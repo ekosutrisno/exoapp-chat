@@ -1,40 +1,21 @@
 <template>
-   <div>
-      Home Page {{ count }}
-      <button @click="increment">Test</button>
+   <div class="h-screen w-full absolute inset-0 max-w-sm mx-auto flex flex-col justify-center items-center">
+      <div class="h-auto mx-auto w-full p-4 overflow-y-auto">
+        <div class="mx-auto mb-3 w-28 h-28 ring-2 ring-whatsapp-teal-green rounded-full">
+            <img class="w-full h-full object-cover " src="https://avatars0.githubusercontent.com/u/51039205?s=460&u=cb1d242b6a9b13a3b6383e46b5410fafe471b63d&v=4" alt="exoapp-logo">
+        </div>
+        <h1 class="text-center text-2xl mb-10 font-semibold text-gray-300">Welcome to ExoApp</h1>
+        <div class="mx-auto w-full text-center mb-8">
+          <router-link to="/login" class="py-3  px-6 text-lg rounded hover:bg-opacity-80 font-semibold text-gray-300 bg-whatsapp-teal-green focus:outline-none">
+            Sign In
+          </router-link>
+        </div>
+        <p class="text-center text-lg text-gray-300 my-2">New user? let's 
+          <router-link to="/register" class="font-bold">
+            Sign Up
+          </router-link>
+        </p>
+        <p class="text-center mt-6 text-sm text-gray-400">From Eko Sutrisno &copy;{{new Date().getFullYear()}} All right reserved</p>
+      </div>
    </div>
 </template>
-
-<script>
-import { computed, onMounted } from "vue";
-import { useStore } from "vuex";
-import firebase from '../firebase';
-export default {
-  setup() {
-    const store = useStore();
-
-    const increment = () => {
-      store.commit("increment");
-    };
-
-    onMounted(() =>{
-      insertData()
-    })
-
-    const insertData = () => {
-      firebase.firestore().collection('exoapps')
-      .add({
-        username: 'Eko Sutrisno',
-        timestamp: new Date().getTime()
-      })
-      .then(d => console.log('Data Added!',d.id))
-      .catch(e => console.log(e))
-    }
-
-    return {
-      count: computed(() => store.state.count),
-      increment,
-    };
-  },
-};
-</script>
