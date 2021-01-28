@@ -5,6 +5,7 @@ import LoginPage from './views/LoginPage.vue';
 import RegisterPage from './views/RegisterPage.vue';
 import ChatHome from './views/ChatHome.vue';
 import InviteFriend from './views/InviteFriend.vue';
+import ChatRoom from './views/ChatRoom.vue';
 
 const routes = [
    {
@@ -31,6 +32,11 @@ const routes = [
       path: "/invite-friend",
       name: "InviteFriend",
       component: InviteFriend,
+   },
+   {
+      path: "/chat-room",
+      name: "ChatRoom",
+      component: ChatRoom,
    },
 ];
 

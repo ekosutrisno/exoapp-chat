@@ -48,7 +48,7 @@
 </template>
 
 <script>
-import { computed, onMounted, reactive, ref, toRefs } from 'vue'
+import { computed, onBeforeMount, onMounted, reactive, ref, toRefs } from 'vue'
 import db from '../firebase'
 import InboxChat from '../components/InboxChat.vue'
 import MenuOption from '../components/MenuOption.vue'
@@ -75,13 +75,18 @@ export default {
             getFriendList();
          })
 
+         onBeforeMount(() =>{
+            if(!localStorage.getItem('user_id'))
+               router.push('/login')
+         })
+
          const toggleOption = () => {
             return option.value = !option.value
          }
 
          const onLogout = () => {
             db.auth().signOut().then(() => {
-               store.state.currentUser = {};
+               localStorage.clear();
                router.push('/login');
             }).catch((error) => {
                console.log(error)
@@ -91,6 +96,10 @@ export default {
          const getFriendList = async () => {
 
             state.isProcess = true;
+            
+            setTimeout(() => {
+               state.isProcess = false;
+            }, 5000);
 
             const data = await db.firestore().collection('users')
             .doc(state.currentUserId)
@@ -108,7 +117,7 @@ export default {
                         documentKey: item.id,
                         id: item.data().user_id,
                         username: item.data().username,
-                        URL: item.data().URL,
+                        photo_url: item.data().photo_url,
                         descriptions: item.data().descriptions,
                      })
                   }
@@ -116,16 +125,13 @@ export default {
                })
             }
             state.isProcess = false;
-            setTimeout(() => {
-               state.isProcess = false;
-            }, 5000);
          }
 
          const letChat = ( peerUser ) => {
             state.currentPeerUser = peerUser;
-            localStorage.setItem('peerUserId', peerUser.id)
-            localStorage.setItem('peerPhotoUrl', peerUser.URL)
-            localStorage.setItem('peerUsername', peerUser.username)
+            localStorage.setItem('peer_user_id', peerUser.id);
+            localStorage.setItem('peer_photo_url', peerUser.photo_url);
+            localStorage.setItem('peer_username', peerUser.username);
             router.push("/chat-room")
          }
 
@@ -134,8 +140,7 @@ export default {
             option,
             onLogout,
             toggleOption,
-            letChat,
-            u : computed(()=> store.state.currentUser)
+            letChat
          }
       }
    }

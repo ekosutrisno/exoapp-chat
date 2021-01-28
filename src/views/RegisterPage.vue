@@ -115,12 +115,12 @@ export default {
                   status: 'I Love ExoApps'
                }
                
-               insertUser(userData); //Save to Store
+               insertUser(userData); //Save to Store and LocalStorage
 
                await db.firestore().collection('users')
                .doc(data.user.uid)
                .set(userData).then( () =>{
-
+                  
                   state.username = '';
                   state.email = '';
                   state.password = '';

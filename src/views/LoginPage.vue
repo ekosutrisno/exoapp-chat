@@ -74,11 +74,13 @@ export default {
                            user_id: userData.user_id,
                            username: userData.username,
                            email: userData.email,
+                           phone_number: userData.phone_number,
                            photo_url: userData.photo_url,
+                           status: userData.status,
                            descriptions: userData.descriptions,
                            FirebaseDocumentId: doc.id
                         }
-                        setUser(payload);
+                        setCurrentUser(payload);
                   })
 
                   state.isProcess = false;
@@ -99,7 +101,7 @@ export default {
 
       }
 
-       const setUser = async ( data ) => {
+       const setCurrentUser = async ( data ) => {
           await store.dispatch('setCurrentUser', data);
       }
 
@@ -126,10 +128,9 @@ export default {
       }
 
       onBeforeMount(() => {
-         let user_id = store.getters.getUserId;
-
-         if(user_id) 
-            router.push('/chat-room')
+         if(localStorage.getItem('user_id')) { 
+            router.push('/chat-home')
+         }
       })
 
       return {
