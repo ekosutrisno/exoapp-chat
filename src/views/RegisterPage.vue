@@ -5,7 +5,7 @@
    <div class="h-full min-h-screen absolute inset-0 w-full max-w-sm mx-auto flex flex-col justify-center items-center">
          <div class="h-full w-full p-4">
             <div class="mx-auto mb-3 w-28 h-28 ring-2 ring-whatsapp-teal-green rounded-full">
-               <img class="w-full h-full object-cover " src="https://avatars0.githubusercontent.com/u/51039205?s=460&u=cb1d242b6a9b13a3b6383e46b5410fafe471b63d&v=4" alt="exoapp-logo">
+               <img class="w-full h-full object-cover " src="../assets/avatar.png" alt="exoapp-logo">
             </div>
             <h1 class="text-center text-lg font-semibold text-gray-300 mb-6">SIGN UP</h1>
             <h1 v-if="errorMessage" class="text-center text-sm font-semibold text-green-500 mb-6">{{errorMessage}}</h1>
@@ -35,6 +35,7 @@ import { useStore } from 'vuex';
 import db from '../firebase'
 import { useRouter } from 'vue-router'
 import Spinner from '../components/Spinner.vue'
+import moment from 'moment';
 
 export default {
    components:{ Spinner },
@@ -109,6 +110,7 @@ export default {
                   username: state.username,
                   password: state.password,
                   email: state.email,
+                  join_at: moment().format('LLLL'),
                   descriptions: `Hi, My name is ${state.username}`,
                   phone_number: '',
                   photo_url: '',

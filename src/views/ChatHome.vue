@@ -31,8 +31,8 @@
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
                </svg>
             </button>
-             <button class="py-2 text-lg hover:text-gray-400 w-24 font-semibold border-b-2 border-whatsapp-teal-green focus:outline-none focus:text-whatsapp-teal-green">
-                <div>CHATS</div>
+             <button v-for="nav in togle" :key="nav.id" class="py-2 text-lg hover:text-gray-400 w-24 font-semibold border-whatsapp-teal-green focus:outline-none focus:text-whatsapp-teal-green">
+                <div> {{nav.text}} </div>
             </button>
          </div>
       </div>
@@ -40,6 +40,12 @@
          <ul>
             <li v-for="(user, i) in friends" :key="i">
                <InboxChat  @click="letChat(user)" :currentPeerUser="user"/>
+            </li>
+            <li v-if="friends.length === 0" class="text-gray-300 text-center py-4">
+               <h1 class="mb-6">Yo No have a Friend!</h1>
+               <router-link to="/invite-friend" class="py-3 px-6 text-lg rounded hover:bg-opacity-80 font-semibold text-gray-300 bg-whatsapp-teal-green focus:outline-none">
+                  Invite Friend
+               </router-link>
             </li>
          </ul>
       </div>
@@ -69,6 +75,16 @@ export default {
             friends: [],
             groups:[],
             isProcess: false,
+            togle: [
+               {
+                  id: 1,
+                  text: 'CHATS'
+               },
+               {
+                  id: 2,
+                  text: 'GROUPS'
+               },
+            ]
          })
 
          onMounted(() =>{ 

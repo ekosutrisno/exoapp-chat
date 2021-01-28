@@ -6,6 +6,7 @@ import RegisterPage from './views/RegisterPage.vue';
 import ChatHome from './views/ChatHome.vue';
 import InviteFriend from './views/InviteFriend.vue';
 import ChatRoom from './views/ChatRoom.vue';
+import ProfilePage from './views/ProfilePage.vue';
 
 const routes = [
    {
@@ -22,6 +23,11 @@ const routes = [
       path: "/register",
       name: "Register",
       component: RegisterPage,
+   },
+   {
+      path: "/profile",
+      name: "Profile",
+      component: ProfilePage,
    },
    {
       path: "/chat-home",

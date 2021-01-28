@@ -2,7 +2,7 @@
    <div class="h-screen w-full absolute inset-0 max-w-sm mx-auto flex flex-col justify-center items-center">
       <div class="h-auto mx-auto w-full p-4 overflow-y-auto">
         <div class="mx-auto mb-3 w-28 h-28 ring-2 ring-whatsapp-teal-green rounded-full">
-            <img class="w-full h-full object-cover " src="https://avatars0.githubusercontent.com/u/51039205?s=460&u=cb1d242b6a9b13a3b6383e46b5410fafe471b63d&v=4" alt="exoapp-logo">
+            <img class="w-full h-full object-cover " src="../assets/avatar.png" alt="exoapp-logo">
         </div>
         <h1 class="text-center text-2xl mb-10 font-semibold text-gray-300">Welcome to ExoApp</h1>
         <div class="mx-auto w-full text-center mb-8">
