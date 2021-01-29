@@ -55,109 +55,109 @@
 
 <script>
 import { computed, onBeforeMount, onMounted, reactive, ref, toRefs } from 'vue'
+import { useRouter } from 'vue-router'
+import { useStore } from 'vuex'
 import db from '../firebase'
 import InboxChat from '../components/InboxChat.vue'
 import MenuOption from '../components/MenuOption.vue'
 import Spinner from '../components/Spinner.vue'
-import { useRouter } from 'vue-router'
-import { useStore } from 'vuex'
 
 export default {
-  components: { InboxChat, Spinner, MenuOption },
-      setup () {
-         const option = ref(false);
-         const router = useRouter();
-         const store = useStore();
+   components: {InboxChat, Spinner, MenuOption},
+   setup () {
+      const option = ref(false);
+      const router = useRouter();
+      const store = useStore();
 
-         const state = reactive({
-            currentPeerUser: null,
-            currentUserId: computed(() => store.getters.getUserId),
-            friends: [],
-            groups:[],
-            isProcess: false,
-            togle: [
-               {
-                  id: 1,
-                  text: 'CHATS'
-               },
-               {
-                  id: 2,
-                  text: 'GROUPS'
-               },
-            ]
-         })
+      const state = reactive({
+         currentPeerUser: null,
+         currentUserId: computed(() => store.getters.getUserId),
+         friends: [],
+         groups:[],
+         isProcess: false,
+         togle: [
+            {
+               id: 1,
+               text: 'CHATS'
+            },
+            {
+               id: 2,
+               text: 'GROUPS'
+            },
+         ]
+      })
 
-         onMounted(() =>{ 
-            getFriendList();
-         })
+      onMounted(() =>{ 
+         getFriendList();
+      })
 
-         onBeforeMount(() =>{
-            if(!localStorage.getItem('user_id'))
-               router.push('/login')
-         })
+      onBeforeMount(() =>{
+         if(!localStorage.getItem('user_id'))
+            router.push('/login')
+      })
 
-         const toggleOption = () => {
-            return option.value = !option.value
-         }
+      const toggleOption = () => {
+         return option.value = !option.value
+      }
 
-         const onLogout = () => {
-            db.auth().signOut().then(() => {
-               localStorage.clear();
-               router.push('/login');
-            }).catch((error) => {
-               console.log(error)
-            });
-         }
+      const onLogout = () => {
+         db.auth().signOut().then(() => {
+            localStorage.clear();
+            router.push('/login');
+         }).catch((error) => {
+            console.log(error)
+         });
+      }
 
-         const getFriendList = async () => {
+      const getFriendList = async () => {
 
-            state.isProcess = true;
-            
-            setTimeout(() => {
-               state.isProcess = false;
-            }, 5000);
-
-            const data = await db.firestore().collection('users')
-            .doc(state.currentUserId)
-            .collection('friends')
-            .get();
-
-            if (data.docs.length > 0) {
-               let listUser = [];
-               listUser = [...data.docs]
-               listUser.forEach((item, index) => {
-                  
-                  if(item.data().user_id !== state.currentUserId){
-                     state.friends.push({
-                        key: index,
-                        documentKey: item.id,
-                        id: item.data().user_id,
-                        username: item.data().username,
-                        photo_url: item.data().photo_url,
-                        descriptions: item.data().descriptions,
-                     })
-                  }
-
-               })
-            }
+         state.isProcess = true;
+         
+         setTimeout(() => {
             state.isProcess = false;
-         }
+         }, 5000);
 
-         const letChat = ( peerUser ) => {
-            state.currentPeerUser = peerUser;
-            localStorage.setItem('peer_user_id', peerUser.id);
-            localStorage.setItem('peer_photo_url', peerUser.photo_url);
-            localStorage.setItem('peer_username', peerUser.username);
-            router.push("/chat-room")
-         }
+         const data = await db.firestore().collection('users')
+         .doc(state.currentUserId)
+         .collection('friends')
+         .get();
 
-         return{
-            ...toRefs(state),
-            option,
-            onLogout,
-            toggleOption,
-            letChat
+         if (data.docs.length > 0) {
+            let listUser = [];
+            listUser = [...data.docs]
+            listUser.forEach((item, index) => {
+               
+               if(item.data().user_id !== state.currentUserId){
+                  state.friends.push({
+                     key: index,
+                     documentKey: item.id,
+                     id: item.data().user_id,
+                     username: item.data().username,
+                     photo_url: item.data().photo_url,
+                     descriptions: item.data().descriptions,
+                  })
+               }
+
+            })
          }
+         state.isProcess = false;
+      }
+
+      const letChat = ( peerUser ) => {
+         state.currentPeerUser = peerUser;
+         localStorage.setItem('peer_user_id', peerUser.id);
+         localStorage.setItem('peer_photo_url', peerUser.photo_url);
+         localStorage.setItem('peer_username', peerUser.username);
+         router.push("/chat-room")
+      }
+
+      return{
+         ...toRefs(state),
+         option,
+         onLogout,
+         toggleOption,
+         letChat
       }
    }
+}
 </script>

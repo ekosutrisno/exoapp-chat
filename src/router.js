@@ -1,48 +1,45 @@
 import { createRouter, createWebHistory } from 'vue-router';
 
-import HomePage from './views/HomePage.vue';
-import LoginPage from './views/LoginPage.vue';
-import RegisterPage from './views/RegisterPage.vue';
-import ChatHome from './views/ChatHome.vue';
-import InviteFriend from './views/InviteFriend.vue';
-import ChatRoom from './views/ChatRoom.vue';
-import ProfilePage from './views/ProfilePage.vue';
-
 const routes = [
    {
       path: "/",
       name: "Home",
-      component: HomePage,
+      component: () => import('./views/HomePage.vue'),
    },
    {
       path: "/login",
       name: "Login",
-      component: LoginPage,
+      component: () => import('./views/LoginPage.vue'),
    },
    {
       path: "/register",
       name: "Register",
-      component: RegisterPage,
+      component: () => import('./views/RegisterPage.vue'),
    },
    {
       path: "/profile",
       name: "Profile",
-      component: ProfilePage,
+      component: () => import('./views/ProfilePage.vue'),
    },
    {
       path: "/chat-home",
       name: "ChatHome",
-      component: ChatHome,
+      component: () => import('./views/ChatHome.vue'),
    },
    {
       path: "/invite-friend",
       name: "InviteFriend",
-      component: InviteFriend,
+      component: () => import('./views/InviteFriend.vue'),
+   },
+   {
+      path: "/create-group",
+      name: "CreateGroup",
+      component: () => import('./views/CreateGroup.vue'),
    },
    {
       path: "/chat-room",
       name: "ChatRoom",
-      component: ChatRoom,
+      component: () => import('./views/ChatRoom.vue'),
    },
 ];
 

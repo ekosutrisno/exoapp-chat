@@ -12,7 +12,7 @@
       <div class="mx-auto mb-3 w-28 h-28 ring-2 ring-whatsapp-teal-green rounded-full">
          <img class="w-full h-full object-cover " src="https://avatars0.githubusercontent.com/u/51039205?s=460&u=cb1d242b6a9b13a3b6383e46b5410fafe471b63d&v=4" alt="exoapp-logo">
       </div>
-      <h1 class="text-center text-lg font-semibold text-gray-300 mb-6">INVITE YOUR FRIEND</h1>
+      <h1 class="text-center text-lg font-semibold text-gray-300 mb-6">INVITE FRIEND</h1>
       <h1 v-if="errorMessage" class="text-center text-sm font-semibold text-green-500 mb-6">{{errorMessage}}</h1>
 
       <div class="w-full flex flex-col">
@@ -20,6 +20,7 @@
          <button @click="onInvite" type="button" class="py-3 px-6 text-lg rounded hover:bg-opacity-80 font-semibold text-gray-300 bg-whatsapp-teal-green focus:outline-none">
             Invite
          </button>
+         <p class="text-left mt-6 text-sm text-gray-400">Hi <span class="font-semibold">{{ currentUsername }}</span>, you can add to your friends contact list and share stories with each other. It should be noted that you can only invite your friends who are also registered and use ExoApp.</p>
          <p class="text-center mt-6 text-sm text-gray-400">From Eko Sutrisno &copy;{{new Date().getFullYear()}} All right reserved</p>
       </div>
    </div>
@@ -42,7 +43,8 @@ export default {
          email: '',
          errorMessage: '',
          isProcess: false,
-         user_id: computed(() => store.getters.getUserId)
+         user_id: computed(() => store.getters.getUserId),
+         currentUsername: localStorage.getItem('username')
       })
 
        const validateEmail = (email) => {
