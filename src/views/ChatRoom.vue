@@ -40,7 +40,7 @@
     <div class="flex-1 px-4 pt-20 overflow-y-auto md:on-scrollbar bg-transparent">
       <ul class="space-y-1 text-gray-300 relative">
         <li class="text-center mb-2">
-          <span class="py-1 px-2 text-xs bg-whatsapp-dark-200 rounded shadow-lg text-gray-400">Let's say hay with {{currentPeerUsername ? currentPeerUsername : 'Your Friend' }}</span>
+          <span class="py-1 px-2 text-xs bg-whatsapp-dark-200 rounded-md shadow-lg text-gray-400">Let's say hay with {{currentPeerUsername ? currentPeerUsername : 'Your Friend' }}</span>
         </li>
         <li class="text-center">
           <p class="py-1 px-2 text-xs mb-2 bg-whatsapp-dark-200 rounded-md shadow-lg text-yellow-400">
@@ -53,7 +53,7 @@
         <li class="pb-10"> 
           <ul v-for="(message, idx) in listMessages" :key="idx" class="space-y-1 text-center text-gray-300">
             <div class="my-4">
-              <span class="py-1 px-2 text-xs mx-auto bg-whatsapp-dark-100 rounded shadow-lg text-gray-400">{{ message.date == toDay ? 'TODAY': formatDate(message.date)}}</span>
+              <span class="py-1 px-2 uppercase text-xs mx-auto bg-whatsapp-dark-100 rounded-md shadow-lg text-gray-400">{{ message.date == toDay ? 'TODAY': formatDate(message.date)}}</span>
             </div>
             <li v-for="chat in message.chats"  :key="chat.user_id" class="flex flex-col" :class="{'items-end': chat.idFrom === currentUserId , 'items-start': chat.idFrom !== currentUserId}">
               <Chat 
@@ -195,7 +195,7 @@ export default {
       let groupChatId = `${state.currentPeerUserId}+${state.currentUserId}`;
 
       // Init DB Object
-      const messageRefw = await db.database().ref(groupChatId);
+      const messageRefw = db.database().ref(groupChatId);
       
       // Get Reference
       let keyChek = await messageRefw.get()
@@ -208,7 +208,7 @@ export default {
           retrieveMessagesFromDB(groupChatId);
 
       } else {
-
+        
           // Set new Room
           state.groupChatId =  `${state.currentUserId}+${state.currentPeerUserId}`;
           retrieveMessagesFromDB(state.groupChatId);
@@ -217,25 +217,25 @@ export default {
 
     }
 
-    const retrieveMessagesFromDB = async ( group ) => {
-        await db.database().ref(group).on('value', (snapshot) => {
-              const data = snapshot.val();
-            
-              let messages = [];
+    const retrieveMessagesFromDB = ( group ) => {
+        db.database().ref(group).on('value', (snapshot) => {
+        const data=snapshot.val()
 
-              if ( data !== null ) {
-                Object.keys(data).forEach( key => {
-                  const obejctMessage = {
-                    date: key,
-                    chats: data[key]
-                  }
-                  messages.push(obejctMessage)
-                })
-              }
-            // Set ListMessage Data
-            state.listMessages = messages;  
-            state.isProcess = false;
-          });
+        let messages=[]
+
+        if(data!==null) {
+          Object.keys(data).forEach(key => {
+            const obejctMessage={
+              date: key,
+              chats: data[key]
+            }
+            messages.push(obejctMessage)
+          })
+        }
+        // Set ListMessage Data
+        state.listMessages=messages
+        state.isProcess=false
+      });
     }
 
     const toggleOption = () => {
@@ -249,11 +249,11 @@ export default {
       }
 
     const formatTime = (dateValue) => {
-      return moment(dateValue).format('LT')
+      return moment(dateValue).format('LT');
     }
 
     const formatDate = (dateValue) => {
-      return moment(dateValue).format('LL')
+      return moment(dateValue).format('LL');
     }
 
     const bottom = ref(null)

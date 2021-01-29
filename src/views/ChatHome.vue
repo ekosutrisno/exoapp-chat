@@ -31,20 +31,35 @@
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
                </svg>
             </button>
-             <button v-for="nav in togle" :key="nav.id" class="py-2 text-lg hover:text-gray-400 w-24 font-semibold border-whatsapp-teal-green focus:outline-none focus:text-whatsapp-teal-green">
+             <button 
+               v-for="nav in togle" 
+               :key="nav.id" 
+               @click="switchToggle(nav.id)"
+               class="py-2 text-lg hover:text-gray-400 w-24 font-semibold border-whatsapp-teal-green focus:outline-none">
                 <div> {{nav.text}} </div>
             </button>
          </div>
       </div>
       <div class="flex-1 pb-2 pt-28 flex flex-col overflow-y-auto on-scrollbar">
-         <ul>
+         <ul v-show="isChat">
             <li v-for="(user, i) in friends" :key="i">
                <InboxChat  @click="letChat(user)" :currentPeerUser="user"/>
             </li>
             <li v-if="friends.length === 0" class="text-gray-300 text-center py-4">
-               <h1 class="mb-6">Yo No have a Friend!</h1>
+               <h1 class="mb-6">You No have a Friend!</h1>
                <router-link to="/invite-friend" class="py-3 px-6 text-lg rounded hover:bg-opacity-80 font-semibold text-gray-300 bg-whatsapp-teal-green focus:outline-none">
                   Invite Friend
+               </router-link>
+            </li>
+         </ul>
+         <ul v-show="isGroup">
+            <!-- <li v-for="(user, i) in friends" :key="i">
+               <InboxChat  @click="letChat(user)" :currentPeerUser="user"/>
+            </li> -->
+            <li class="text-gray-300 text-center py-4">
+               <h1 class="mb-6">Group Empty!</h1>
+               <router-link to="/create-group" class="py-3 px-6 text-lg rounded hover:bg-opacity-80 font-semibold text-gray-300 bg-whatsapp-teal-green focus:outline-none">
+                  Create Group
                </router-link>
             </li>
          </ul>
@@ -75,6 +90,8 @@ export default {
          friends: [],
          groups:[],
          isProcess: false,
+         isChat: true,
+         isGroup: false,
          togle: [
             {
                id: 1,
@@ -151,12 +168,23 @@ export default {
          router.push("/chat-room")
       }
 
+      const switchToggle = (id) => {
+            if(id===1){
+               state.isGroup = false;
+               state.isChat = true;
+            }else if(id===2){
+               state.isGroup = true;
+               state.isChat = false;
+            }
+      }
+
       return{
          ...toRefs(state),
          option,
          onLogout,
          toggleOption,
-         letChat
+         letChat,
+         switchToggle
       }
    }
 }
