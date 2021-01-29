@@ -69,6 +69,7 @@ export default {
                group_description: state.groupDescriptions,
                admin_create_id: state.user_id,
                group_avatar: '',
+               group_id: groupId,
                active: true
             })
             .then(() =>{
@@ -94,6 +95,10 @@ export default {
                console.log(e)
             })
       }
+
+      // const addGroupMember = () => {
+         
+      // }
 
       const back = () => {
          router.back()

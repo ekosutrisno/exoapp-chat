@@ -177,8 +177,9 @@ export default {
             //Push to Local State
             listGroup.forEach(g =>{
                state.groups.push({
-                  gorup_id: g.id,
+                  group_id: g.data().group_id,
                   group_name: g.data().group_name,
+                  group_avatar: g.data().group_avatar,
                   created_date: g.data().created_date,
                   admin_create_id: g.data().admin_create_id,
                   group_description: g.data().group_description

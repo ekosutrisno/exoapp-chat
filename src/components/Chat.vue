@@ -1,6 +1,6 @@
 <template>
    <div class="h-auto group max-w-xs text-sm rounded-lg relative shadow-lg text-gray-300" :class="{
-      'rounded-tl-none ':idx == 0 && isOwner == false,
+      'rounded-bl-none ':idx == 0 && isOwner == false,
       'bg-whatsapp-dark-200': isOwner == false,
       'rounded-br-none ':idx == 0 && isOwner,
       'bg-whatsapp-teal-green-dark ': isOwner,

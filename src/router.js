@@ -41,6 +41,11 @@ const routes = [
       name: "ChatRoom",
       component: () => import('./views/ChatRoom.vue'),
    },
+   {
+      path: "/group-chat-room",
+      name: "GroupChatRoom",
+      component: () => import('./views/ChatRoomGroup.vue'),
+   },
 ];
 
 const router = createRouter({
