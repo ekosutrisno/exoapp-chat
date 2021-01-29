@@ -64,10 +64,11 @@ export default {
             .collection('groups')
             .doc(groupId)
             .set({
-               created_date: new Date(),
+               created_date: new Date().toDateString(),
                group_name: state.groupName,
                group_description: state.groupDescriptions,
                admin_create_id: state.user_id,
+               group_avatar: '',
                active: true
             })
             .then(() =>{
@@ -83,7 +84,7 @@ export default {
                            .doc(state.user_id)
                            .set(doc.data())
                            .then(() =>{
-                              console.log("Group Added!")
+                              state.errorMessage ='Group Added!';
                            }).catch(e =>{
                               console.log(e)
                            })

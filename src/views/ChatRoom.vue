@@ -53,7 +53,9 @@
         <li class="pb-10"> 
           <ul v-for="(message, idx) in listMessages" :key="idx" class="space-y-1 text-center text-gray-300">
             <div class="my-4">
-              <span class="py-1 px-2 uppercase text-xs mx-auto bg-whatsapp-dark-100 rounded-md shadow-lg text-gray-400">{{ message.date == toDay ? 'TODAY': formatDate(message.date)}}</span>
+              <span v-if="message.date == toDay" class="py-1 px-2 uppercase text-xs mx-auto bg-whatsapp-dark-100 rounded-md shadow-lg text-gray-400">TODAY</span>
+              <span v-else-if="message.date == yesterdayDate()" class="py-1 px-2 uppercase text-xs mx-auto bg-whatsapp-dark-100 rounded-md shadow-lg text-gray-400">YESTERDAY</span>
+              <span v-else class="py-1 px-2 uppercase text-xs mx-auto bg-whatsapp-dark-100 rounded-md shadow-lg text-gray-400">{{formatDate(message.date)}}</span>
             </div>
             <li v-for="chat in message.chats"  :key="chat.user_id" class="flex flex-col" :class="{'items-end': chat.idFrom === currentUserId , 'items-start': chat.idFrom !== currentUserId}">
               <Chat 
@@ -256,6 +258,10 @@ export default {
       return moment(dateValue).format('LL');
     }
 
+    const yesterdayDate = () => {
+     return moment(state.toDay).subtract(1, 'days').format('YYYY-MM-DD');
+    }
+
     const bottom = ref(null)
 
     const scrollToBottom = () => {
@@ -271,6 +277,7 @@ export default {
       logout,
       sendMessage,
       formatDate,
+      yesterdayDate,
       scrollToBottom
     }
   }

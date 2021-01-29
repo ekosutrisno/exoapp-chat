@@ -33,8 +33,9 @@
             </button>
              <button 
                v-for="nav in togle" 
-               :key="nav.id" 
-               @click="switchToggle(nav.id)"
+               :key="nav.id"
+               :class="{'border-b-2': currentTab === nav.text}" 
+               @click="switchToggle(nav.id, nav.text)"
                class="py-2 text-lg hover:text-gray-400 w-24 font-semibold border-whatsapp-teal-green focus:outline-none">
                 <div> {{nav.text}} </div>
             </button>
@@ -53,10 +54,10 @@
             </li>
          </ul>
          <ul v-show="isGroup">
-            <!-- <li v-for="(user, i) in friends" :key="i">
-               <InboxChat  @click="letChat(user)" :currentPeerUser="user"/>
-            </li> -->
-            <li class="text-gray-300 text-center py-4">
+            <li v-for="(group, i) in groups" :key="i">
+               <InboxGroup  @click="letChatGroup(group)" :currentGroup="group"/>
+            </li>
+            <li v-if="groups.length === 0" class="text-gray-300 text-center py-4">
                <h1 class="mb-6">Group Empty!</h1>
                <router-link to="/create-group" class="py-3 px-6 text-lg rounded hover:bg-opacity-80 font-semibold text-gray-300 bg-whatsapp-teal-green focus:outline-none">
                   Create Group
@@ -74,11 +75,12 @@ import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
 import db from '../firebase'
 import InboxChat from '../components/InboxChat.vue'
+import InboxGroup from '../components/InboxGroup.vue'
 import MenuOption from '../components/MenuOption.vue'
 import Spinner from '../components/Spinner.vue'
 
 export default {
-   components: {InboxChat, Spinner, MenuOption},
+   components: {InboxChat, InboxGroup, Spinner, MenuOption},
    setup () {
       const option = ref(false);
       const router = useRouter();
@@ -86,12 +88,14 @@ export default {
 
       const state = reactive({
          currentPeerUser: null,
+         currentPeerGroup: null,
          currentUserId: computed(() => store.getters.getUserId),
          friends: [],
          groups:[],
          isProcess: false,
          isChat: true,
          isGroup: false,
+         currentTab:'CHATS',
          togle: [
             {
                id: 1,
@@ -106,6 +110,7 @@ export default {
 
       onMounted(() =>{ 
          getFriendList();
+         getGroupList();
       })
 
       onBeforeMount(() =>{
@@ -160,6 +165,29 @@ export default {
          state.isProcess = false;
       }
 
+      const getGroupList = async () => {
+         const data = await db.firestore().collection('users')
+         .doc(state.currentUserId)
+         .collection('groups')
+         .get();
+         
+         if(data.docs.length > 0){
+            let listGroup = [];
+            listGroup = [...data.docs]
+            //Push to Local State
+            listGroup.forEach(g =>{
+               state.groups.push({
+                  gorup_id: g.id,
+                  group_name: g.data().group_name,
+                  created_date: g.data().created_date,
+                  admin_create_id: g.data().admin_create_id,
+                  group_description: g.data().group_description
+               })
+            })
+         }
+
+      }
+
       const letChat = ( peerUser ) => {
          state.currentPeerUser = peerUser;
          localStorage.setItem('peer_user_id', peerUser.id);
@@ -168,11 +196,22 @@ export default {
          router.push("/chat-room")
       }
 
-      const switchToggle = (id) => {
-            if(id===1){
+      const letChatGroup = ( group ) => {
+         state.currentPeerGroup = group;
+         localStorage.setItem('current_group_id', group.group_id);
+         localStorage.setItem('current_group_avatar', group.group_avatar);
+         localStorage.setItem('current_group_name', group.group_name);
+         localStorage.setItem('current_group_description', group.group_description);
+         router.push("/group-chat-room")
+      }
+
+      const switchToggle = ( id, text ) => {
+            state.currentTab = text;
+           
+           if(id === 1){
                state.isGroup = false;
                state.isChat = true;
-            }else if(id===2){
+            }else if(id === 2){
                state.isGroup = true;
                state.isChat = false;
             }
@@ -184,6 +223,7 @@ export default {
          onLogout,
          toggleOption,
          letChat,
+         letChatGroup,
          switchToggle
       }
    }
