@@ -11,9 +11,9 @@
           </svg>
         </router-link>
         <button class="inline-flex focus:outline-none items-center space-x-2">
-          <img class="w-9 h-9 object-cover rounded-full" :src="currentPeerURL ? currentPeerURL : 'https://cdn4.iconfinder.com/data/icons/avatars-xmas-giveaway/128/avocado_scream_avatar_food-128.png'" alt="profile">
+          <img class="w-9 h-9 object-cover rounded-full" :src="currentPeerGroupAvatar ? currentPeerGroupAvatar : 'https://cdn4.iconfinder.com/data/icons/avatars-xmas-giveaway/128/avocado_scream_avatar_food-128.png'" alt="profile">
           <div class="text-left">
-            <p class="block text-lg">{{ currentPeerUsername }}</p>
+            <p class="block text-lg">{{ currentPeerGroupname }}</p>
             <p class="block text-sm -mt-1">online</p>
           </div>
         </button>
@@ -40,7 +40,7 @@
     <div class="flex-1 px-4 pt-20 overflow-y-auto md:on-scrollbar bg-transparent">
       <ul class="space-y-1 text-gray-300 relative">
         <li class="text-center mb-2">
-          <span class="py-1 px-2 text-xs bg-whatsapp-dark-200 rounded-md shadow-lg text-gray-400">Let's say hay with {{currentPeerUsername ? currentPeerUsername : 'Your Friend' }}</span>
+          <span class="py-1 px-2 text-xs bg-whatsapp-dark-200 rounded-md shadow-lg text-gray-400">Let's say hay with {{currentPeerGroupname ? currentPeerGroupname : 'Your Friend' }}</span>
         </li>
         <li class="text-center">
           <p class="py-1 px-2 text-xs mb-2 bg-whatsapp-dark-200 rounded-md shadow-lg text-yellow-400">
@@ -122,10 +122,9 @@ export default {
     const state = reactive({
       currentUsername: localStorage.getItem('username'),
       currentUserId: localStorage.getItem('user_id'),
-      currentPeerUserId: localStorage.getItem('peer_user_id'),
-      currentPeerURL: localStorage.getItem('peer_photo_url'),
-      currentPeerUsername: localStorage.getItem('peer_username'),
-      currentPeerUser: null,
+      currentPeerGroupId: localStorage.getItem('current_group_id'),
+      currentPeerGroupAvatar: localStorage.getItem('current_group_avatar'),
+      currentPeerGroupname: localStorage.getItem('current_group_name'),
       listMessages: [],
       groupChatId: null,
       isProcess: false,
@@ -141,8 +140,6 @@ export default {
         });
       }
 
-
-
     const sendMessage = ( inputMessageValue ) => {
       
         // Check text message not null or blank
@@ -153,24 +150,23 @@ export default {
         // Generate Message Object
         const message = {
           username: state.currentUsername,
-          isGroup: false,
+          isGroup: true,
           idFrom: state.currentUserId,
-          idTo: state.currentPeerUserId,
           timestamp: moment().valueOf().toString(),
           sendTime:formatTime(new Date()),
           content: inputMessageValue.trim()
         }
 
         // DB Object Init
-        const messageRef = db.database().ref(state.groupChatId);
+        const messageRef = db.database().ref(`G-${state.currentPeerGroupId}`);
 
         // Save and Insert Data To Realtime DB Firebase
         messageRef.child(moment()
           .format('YYYY-MM-DD').toString())
-          .push(message)
+          .push(message);
 
         // Reset TextMessage
-        inputMessage.value = ""
+        inputMessage.value = "";
     }
 
     // Lifecicle Hook
@@ -193,7 +189,7 @@ export default {
       autoStopSpinner();
 
       // Temp Current Room
-      let groupChatId = `P-${state.currentPeerUserId}+${state.currentUserId}`;
+      let groupChatId = `G-${state.currentPeerGroupId}`;
 
       // Init DB Object
       const messageRefw = db.database().ref(groupChatId);
@@ -207,20 +203,13 @@ export default {
           // Set Room To Current State
           state.groupChatId = groupChatId;
           retrieveMessagesFromDB(groupChatId);
-
-      } else {
-        
-          // Set new Room
-          state.groupChatId =  `P-${state.currentUserId}+${state.currentPeerUserId}`;
-          retrieveMessagesFromDB(state.groupChatId);
-          
       }
 
     }
 
     const retrieveMessagesFromDB = ( group ) => {
         db.database().ref(group).on('value', (snapshot) => {
-        const data=snapshot.val()
+        const data = snapshot.val()
 
         let messages=[]
 
@@ -234,8 +223,8 @@ export default {
           })
         }
         // Set ListMessage Data
-        state.listMessages=messages
-        state.isProcess=false
+        state.listMessages = messages;
+        state.isProcess = false;
       });
     }
 
