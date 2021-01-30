@@ -59,7 +59,8 @@ export default {
 
       const onCreateGroup = () => {
          let groupId = state.groupName.toUpperCase().replace(" ","") + new Date().getTime();
-         db.firestore().collection('users')
+         db.firestore()
+            .collection('users')
             .doc(state.user_id)
             .collection('groups')
             .doc(groupId)
@@ -77,7 +78,8 @@ export default {
                   .where('user_id', '==', state.user_id )
                   .get().then( querySnapshot => {
                      querySnapshot.forEach(doc => {
-                        db.firestore().collection('users')
+                        db.firestore()
+                           .collection('users')
                            .doc(state.user_id)
                            .collection('groups')
                            .doc(groupId)

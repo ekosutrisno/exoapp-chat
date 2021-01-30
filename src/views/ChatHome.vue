@@ -140,26 +140,32 @@ export default {
          }, 5000);
 
          const data = await db.firestore().collection('users')
-         .doc(state.currentUserId)
-         .collection('friends')
-         .get();
+            .doc(state.currentUserId)
+            .collection('friends')
+            .get();
 
          if (data.docs.length > 0) {
             let listUser = [];
             listUser = [...data.docs]
             listUser.forEach((item, index) => {
                
-               if(item.data().user_id !== state.currentUserId){
-                  state.friends.push({
-                     key: index,
-                     documentKey: item.id,
-                     id: item.data().user_id,
-                     username: item.data().username,
-                     photo_url: item.data().photo_url,
-                     descriptions: item.data().descriptions,
-                  })
-               }
+               db.firestore().collection('users')
+                  .where('user_id', '==', item.id )
+                  .get().then(querySnapshot => {
 
+                     querySnapshot.forEach(doc => {
+                        if(doc.data().user_id !== state.currentUserId){
+                           state.friends.push({
+                              key: index,
+                              documentKey: doc.id,
+                              id: doc.data().user_id,
+                              username: doc.data().username,
+                              photo_url: doc.data().photo_url,
+                              descriptions: doc.data().descriptions,
+                           })
+                        }
+                     })
+                  })
             })
          }
          state.isProcess = false;

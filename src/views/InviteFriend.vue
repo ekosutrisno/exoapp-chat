@@ -72,7 +72,10 @@ export default {
                   .doc(state.user_id)
                   .collection('friends')
                   .doc(doc.data().user_id)
-                  .set(doc.data())
+                  .set({
+                    user_id: doc.data().user_id,
+                    email: doc.data().email
+                  })
 
                   .then(()=>{
                      state.isProcess = false;

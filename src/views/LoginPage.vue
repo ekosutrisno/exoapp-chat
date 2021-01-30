@@ -59,7 +59,6 @@ export default {
          }
 
          state.isProcess = true;
-
          auth.signInWithEmailAndPassword(state.email, state.password)
          .then( async res => {
             if(res.user){

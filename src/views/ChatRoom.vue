@@ -53,9 +53,9 @@
         <li class="pb-10"> 
           <ul v-for="(message, idx) in listMessages" :key="idx" class="space-y-1 text-center text-gray-300">
             <div class="my-4">
-              <span v-if="message.date == toDay" class="py-1 px-2 uppercase text-xs mx-auto bg-whatsapp-dark-100 rounded-md shadow-lg text-gray-400">TODAY</span>
-              <span v-else-if="message.date == yesterdayDate()" class="py-1 px-2 uppercase text-xs mx-auto bg-whatsapp-dark-100 rounded-md shadow-lg text-gray-400">YESTERDAY</span>
-              <span v-else class="py-1 px-2 uppercase text-xs mx-auto bg-whatsapp-dark-100 rounded-md shadow-lg text-gray-400">{{formatDate(message.date)}}</span>
+              <span v-if="message.date == today" class="py-1 px-2 uppercase text-xs mx-auto bg-whatsapp-dark-100 rounded-md shadow-lg text-gray-400 leading-none">TODAY</span>
+              <span v-else-if="message.date == yesterday" class="py-1 px-2 uppercase text-xs mx-auto bg-whatsapp-dark-100 rounded-md shadow-lg text-gray-400 leading-none">YESTERDAY</span>
+              <span v-else class="py-1 px-2 uppercase text-xs mx-auto bg-whatsapp-dark-100 rounded-md shadow-lg text-gray-400 leading-none">{{formatDate(message.date)}}</span>
             </div>
             <li v-for="chat in message.chats"  :key="chat.user_id" class="flex flex-col" :class="{'items-end': chat.idFrom === currentUserId , 'items-start': chat.idFrom !== currentUserId}">
               <Chat 
@@ -129,7 +129,8 @@ export default {
       listMessages: [],
       groupChatId: null,
       isProcess: false,
-      toDay: computed(()=> moment().format('YYYY-MM-DD').toString())
+      today: computed(()=> moment().format('YYYY-MM-DD').toString()),
+      yesterday: computed(()=> moment().subtract(1, 'days').format('YYYY-MM-DD')),
     })
 
      const logout = () => {
@@ -162,12 +163,9 @@ export default {
         }
 
         // DB Object Init
-        const messageRef = db.database().ref(state.groupChatId);
-
-        // Save and Insert Data To Realtime DB Firebase
-        messageRef.child(moment()
-          .format('YYYY-MM-DD').toString())
-          .push(message)
+        db.database()
+        .ref(`${state.groupChatId}/${moment().format('YYYY-MM-DD').toString()}`)
+        .push(message);
 
         // Reset TextMessage
         inputMessage.value = ""
@@ -220,13 +218,13 @@ export default {
 
     const retrieveMessagesFromDB = ( group ) => {
         db.database().ref(group).on('value', (snapshot) => {
-        const data=snapshot.val()
+        const data = snapshot.val()
 
-        let messages=[]
+        let messages = []
 
-        if(data!==null) {
+        if(data !== null) {
           Object.keys(data).forEach(key => {
-            const obejctMessage={
+            const obejctMessage = {
               date: key,
               chats: data[key]
             }
@@ -246,7 +244,7 @@ export default {
     const autoStopSpinner = () => {
          setTimeout(() => {
             state.isProcess = false;
-         }, 10000);
+         }, 5000);
       }
 
     const formatTime = (dateValue) => {
@@ -255,10 +253,6 @@ export default {
 
     const formatDate = (dateValue) => {
       return moment(dateValue).format('LL');
-    }
-
-    const yesterdayDate = () => {
-     return moment(state.toDay).subtract(1, 'days').format('YYYY-MM-DD');
     }
 
     const bottom = ref(null)
@@ -276,7 +270,6 @@ export default {
       logout,
       sendMessage,
       formatDate,
-      yesterdayDate,
       scrollToBottom
     }
   }
