@@ -4,9 +4,8 @@
    </div>
    <div class="min-h-screen w-full absolute inset-0 max-w-sm mx-auto flex flex-col justify-center items-center">
          <div class="h-full w-full p-4">
-            <div class="mx-auto mb-3 w-28 h-28 ring-2 ring-whatsapp-teal-green rounded-full">
-               <img class="w-full h-full object-cover " src="../assets/avatar.png" alt="exoapp-logo">
-
+            <div class="mx-auto mb-3">
+               <Lock class="mx-auto"/>
             </div>
             <h1 class="text-center text-lg font-semibold text-gray-300 mb-6">SIGN IN</h1>
             <h1 v-if="errorMessage" class="text-center text-sm font-semibold text-green-500 mb-6">{{errorMessage}}</h1>
@@ -30,11 +29,12 @@
 <script>
 import { onBeforeMount, reactive, toRefs } from 'vue';
 import { useRouter } from 'vue-router';
-import Spinner from '../components/Spinner.vue'
-import db from '../firebase'
 import { useStore } from 'vuex';
+import db from '../firebase'
+import Spinner from '../components/Spinner'
+import Lock from '../components/svg/Lock';
 export default {
-   components:{Spinner},
+   components:{Spinner, Lock},
    setup () {
       const router = useRouter();
       const store = useStore();

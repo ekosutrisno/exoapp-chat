@@ -1,8 +1,8 @@
 <template>
    <div class="h-screen w-full absolute inset-0 max-w-sm mx-auto flex flex-col justify-center items-center">
       <div class="h-auto mx-auto w-full p-4 overflow-y-auto">
-        <div class="mx-auto mb-3 w-28 h-28 ring-2 ring-whatsapp-teal-green rounded-full">
-            <img class="w-full h-full object-cover " src="../assets/avatar.png" alt="exoapp-logo">
+        <div class="mx-auto">
+               <ChatIcon class="mx-auto"/>
         </div>
         <h1 class="text-center text-2xl mb-10 font-semibold text-gray-300">Welcome to ExoApp</h1>
         <div class="mx-auto w-full text-center mb-8">
@@ -19,3 +19,10 @@
       </div>
    </div>
 </template>
+<script>
+import ChatIcon from '../components/svg/ChatIcon';
+
+export default {
+  components: {ChatIcon}
+}
+</script>

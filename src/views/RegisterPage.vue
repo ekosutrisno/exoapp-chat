@@ -4,10 +4,10 @@
    </div>
    <div class="h-full min-h-screen absolute inset-0 w-full max-w-sm mx-auto flex flex-col justify-center items-center">
          <div class="h-full w-full p-4">
-            <div class="mx-auto mb-3 w-28 h-28 ring-2 ring-whatsapp-teal-green rounded-full">
-               <img class="w-full h-full object-cover " src="../assets/avatar.png" alt="exoapp-logo">
+            <div class="mx-auto">
+               <ChatIcon class="mx-auto"/>
             </div>
-            <h1 class="text-center text-lg font-semibold text-gray-300 mb-6">SIGN UP</h1>
+            <h1 class="text-center -mt-6 text-lg font-semibold text-gray-300 mb-6">SIGN UP</h1>
             <h1 v-if="errorMessage" class="text-center text-sm font-semibold text-green-500 mb-6">{{errorMessage}}</h1>
 
             <div @submit.prevent="onRegister" class="w-full flex flex-col">
@@ -34,11 +34,12 @@ import { computed, reactive, toRefs } from 'vue'
 import { useStore } from 'vuex';
 import db from '../firebase'
 import { useRouter } from 'vue-router'
-import Spinner from '../components/Spinner.vue'
+import Spinner from '../components/Spinner'
+import ChatIcon from '../components/svg/ChatIcon';
 import moment from 'moment';
 
 export default {
-   components:{ Spinner },
+   components:{ Spinner, ChatIcon },
    setup () {
        const router = useRouter();
        const store = useStore();

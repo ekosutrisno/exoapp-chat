@@ -2,7 +2,7 @@
    <div v-if="isProcess" class="absolute flex items-center justify-center inset-0 z-50 bg-opacity-50 bg-gray-900">
       <Spinner/>
    </div>
-   <div class="bg-cst h-full inset-0 min-h-screen w-full max-w-sm mx-auto flex flex-col justify-center items-center">
+   <div class="bg-gray-800 h-full inset-0 min-h-screen w-full max-w-sm mx-auto flex flex-col overflow-y-auto justify-center items-center">
          <div class="h-full w-full p-4">
             <div @click="back" class="font-semibold md:cursor-pointer text-gray-300">
                <svg class="w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
@@ -27,12 +27,14 @@
             </div>
                <h1 v-if="messageInfo" class="text-center text-sm font-semibold text-green-500 mb-6">{{messageInfo}}</h1>
             <div class="w-full flex flex-col">
-               <span class="text-gray-300 mb-2">Username</span>
-               <input v-model="username" type="text" required class="py-2 px-4 text-gray-300 mb-2 rounded bg-gray-800 focus:outline-none focus-within:ring-1 focus:ring-gray-700 placeholder-gray-400 placeholder-opacity-70" placeholder="Username" />
-               <input v-model="status" type="text" required class="py-2 px-4 text-gray-300 mb-2 rounded bg-gray-800 focus:outline-none focus-within:ring-1 focus:ring-gray-700 placeholder-gray-400 placeholder-opacity-70" placeholder="Status" />
-               <input v-model="phoneNumber" type="text" required class="py-2 px-4 text-gray-300 mb-2 rounded bg-gray-800 focus:outline-none focus-within:ring-1 focus:ring-gray-700 placeholder-gray-400 placeholder-opacity-70" placeholder="Phone Number" />
-               <span class="text-gray-300 mb-2">About Me</span>
-               <textarea v-model="descriptions" class="py-2 px-4 text-gray-300 mb-2 rounded bg-gray-800 focus:outline-none focus-within:ring-1 focus:ring-gray-700 placeholder-gray-400 placeholder-opacity-70" rows="4" placeholder="Your Descriptions"></textarea>
+               <span class="text-gray-400 text-sm px-4 -mb-2 z-50">Username</span>
+               <input v-model="username" type="text" required class="py-2 px-4 text-gray-300 mb-2 rounded bg-transparent focus:outline-none focus-within:ring-1 focus:ring-gray-700 placeholder- text-sm-70" placeholder="Username" />
+               <span class="text-gray-400 text-sm px-4 -mb-2 z-50">Status</span>
+               <input v-model="status" type="text" required class="py-2 px-4 text-gray-300 mb-2 rounded bg-transparent focus:outline-none focus-within:ring-1 focus:ring-gray-700 placeholder-gray-400 placeholder-opacity-70" placeholder="Status" />
+               <span class="text-gray-400 text-sm px-4 -mb-2 z-50">Handphone</span>
+               <input v-model="phoneNumber" type="text" required class="py-2 px-4 text-gray-300 mb-2 rounded bg-transparent focus:outline-none focus-within:ring-1 focus:ring-gray-700 placeholder-gray-400 placeholder-opacity-70" placeholder="Phone Number" />
+               <span class="text-gray-400 text-sm px-4 -mb-2 z-50">About Me</span>
+               <textarea v-model="descriptions" class="py-2 px-4 text-gray-300 mb-2 rounded bg-transparent focus:outline-none focus-within:ring-1 focus:ring-gray-700 placeholder-gray-400 placeholder-opacity-70" rows="2" placeholder="Your Descriptions"></textarea>
 
                <button type="button" @click="uploadAvatar" class="py-3 px-6 text-lg mt-4 rounded hover:bg-opacity-80 font-semibold text-gray-300 bg-whatsapp-teal-green focus:outline-none">
                   Update Profile
