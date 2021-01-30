@@ -14,7 +14,7 @@
                <input @keyup.enter="onRegister" v-model="username" type="text" required class="py-3 px-6 text-lg text-gray-300 mb-2 rounded bg-gray-800 focus:outline-none focus-within:ring-1 focus:ring-gray-700 placeholder-gray-400 placeholder-opacity-70" placeholder="Username" />
                <input @keyup.enter="onRegister" v-model="email" type="email" required class="py-3 px-6 text-lg text-gray-300 mb-2 rounded bg-gray-800 focus:outline-none focus-within:ring-1 focus:ring-gray-700 placeholder-gray-400 placeholder-opacity-70" placeholder="Email" />
                <input @keyup.enter="onRegister" v-model="password" type="password" required class="py-3 px-6 text-lg text-gray-300 mb-2 rounded bg-gray-800 focus:outline-none focus-within:ring-1 focus:ring-gray-700 placeholder-gray-400 placeholder-opacity-70" placeholder="Password" />
-               <input @keyup.enter="onRegister" v-model="confirmPassword" type="password" required class="hidden py-3 px-6 text-lg text-gray-300 mb-6 rounded bg-gray-800 focus:outline-none focus-within:ring-1 focus:ring-gray-700 placeholder-gray-400 placeholder-opacity-70" placeholder="Confirm Password" />
+               <input @keyup.enter="onRegister" v-model="confirmPassword" type="password" required class="py-3 px-6 text-lg text-gray-300 mb-6 rounded bg-gray-800 focus:outline-none focus-within:ring-1 focus:ring-gray-700 placeholder-gray-400 placeholder-opacity-70" placeholder="Confirm Password" />
                <button @click="onRegister" type="button" class="py-4 text-lg px-6 rounded hover:bg-opacity-80 font-semibold text-gray-300 bg-whatsapp-teal-green focus:outline-none">
                   Sign Up
                </button>
@@ -60,10 +60,12 @@ export default {
          return (false)
       }
 
-      const validatePassword = (password) => {
-         // 01: TODO added validate with Confirm Password
+      const validatePassword = (password, confirmPassword) => {
+         let validatePassword1 = password.trim() === "" || password.length < 8;
+         let validatePassword2 = confirmPassword.trim() === "" || confirmPassword.length < 8;
+         let finalValidate = password !== confirmPassword;
 
-         if (password.trim() === "" || password.length < 8) {
+         if (validatePassword1 || validatePassword2 || finalValidate) {
             return (true)
          }
          return (false)
@@ -80,8 +82,9 @@ export default {
          let usernameValidate = state.username === null || state.username === '';
          let emailValidate = state.email === null || state.email === '';
          let passwordValidate = state.password === null || state.password === '';
+         let passwordConfirmValidate = state.confirmPassword === null || state.confirmPassword === '';
          
-         return usernameValidate || emailValidate || passwordValidate;
+         return usernameValidate || emailValidate || passwordValidate || passwordConfirmValidate;
       })
 
 
@@ -96,8 +99,8 @@ export default {
             errorMessageHandler('Invalid format email.');
             return;
          }
-         if(validatePassword(state.password)){
-            errorMessageHandler('Password to short, min 8 caracter.');
+         if(validatePassword(state.password, state.confirmPassword)){
+            errorMessageHandler("Password to short, min 8 caracter, or password don't Match");
             return;
          }
 
@@ -126,6 +129,7 @@ export default {
                   state.username = '';
                   state.email = '';
                   state.password = '';
+                  state.confirmPassword = '';
 
                   state.isProcess = false;
 
