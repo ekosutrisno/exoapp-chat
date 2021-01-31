@@ -36,7 +36,7 @@
                :key="nav.id"
                :class="{'border-b-2': currentTab === nav.text}" 
                @click="switchToggle(nav.id, nav.text)"
-               class="py-2 text-lg hover:text-gray-400 w-24 font-semibold border-whatsapp-teal-green focus:outline-none">
+               class="py-2 text-lg w-24 font-semibold border-whatsapp-teal-green focus:outline-none">
                 <div> {{nav.text}} </div>
             </button>
          </div>
@@ -154,7 +154,6 @@ export default {
                   .get().then(querySnapshot => {
 
                      querySnapshot.forEach(doc => {
-                        if(doc.data().user_id !== state.currentUserId){
                            state.friends.push({
                               key: index,
                               documentKey: doc.id,
@@ -163,7 +162,6 @@ export default {
                               photo_url: doc.data().photo_url,
                               descriptions: doc.data().descriptions,
                            })
-                        }
                      })
                   })
             })

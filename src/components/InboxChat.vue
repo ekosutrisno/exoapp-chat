@@ -31,7 +31,7 @@ export default {
    props:{
       currentPeerUser: Object
    },
-   setup (props) {
+   setup () {
       const state = reactive({
          inboxChat:{
             imageAvatar: localStorage.getItem('photoUrl'),
@@ -39,8 +39,7 @@ export default {
             time: moment(new Date()).format('LT'),
             entry: 3,
             message:'Test Message'
-         },
-         currentPeerUser : props.currentPeerUser
+         }
       })
 
       return {
