@@ -2,7 +2,7 @@
    <div v-if="isProcess" class="absolute flex items-center justify-center inset-0 z-50 bg-opacity-50 bg-gray-900">
       <Spinner/>
    </div>
-   <div class="h-full min-h-screen absolute inset-0 w-full max-w-sm mx-auto flex flex-col justify-center items-center">
+   <div class="h-full min-h-screen absolute inset-0 w-full max-w-screen-sm mx-auto flex flex-col justify-center items-center">
          <div class="h-full w-full p-4">
             <div class="mx-auto">
                <ChatIcon class="mx-auto"/>

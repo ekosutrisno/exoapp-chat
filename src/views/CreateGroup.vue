@@ -2,7 +2,7 @@
  <div v-if="isProcess" class="absolute flex items-center justify-center inset-0 z-50 bg-opacity-50 bg-gray-900">
       <Spinner/>
 </div>
- <div class="min-h-screen w-full absolute inset-0 max-w-sm mx-auto flex flex-col justify-center items-center">
+ <div class="min-h-screen w-full absolute inset-0 max-w-screen-sm mx-auto flex flex-col justify-center items-center">
    <div class="h-full w-full p-4">
       <div @click="back" class="font-semibold md:cursor-pointer text-gray-300">
          <svg class="w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">

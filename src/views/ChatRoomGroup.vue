@@ -2,8 +2,8 @@
   <div v-if="isProcess" class="absolute flex items-center justify-center inset-0 z-50 bg-opacity-50 bg-gray-900">
       <Spinner/>
   </div>
-  <div class="h-screen mx-auto flex flex-col w-full max-w-sm">
-    <div class="flex fixed w-full top-0 max-w-sm items-center justify-between px-4 bg-whatsapp-dark-300 text-gray-300 h-16 flex-shrink-0 shadow-lg z-40">
+  <div class="h-screen mx-auto flex flex-col w-full max-w-screen-sm">
+    <div class="flex fixed w-full top-0 max-w-screen-sm items-center justify-between px-4 bg-whatsapp-dark-300 text-gray-300 h-16 flex-shrink-0 shadow-lg z-40">
       <div class="inline-flex items-center space-x-2">
         <router-link to="/chat-home" class="w-5 hover:text-gray-400 focus:outline-none">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
@@ -69,7 +69,7 @@
         </li>
       </ul>
     </div>
-     <div class="fixed bottom-0 z-40 px-4 w-full max-w-sm bg-whatsapp-dark-300 h-16 flex-shrink-0 flex items-center justify-between space-x-2">
+     <div class="fixed bottom-0 z-40 px-4 w-full max-w-screen-sm bg-whatsapp-dark-300 h-16 flex-shrink-0 flex items-center justify-between space-x-2">
          <div class="relative w-full">
            <input @keyup.enter="sendMessage(inputMessage)" v-model="inputMessage" placeholder="Type a message..." type="text" class="py-3 pl-10 pr-16 w-full text-gray-200 focus:outline-none rounded-full bg-gray-700 bg-opacity-50">
             <button @click="scrollToBottom" class="hover:text-gray-200 text-gray-400 text-opacity-80">
