@@ -2,8 +2,8 @@
   <div v-if="isProcess" class="absolute flex items-center justify-center inset-0 z-50 bg-opacity-50 bg-gray-900">
       <Spinner/>
   </div>
-  <div class="h-screen mx-auto flex flex-col w-full max-w-sm">
-    <div class="flex fixed w-full top-0 max-w-sm items-center justify-between px-4 bg-whatsapp-dark-300 text-gray-300 h-16 flex-shrink-0 shadow-lg z-40">
+  <div class="h-screen mx-auto flex flex-col w-full max-w-screen-sm">
+    <div class="flex fixed w-full top-0 max-w-screen-sm items-center justify-between px-4 bg-whatsapp-dark-300 text-gray-300 h-16 flex-shrink-0 shadow-lg z-40">
       <div class="inline-flex items-center space-x-2">
         <router-link to="/chat-home" class="w-5 hover:text-gray-400 focus:outline-none">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
@@ -53,9 +53,9 @@
         <li class="pb-10"> 
           <ul v-for="(message, idx) in listMessages" :key="idx" class="space-y-1 text-center text-gray-300">
             <div class="my-4">
-              <span v-if="message.date == today" class="py-1 px-2 uppercase text-xs mx-auto bg-whatsapp-dark-100 rounded-md shadow-lg text-gray-400">TODAY</span>
-              <span v-else-if="message.date == yesterday" class="py-1 px-2 uppercase text-xs mx-auto bg-whatsapp-dark-100 rounded-md shadow-lg text-gray-400">YESTERDAY</span>
-              <span v-else class="py-1 px-2 uppercase text-xs mx-auto bg-whatsapp-dark-100 rounded-md shadow-lg text-gray-400">{{formatDate(message.date)}}</span>
+              <span v-if="message.date == today" class="py-1 px-2 uppercase text-xs mx-auto bg-whatsapp-dark-200 rounded shadow-lg text-gray-400 leading-none">TODAY</span>
+              <span v-else-if="message.date == yesterday" class="py-1 px-2 uppercase text-xs mx-auto bg-whatsapp-dark-200 rounded shadow-lg text-gray-400 leading-none">YESTERDAY</span>
+              <span v-else class="py-1 px-2 uppercase text-xs mx-auto bg-whatsapp-dark-200 rounded shadow-lg text-gray-400 leading-none">{{formatDate(message.date)}}</span>
             </div>
             <li v-for="chat in message.chats"  :key="chat.user_id" class="flex flex-col" :class="{'items-end': chat.idFrom === currentUserId , 'items-start': chat.idFrom !== currentUserId}">
               <Chat 
@@ -69,7 +69,7 @@
         </li>
       </ul>
     </div>
-     <div class="fixed bottom-0 z-40 px-4 w-full max-w-sm bg-whatsapp-dark-300 h-16 flex-shrink-0 flex items-center justify-between space-x-2">
+     <div class="fixed bottom-0 z-40 px-4 w-full max-w-screen-sm bg-whatsapp-dark-300 h-16 flex-shrink-0 flex items-center justify-between space-x-2">
          <div class="relative w-full">
            <input @keyup.enter="sendMessage(inputMessage)" v-model="inputMessage" placeholder="Type a message..." type="text" class="py-3 pl-10 pr-16 w-full text-gray-200 focus:outline-none rounded-full bg-gray-700 bg-opacity-50">
             <button @click="scrollToBottom" class="hover:text-gray-200 text-gray-400 text-opacity-80">

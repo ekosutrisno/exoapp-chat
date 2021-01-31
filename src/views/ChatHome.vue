@@ -2,8 +2,8 @@
    <div v-if="isProcess" class="absolute flex items-center justify-center inset-0 z-50 bg-opacity-50 bg-gray-900">
       <Spinner/>
    </div>
-   <div class="bg-whatsapp-dark-300 h-screen w-full max-w-sm mx-auto flex flex-col">
-      <div class="h-28 fixed top-0 w-full max-w-sm flex-shrink-0 shadow-lg z-50 p-4 bg-gray-800 text-gray-300">
+   <div class="bg-whatsapp-dark-300 h-screen w-full max-w-screen-sm mx-auto flex flex-col">
+      <div class="h-28 fixed top-0 w-full max-w-screen-sm flex-shrink-0 shadow-lg z-50 p-4 bg-gray-800 text-gray-300">
          <div class="flex items-start justify-between">
             <div class="inline-flex items-center space-x-2">
             <button class="w-5 font-medium text-2xl hover:text-gray-400 focus:outline-none">
@@ -36,7 +36,7 @@
                :key="nav.id"
                :class="{'border-b-2': currentTab === nav.text}" 
                @click="switchToggle(nav.id, nav.text)"
-               class="py-2 text-lg hover:text-gray-400 w-24 font-semibold border-whatsapp-teal-green focus:outline-none">
+               class="py-2 text-lg w-24 font-semibold border-whatsapp-teal-green focus:outline-none">
                 <div> {{nav.text}} </div>
             </button>
          </div>
@@ -154,7 +154,6 @@ export default {
                   .get().then(querySnapshot => {
 
                      querySnapshot.forEach(doc => {
-                        if(doc.data().user_id !== state.currentUserId){
                            state.friends.push({
                               key: index,
                               documentKey: doc.id,
@@ -163,7 +162,6 @@ export default {
                               photo_url: doc.data().photo_url,
                               descriptions: doc.data().descriptions,
                            })
-                        }
                      })
                   })
             })

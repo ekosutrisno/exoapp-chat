@@ -31,14 +31,13 @@ export default {
    props:{
       currentGroup: Object
    },
-   setup (props) {
+   setup () {
       const state = reactive({
          inboxChat:{
             time: moment(new Date()).format('LT'),
             entry: 3,
             message:'Test Message'
-         },
-         currentGroup : props.currentGroup
+         }
       })
 
       return {
