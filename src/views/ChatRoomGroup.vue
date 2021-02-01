@@ -128,6 +128,7 @@ export default {
       listMessages: [],
       groupChatId: null,
       isProcess: false,
+      initialState: false,
       today: computed(()=> moment().format('YYYY-MM-DD').toString()),
       yesterday: computed(()=> moment().subtract(1, 'days').format('YYYY-MM-DD')),
     })
@@ -163,6 +164,8 @@ export default {
         .ref(`${state.groupChatId}/${moment().format('YYYY-MM-DD').toString()}`)
         .push(message);
 
+        state.initialState = true;
+
         // Reset TextMessage
         inputMessage.value = "";
     }
@@ -180,7 +183,13 @@ export default {
       })
 
     // Scrolldwon when chatroom updated
-    onUpdated(()=> scrollToBottom())
+    onUpdated(()=> {
+      if(state.initialState){
+        scrollToBottom();
+      }else{
+        toBottom();
+      }
+    });
 
    const getDataMessages = async () => {
       state.isProcess = true;
@@ -247,6 +256,10 @@ export default {
 
     const scrollToBottom = () => {
       bottom.value.scrollIntoView({behavior: 'smooth'})
+    }
+
+    const toBottom = () => {
+      bottom.value.scrollIntoView();
     }
 
     return{

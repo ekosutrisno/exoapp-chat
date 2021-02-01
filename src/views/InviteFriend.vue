@@ -9,8 +9,8 @@
       </svg>
    </div>
    <div class="h-full w-full px-4 pb-4 pt-20">
-      <div class="mx-auto mb-3 w-28 h-28 ring-2 ring-whatsapp-teal-green rounded-full">
-         <img class="w-full h-full object-cover " src="https://avatars0.githubusercontent.com/u/51039205?s=460&u=cb1d242b6a9b13a3b6383e46b5410fafe471b63d&v=4" alt="exoapp-logo">
+      <div class="mx-auto">
+         <FriendIcon class="mx-auto"/>
       </div>
       <h1 class="text-center text-lg font-semibold text-gray-300 mb-6">INVITE FRIEND</h1>
       <h1 v-if="errorMessage" class="text-center text-sm font-semibold text-green-500 mb-6">{{errorMessage}}</h1>
@@ -33,8 +33,9 @@ import db from '../firebase';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
 import Spinner from '../components/Spinner';
+import FriendIcon from '../components/svg/FriendIcon.vue';
 export default {
-   components: { Spinner },
+   components: { Spinner, FriendIcon },
    setup(){
       const store = useStore();
       const router = useRouter();

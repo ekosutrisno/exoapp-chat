@@ -6,10 +6,10 @@
    <div class="flex-1 h-full leading-none flex justify-center flex-col pr-2 border-b border-gray-700 overflow-x-hidden">
       <div class="flex items-center justify-between">
          <span class="font-semibold text-lg text-gray-50"> {{ currentPeerUser.username }} </span>
-         <button v-if="currentUserId === currentPeerUser.user_id" class="text-xs p-1 px-2 inline-flex items-center focus:outline-none bg-whatsapp-teal-green text-gray-200 rounded-md hover:bg-opacity-70">
-            <span>Admin</span>
+         <button v-if="currentUserId === currentPeerUser.user_id" class="text-sm py-2 px-3 inline-flex items-center focus:outline-none bg-green-500 text-gray-200 rounded-md">
+            <span>You Are Admin</span>
          </button>
-         <button v-else @click="$emit('remove-member')" class="text-xs p-1 px-2 inline-flex items-center focus:outline-none bg-whatsapp-teal-green text-gray-200 rounded-md hover:bg-opacity-70">
+         <button v-else @click="$emit('remove-member')" class="text-sm py-2 px-3 inline-flex items-center focus:outline-none bg-whatsapp-teal-green text-gray-200 rounded-md hover:bg-opacity-70">
             <span>Remove</span>
          </button>
       </div>

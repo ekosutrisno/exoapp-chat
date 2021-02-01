@@ -37,7 +37,8 @@
         </div>
       </div>
     </div>
-    <div class="flex-1 px-4 pt-20 overflow-y-auto md:on-scrollbar bg-transparent">
+    <div class="flex-1 px-4 overflow-y-auto md:on-scrollbar bg-transparent">
+      <div class="h-20"></div>
       <ul class="space-y-1 text-gray-300 relative">
         <li class="text-center mb-2">
           <span class="py-1 px-2 text-xs bg-whatsapp-dark-200 rounded-md shadow-lg text-gray-400">Let's say hay with {{currentPeerUsername ? currentPeerUsername : 'Your Friend' }}</span>
@@ -99,7 +100,7 @@
 </template>
 
 <script>
-import { reactive, toRefs, onMounted, ref, computed, onBeforeMount, onUpdated } from 'vue'
+import { reactive, toRefs, onMounted, ref, computed, onBeforeMount, onUpdated} from 'vue'
 import moment from 'moment'
 import Chat from '../components/Chat.vue'
 import db from '../firebase'
@@ -129,6 +130,7 @@ export default {
       listMessages: [],
       groupChatId: null,
       isProcess: false,
+      initialState: false,
       today: computed(()=> moment().format('YYYY-MM-DD').toString()),
       yesterday: computed(()=> moment().subtract(1, 'days').format('YYYY-MM-DD')),
     })
@@ -167,8 +169,11 @@ export default {
         .ref(`${state.groupChatId}/${moment().format('YYYY-MM-DD').toString()}`)
         .push(message);
 
+        state.initialState = true;
+
         // Reset TextMessage
         inputMessage.value = ""
+
     }
 
     // Lifecicle Hook
@@ -184,7 +189,13 @@ export default {
       })
 
     // Scrolldwon when chatroom updated
-    onUpdated(()=> scrollToBottom())
+    onUpdated(()=> {
+      if(state.initialState){
+        scrollToBottom();
+      }else{
+        toBottom();
+      }
+    });
 
    const getDataMessages = async () => {
       state.isProcess = true;
@@ -259,6 +270,10 @@ export default {
 
     const scrollToBottom = () => {
       bottom.value.scrollIntoView({behavior: 'smooth'})
+    }
+
+    const toBottom = () => {
+      bottom.value.scrollIntoView();
     }
 
     return{
