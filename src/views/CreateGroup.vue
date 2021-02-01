@@ -9,13 +9,13 @@
       </svg>
    </div>
    <div class="h-full px-4 pb-4 pt-20">
-      <div class="mx-auto mb-3 w-28 h-28 ring-2 ring-whatsapp-teal-green rounded-full">
-         <img class="w-full h-full object-cover " src="https://avatars0.githubusercontent.com/u/51039205?s=460&u=cb1d242b6a9b13a3b6383e46b5410fafe471b63d&v=4" alt="exoapp-logo">
+      <div class="mx-auto">
+         <GroupIcon class="mx-auto"/>
       </div>
       <h1 class="text-center text-lg font-semibold text-gray-300 mb-6">CREATE GROUP</h1>
-      <h1 v-if="errorMessage" class="text-center text-sm font-semibold text-green-500 mb-6">{{errorMessage}}</h1>
+      <h1 v-if="infoMessage" class="text-center text-sm font-semibold text-green-500 mb-6">{{infoMessage}}</h1>
 
-      <div class="w-full flex flex-col">
+      <div class="w-full flex flex-col pb-4">
          <input @keyup.enter="onCreateGroup" v-model="groupName" type="email" required class="py-3 px-6 text-lg text-gray-300 mb-6 rounded bg-gray-800 focus:outline-none focus-within:ring-1 focus:ring-gray-700 placeholder-gray-400 placeholder-opacity-70" placeholder="Group Name" />
          <textarea v-model="groupDescriptions" class="py-2 px-4 text-gray-300 mb-2 rounded bg-gray-800 focus:outline-none focus-within:ring-1 focus:ring-gray-700 placeholder-gray-400 placeholder-opacity-70" rows="4" placeholder="Group Descriptions"></textarea>
          <button @click="onCreateGroup" type="button" class="py-3 px-6 text-lg rounded hover:bg-opacity-80 font-semibold text-gray-300 bg-whatsapp-teal-green focus:outline-none">
@@ -25,7 +25,7 @@
          
          <!-- List Group Member -->
          <div class="mt-4 text-gray-300">
-            <h1 class="my-2 font-semibold w-16 text-xs bg-whatsapp-teal-green-dark text-left px-2 rounded-sm">Members</h1>
+            <button class="my-2 py-0.5 focus:outline-none font-semibold text-xs bg-green-600 text-left px-2 rounded-full">Members</button>
             <ul >
                <li v-for="(user, i) in members" :key="i">
                   <ListGroupMember @remove-member="removeGroupMember(user, i)"  :currentPeerUser="user"/>
@@ -37,20 +37,19 @@
          </div>
          <!-- List Friends -->
          <div class="mt-4 text-gray-300">
-            <h1 class="my-2 font-semibold w-24 text-xs bg-whatsapp-teal-green-dark text-left px-2 rounded-sm">Your Friends</h1>
+            <button class="my-2 py-0.5 focus:outline-none font-semibold text-xs bg-green-600 text-left px-2 rounded-full">Your Friends</button>
             <ul >
                <li v-for="(user, i) in friends" :key="i">
                   <ListGroupFriend @add-member="addGroupMember(user, i)"  :currentPeerUser="user"/>
                </li>
                <li v-if="friends.length === 0" class="text-gray-300 text-center py-4">
-                  <h1 class="mb-6">You No have a Friend!</h1>
+                  <h1 class="mb-6">You No have more Friends!</h1>
                   <router-link to="/invite-friend" class="py-3 px-6 text-lg rounded hover:bg-opacity-80 font-semibold text-gray-300 bg-whatsapp-teal-green focus:outline-none">
                      Invite Friend
                   </router-link>
                </li>
             </ul>
          </div>
-
          <p class="text-center mt-6 text-sm text-gray-400">From Eko Sutrisno &copy;{{new Date().getFullYear()}} All right reserved</p>
       </div>
    </div>
@@ -65,12 +64,14 @@ import db from '../firebase';
 import Spinner from '../components/Spinner.vue';
 import ListGroupMember from '../components/ListGroupMember.vue';
 import ListGroupFriend from '../components/ListGroupFriend.vue';
+import GroupIcon from '../components/svg/GroupIcon.vue';
 
 export default {
    components: { 
       Spinner,
       ListGroupMember,
-      ListGroupFriend
+      ListGroupFriend,
+      GroupIcon
    },
    setup(){
       const store = useStore();
@@ -79,7 +80,7 @@ export default {
       const state = reactive({
          groupName: '',
          groupDescriptions: '',
-         errorMessage: '',
+         infoMessage: '',
          isProcess: false,
          user_id: computed(() => store.getters.getUserId),
          currentUsername: localStorage.getItem('username'),
@@ -105,12 +106,8 @@ export default {
          }
 
          let groupId = state.groupName.toUpperCase().replace(" ","") + new Date().getTime();
-         db.firestore()
-            .collection('users')
-            .doc(state.user_id)
-            .collection('groups')
-            .doc(groupId)
-            .set({
+         
+         let groupData = {
                created_date: new Date().toDateString(),
                group_name: state.groupName,
                group_description: state.groupDescriptions,
@@ -118,26 +115,39 @@ export default {
                group_avatar: '',
                group_id: groupId,
                active: true
-            })
+            };
+
+         db.firestore()
+            .collection('groups')
+            .doc(groupId)
+            .set(groupData)
             .then(() =>{
                state.members.forEach( member => {
                   db.firestore()
-                  .collection('users')
-                  .doc(state.user_id)
                   .collection('groups')
                   .doc(groupId)
                   .collection('members')
-                  .doc(member.id)
+                  .doc(member.user_id)
                   .set({
-                     user_id: member.id,
-                     email: member.email
+                     user_id: member.user_id,
+                     email: member.email,
+                     is_admin: member.user_id == state.user_id ? true : false
                   })
                   .then(() =>{
-                     state.errorMessage ='Group Added!';
-                  }).catch(e =>{
-                     console.log(e)
-                  })
-               } )
+                     db.firestore()
+                     .collection('users')
+                     .doc(member.user_id)
+                     .collection('groups')
+                     .doc(groupId)
+                     .set({
+                        group_name: groupData.group_name,
+                        group_id: groupData.group_id
+                     })
+                     .then(() =>{
+                        state.infoMessage ='Group Added!';
+                     }).catch(e => console.log(e));
+                  }).catch(e => console.log(e));
+               })
                
             }).catch(e =>{
                console.log(e)
@@ -170,7 +180,7 @@ export default {
                               key: index,
                               documentKey: doc.id,
                               email: doc.data().email,
-                              id: doc.data().user_id,
+                              user_id: doc.data().user_id,
                               username: doc.data().username,
                               photo_url: doc.data().photo_url,
                               descriptions: doc.data().descriptions,

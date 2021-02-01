@@ -1,4 +1,9 @@
 <template>
+   <div class="text-xs mb-1 text-yellow-400" v-if="isOwner == false && chat.isGroup == true"> 
+      <span>
+         {{userNameFormat(chat.username)}}
+      </span>
+   </div>
    <div class="h-auto group max-w-xs text-sm rounded-lg relative shadow-lg text-gray-300" :class="{
       'rounded-bl-none ':idx == 0 && isOwner == false,
       'bg-whatsapp-dark-200': isOwner == false,
@@ -16,9 +21,9 @@
             'arrow-down-green' : isOwner,
          }"
       ></div>
+     
       <div class="p-2">
-         <span class="text-xs -mb-1.5 text-yellow-400 text-left" v-if="isOwner == false && chat.isGroup == true"> {{chat.username}} </span>
-         <p class="w-full text-left"> {{chat.content}} </p>
+         <p class="w-full text-left">{{chat.content}} </p>
          <div class="inline-flex items-center float-right pb-1">
                <span class="text-xs text-gray-300 text-opacity-75">  {{chat.sendTime}} </span>
                <span v-if="isOwner" class="ml-0.5 text-whatsapp-blue">
