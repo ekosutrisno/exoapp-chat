@@ -10,7 +10,7 @@
          </div>
          <div class="h-full w-full px-4 pb-4 pt-20">
             <div class="mx-auto flex w-40 h-40 max-w-screen-sm justify-center relative mb-6 cursor-pointer">
-               <div class="absolute bottom-2 right-0 z-30">
+               <div v-if="is_admin" class="absolute bottom-2 right-0 z-30">
                   <label for="file-upload" class="relative cursor-pointer rounded-md font-medium bg hover:bg-opacity-50 text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500">
                      <div class="rounded-full bg-whatsapp-teal-green bg-opacity-80 text-gray-200 p-3 hover:bg-opacity-100 transition">
                         <span>
@@ -64,16 +64,26 @@
                   </div>
                </div>
 
-               <button type="button" @click="uploadAvatar" class="py-3 px-6 text-lg mt-4 rounded hover:bg-opacity-80 font-semibold text-gray-300 bg-whatsapp-teal-green focus:outline-none">
+               <button v-if="is_admin" type="button" @click="uploadAvatar" class="py-3 px-6 text-lg mt-4 rounded hover:bg-opacity-80 font-semibold text-gray-300 bg-whatsapp-teal-green focus:outline-none">
                   Update Group
                </button>
 
                 <!-- List Group Member -->
                <div class="mt-4 text-gray-300">
                   <button class="my-2 py-0.5 focus:outline-none font-semibold text-xs bg-green-600 text-left px-2 rounded-full">Members</button>
-                  <ul >
+                  <!-- As Admin -->
+                  <ul v-if="is_admin">
                      <li v-for="(user, i) in members" :key="i">
-                        <ListGroupMember @remove-member="removeGroupMember(user, i)"  :currentPeerUser="user"/>
+                        <ListGroupMemberAdmin @remove-member="removeGroupMember(user, i)"  :currentPeerUser="user"/>
+                     </li>
+                     <li v-if="members.length === 0" class="text-gray-300 text-center py-4">
+                        <h1 class="p-2 bg-whatsapp-dark-200 rounded text-sm">This group No have a Member!, search bellow to add a member from your contact!</h1>
+                     </li>
+                  </ul>
+                  <!-- As Member -->
+                  <ul v-else >
+                     <li v-for="(user, i) in members" :key="i">
+                        <ListGroupMemberUser @remove-member="removeGroupMember(user, i)"  :currentPeerUser="user"/>
                      </li>
                      <li v-if="members.length === 0" class="text-gray-300 text-center py-4">
                         <h1 class="p-2 bg-whatsapp-dark-200 rounded text-sm">This group No have a Member!, search bellow to add a member from your contact!</h1>
@@ -107,15 +117,16 @@
 </template>
 
 <script>
-import { onBeforeMount, onMounted, reactive, toRefs } from 'vue'
+import { computed, onBeforeMount, onMounted, reactive, toRefs } from 'vue'
 import { useRouter } from 'vue-router'
 import db from '../firebase'
 import Spinner from '../components/Spinner.vue'
-import ListGroupMember from '../components/ListGroupMember.vue'
+import ListGroupMemberUser from '../components/ListGroupMemberUser.vue'
+import ListGroupMemberAdmin from '../components/ListGroupMemberAdmin.vue'
 import ListGroupFriend from '../components/ListGroupFriend.vue'
 
 export default {
-   components:{ Spinner, ListGroupMember, ListGroupFriend },
+   components:{ Spinner, ListGroupMemberUser, ListGroupFriend, ListGroupMemberAdmin },
    setup () {
       const router = useRouter();
 
@@ -133,6 +144,10 @@ export default {
          messageInfo: '',
          members: [],
          friends: []
+      })
+
+      const is_admin = computed(()=>{
+         return state.group_admin_id === state.user_id;
       })
 
       const changeAvatar = (event) => {
@@ -160,16 +175,12 @@ export default {
             .child(state.group_id)
             .put(state.newFoto)
 
-            upload.on(
-                  'state_changed', 
-                  null, 
-                  err => console.log(err),
+            upload.on('state_changed',null, err => console.log(err),
                   () => {
                      upload.snapshot.ref.getDownloadURL().then(url => {
                         updateUserInfo(true, url);
                      })
-                  }
-               )
+                  })
          } else {
              updateUserInfo(false, null);
          }
@@ -255,7 +266,7 @@ export default {
                   group_id: state.group_id
                })
                .then(() =>{
-                  state.infoMessage ='Group Added!';
+                  state.infoMessage ='New Group Member Added!';
                }).catch(e => console.log(e));
             }).catch(e => console.log(e));
          })
@@ -345,6 +356,7 @@ export default {
                   .get().then(querySnapshot => {
                      querySnapshot.forEach(doc => {
 
+                        if(doc.data().user_id !== state.user_id){
                            state.friends.push({
                               key: index,
                               documentKey: doc.id,
@@ -354,7 +366,9 @@ export default {
                               photo_url: doc.data().photo_url,
                               descriptions: doc.data().descriptions,
                            })
-                        })
+                        }
+                           
+                     })
                   })
             })
          }
@@ -381,7 +395,7 @@ export default {
 
       const stopSpinner = () => {
          state.isProcess = false;
-         state.messageInfo = 'Profile Updated.';
+         state.messageInfo = 'Group has been Updated.';
          setTimeout(() => {
             state.isProcess = false;
             state.messageInfo = '';
@@ -396,6 +410,7 @@ export default {
 
       return {
          ...toRefs(state),
+         is_admin,
          changeAvatar,
          uploadAvatar,
          removeGroupMember,
