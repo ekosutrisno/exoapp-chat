@@ -13,7 +13,7 @@
          <GroupIcon class="mx-auto"/>
       </div>
       <h1 class="text-center text-lg font-semibold text-gray-300 mb-6">CREATE GROUP</h1>
-      <h1 v-if="errorMessage" class="text-center text-sm font-semibold text-green-500 mb-6">{{errorMessage}}</h1>
+      <h1 v-if="infoMessage" class="text-center text-sm font-semibold text-green-500 mb-6">{{infoMessage}}</h1>
 
       <div class="w-full flex flex-col pb-4">
          <input @keyup.enter="onCreateGroup" v-model="groupName" type="email" required class="py-3 px-6 text-lg text-gray-300 mb-6 rounded bg-gray-800 focus:outline-none focus-within:ring-1 focus:ring-gray-700 placeholder-gray-400 placeholder-opacity-70" placeholder="Group Name" />
@@ -80,7 +80,7 @@ export default {
       const state = reactive({
          groupName: '',
          groupDescriptions: '',
-         errorMessage: '',
+         infoMessage: '',
          isProcess: false,
          user_id: computed(() => store.getters.getUserId),
          currentUsername: localStorage.getItem('username'),
@@ -118,23 +118,20 @@ export default {
             };
 
          db.firestore()
-            .collection('users')
-            .doc(state.user_id)
             .collection('groups')
             .doc(groupId)
             .set(groupData)
             .then(() =>{
                state.members.forEach( member => {
                   db.firestore()
-                  .collection('users')
-                  .doc(state.user_id)
                   .collection('groups')
                   .doc(groupId)
                   .collection('members')
-                  .doc(member.id)
+                  .doc(member.user_id)
                   .set({
                      user_id: member.user_id,
-                     email: member.email
+                     email: member.email,
+                     is_admin: member.user_id == state.user_id ? true : false
                   })
                   .then(() =>{
                      db.firestore()
@@ -142,9 +139,12 @@ export default {
                      .doc(member.user_id)
                      .collection('groups')
                      .doc(groupId)
-                     .set(groupData)
+                     .set({
+                        group_name: groupData.group_name,
+                        group_id: groupData.group_id
+                     })
                      .then(() =>{
-                        state.errorMessage ='Group Added!';
+                        state.infoMessage ='Group Added!';
                      }).catch(e => console.log(e));
                   }).catch(e => console.log(e));
                })

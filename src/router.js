@@ -46,6 +46,11 @@ const routes = [
       name: "GroupChatRoom",
       component: () => import('./views/ChatRoomGroup.vue'),
    },
+   {
+      path: "/group-description",
+      name: "GroupDescription",
+      component: () => import('./views/GroupDescription.vue'),
+   },
 ];
 
 const router = createRouter({

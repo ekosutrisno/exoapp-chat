@@ -178,19 +178,26 @@ export default {
          if(data.docs.length > 0){
             let listGroup = [];
             listGroup = [...data.docs]
-            //Push to Local State
+            
             listGroup.forEach(g =>{
-               state.groups.push({
-                  group_id: g.data().group_id,
-                  group_name: g.data().group_name,
-                  group_avatar: g.data().group_avatar,
-                  created_date: g.data().created_date,
-                  admin_create_id: g.data().admin_create_id,
-                  group_description: g.data().group_description
-               })
+                db.firestore().collection('groups')
+                .where('group_id', '==', g.data().group_id)
+                .get()
+                .then( querySnapshot => {
+                   
+                   querySnapshot.forEach( group => {
+                      state.groups.push({
+                         group_id: group.data().group_id,
+                         group_name: group.data().group_name,
+                         group_avatar: group.data().group_avatar,
+                         created_date: group.data().created_date,
+                         admin_create_id: group.data().admin_create_id,
+                         group_description: group.data().group_description
+                      })
+                   })
+                })
             })
          }
-
       }
 
       const letChat = ( peerUser ) => {

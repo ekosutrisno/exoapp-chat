@@ -10,13 +10,13 @@
             <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
           </svg>
         </router-link>
-        <button class="inline-flex focus:outline-none items-center space-x-2">
+        <router-link to="/group-description" class="inline-flex focus:outline-none items-center space-x-2">
           <img class="w-9 h-9 object-cover rounded-full" :src="currentPeerGroupAvatar ? currentPeerGroupAvatar : 'https://cdn4.iconfinder.com/data/icons/avatars-xmas-giveaway/128/avocado_scream_avatar_food-128.png'" alt="profile">
           <div class="text-left">
             <p class="block text-lg">{{ currentPeerGroupname }}</p>
             <p class="block text-sm -mt-1">online</p>
           </div>
-        </button>
+        </router-link>
       </div>
       <div class="inline-flex items-center space-x-4">
         <button class="hover:text-gray-400 focus:outline-none">
@@ -164,7 +164,7 @@ export default {
         .ref(`${state.groupChatId}/${moment().format('YYYY-MM-DD').toString()}`)
         .push(message);
 
-        state.initialState = true;
+        
 
         // Reset TextMessage
         inputMessage.value = "";

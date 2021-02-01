@@ -6,10 +6,10 @@
    <div class="flex-1 h-full leading-none flex justify-center flex-col pr-2 border-b border-gray-700 overflow-x-hidden">
       <div class="flex items-center justify-between">
          <span class="font-semibold text-lg text-gray-50"> {{ currentPeerUser.username }} </span>
-         <button v-if="currentUserId === currentPeerUser.user_id" class="text-sm py-2 px-3 inline-flex items-center focus:outline-none bg-green-500 text-gray-200 rounded-md">
-            <span>You Are Admin</span>
+         <button v-if="currentPeerUser.is_admin" class="text-sm py-2 px-3 inline-flex items-center focus:outline-none bg-green-500 text-gray-200 rounded-md">
+            <span>Group Admin</span>
          </button>
-         <button v-else @click="$emit('remove-member')" class="text-sm py-2 px-3 inline-flex items-center focus:outline-none bg-whatsapp-teal-green text-gray-200 rounded-md hover:bg-opacity-70">
+         <button v-else @click="$emit('remove-member')" :class="{'hidden': !can_remove}" class="text-sm py-2 px-3 inline-flex items-center focus:outline-none bg-whatsapp-teal-green text-gray-200 rounded-md hover:bg-opacity-70">
             <span>Remove</span>
          </button>
       </div>
@@ -24,15 +24,20 @@ export default {
    props:{
       currentPeerUser: Object
    },
-   setup () {
+   setup ( props) {
       const store = useStore();
 
       const state = reactive({
-         currentUserId: computed(() => store.getters.getUserId)
+         currentUserId: computed(() => store.getters.getUserId),
+      })
+
+      const can_remove = computed(() =>{
+        return props.currentPeerUser.user_id === state.currentUserId && props.currentPeerUser.is_admin
       })
 
       return {
          ...toRefs(state),
+         can_remove
       }
    }
 }
