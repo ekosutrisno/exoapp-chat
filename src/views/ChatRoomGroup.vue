@@ -164,7 +164,7 @@ export default {
         .ref(`${state.groupChatId}/${moment().format('YYYY-MM-DD').toString()}`)
         .push(message);
 
-        
+        state.initialState = true;
 
         // Reset TextMessage
         inputMessage.value = "";

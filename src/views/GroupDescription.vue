@@ -94,7 +94,7 @@
                <div class="mt-4 text-gray-300">
                   <button class="my-2 py-0.5 focus:outline-none font-semibold text-xs bg-green-600 text-left px-2 rounded-full">Your Friends</button>
                   <ul >
-                     <li v-for="(user, i) in friends" :key="i">
+                     <li v-show="user.user_id !== user_id" v-for="(user, i) in friends" :key="i">
                         <ListGroupFriend @add-member="addGroupMember(user, i)"  :currentPeerUser="user"/>
                      </li>
                      <li class="text-gray-300 text-center py-4">
@@ -124,6 +124,7 @@ import Spinner from '../components/Spinner.vue'
 import ListGroupMemberUser from '../components/ListGroupMemberUser.vue'
 import ListGroupMemberAdmin from '../components/ListGroupMemberAdmin.vue'
 import ListGroupFriend from '../components/ListGroupFriend.vue'
+import store from '../store'
 
 export default {
    components:{ Spinner, ListGroupMemberUser, ListGroupFriend, ListGroupMemberAdmin },
@@ -331,7 +332,7 @@ export default {
 
       }
 
-      const getFriendList = async () => {
+      const getFriendList = () => {
 
          state.isProcess = true;
          
@@ -339,39 +340,7 @@ export default {
             state.isProcess = false;
          }, 5000);
 
-         const data = await db.firestore().collection('users')
-            .doc(state.user_id)
-            .collection('friends')
-            .get();
-
-         if (data.docs.length > 0) {
-            let listUser = [];
-            listUser = [...data.docs]
-            state.friends = [];
-            
-            listUser.forEach((item, index) => {
-               
-               db.firestore().collection('users')
-                  .where('user_id', '==', item.id )
-                  .get().then(querySnapshot => {
-                     querySnapshot.forEach(doc => {
-
-                        if(doc.data().user_id !== state.user_id){
-                           state.friends.push({
-                              key: index,
-                              documentKey: doc.id,
-                              email: doc.data().email,
-                              user_id: doc.data().user_id,
-                              username: doc.data().username,
-                              photo_url: doc.data().photo_url,
-                              descriptions: doc.data().descriptions,
-                           })
-                        }
-                           
-                     })
-                  })
-            })
-         }
+         state.friends = computed(()=> store.state.friends.friends);
          state.isProcess = false;
       }
 

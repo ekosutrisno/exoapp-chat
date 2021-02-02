@@ -57,7 +57,7 @@
 </template>
 
 <script>
-import { computed, onMounted, reactive, toRefs } from 'vue'
+import { computed, reactive, toRefs } from 'vue'
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
 import db from '../firebase';
@@ -84,7 +84,7 @@ export default {
          isProcess: false,
          user_id: computed(() => store.getters.getUserId),
          currentUsername: localStorage.getItem('username'),
-         friends: [],
+         friends: computed(() => store.state.friends.friends),
          members: [
             {
                user_id: computed(() => store.getters.getUserId),
@@ -93,10 +93,6 @@ export default {
                photo_url: localStorage.getItem('photo_url')
             }
          ]
-      })
-
-      onMounted(() => {
-         getFriendList();
       })
 
       const onCreateGroup = () => {
@@ -152,44 +148,6 @@ export default {
             }).catch(e =>{
                console.log(e)
          })
-      }
-
-       const getFriendList = async () => {
-
-         state.isProcess = true;
-         
-         setTimeout(() => {
-            state.isProcess = false;
-         }, 5000);
-
-         const data = await db.firestore().collection('users')
-            .doc(state.user_id)
-            .collection('friends')
-            .get();
-
-         if (data.docs.length > 0) {
-            let listUser = [];
-            listUser = [...data.docs]
-            listUser.forEach((item, index) => {
-               
-               db.firestore().collection('users')
-                  .where('user_id', '==', item.id )
-                  .get().then(querySnapshot => {
-                     querySnapshot.forEach(doc => {
-                           state.friends.push({
-                              key: index,
-                              documentKey: doc.id,
-                              email: doc.data().email,
-                              user_id: doc.data().user_id,
-                              username: doc.data().username,
-                              photo_url: doc.data().photo_url,
-                              descriptions: doc.data().descriptions,
-                           })
-                        })
-                  })
-            })
-         }
-         state.isProcess = false;
       }
 
       const addGroupMember = ( user, array_index) => {
