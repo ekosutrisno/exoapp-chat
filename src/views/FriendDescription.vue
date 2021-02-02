@@ -10,7 +10,8 @@
          </div>
          <div class="h-full w-full px-4 pb-4 pt-20">
             <div class="mx-auto flex w-40 h-40 max-w-screen-sm justify-center relative mb-6 cursor-pointer">
-               <img class="w-40 h-40 object-cover ring-whatsapp-teal-green rounded-full" :src="photo_url ? photo_url: 'https://cdn4.iconfinder.com/data/icons/avatars-xmas-giveaway/128/avocado_scream_avatar_food-128.png'" alt="exoapp-logo">
+               <img v-if="photo_url" class="w-40 h-40 object-cover ring-whatsapp-teal-green rounded-full" :src="photo_url" alt="exoapp-logo">
+               <U v-else class="w-40 h-40"/>
             </div>
                <h1 v-if="messageInfo" class="text-center text-sm font-semibold text-green-500 mb-6">{{messageInfo}}</h1>
             <div class="w-full flex flex-col">
@@ -66,9 +67,10 @@ import { onBeforeMount, onMounted, reactive, toRefs } from 'vue'
 import db from '../firebase'
 import { useRoute, useRouter } from 'vue-router'
 import Spinner from '../components/Spinner.vue'
+import U from '../components/svg/U.vue'
 
 export default {
-   components:{ Spinner },
+   components:{ Spinner, U },
    setup () {
       const route = useRoute();
       const router = useRouter();

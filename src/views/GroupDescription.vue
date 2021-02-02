@@ -22,7 +22,8 @@
                      <input id="file-upload" name="file-upload" type="file" class="sr-only" @change="changeAvatar">
                   </label>
                </div>
-               <img class="w-40 h-40 object-cover ring-whatsapp-teal-green rounded-full" :src="group_avatar ? group_avatar: 'https://cdn4.iconfinder.com/data/icons/avatars-xmas-giveaway/128/avocado_scream_avatar_food-128.png'" alt="exoapp-logo">
+               <img v-if="group_avatar" class="w-40 h-40 object-cover ring-whatsapp-teal-green rounded-full" :src="group_avatar" alt="exoapp-logo">
+               <G v-else/>
             </div>
                <h1 v-if="messageInfo" class="text-center text-sm font-semibold text-green-500 mb-6">{{messageInfo}}</h1>
             <div class="w-full flex flex-col">
@@ -95,15 +96,15 @@
                   <button class="my-2 py-0.5 focus:outline-none font-semibold text-xs bg-green-600 text-left px-2 rounded-full">Your Friends</button>
                   <ul >
                      <li v-show="user.user_id !== user_id" v-for="(user, i) in friends" :key="i">
-                        <ListGroupFriend @add-member="addGroupMember(user, i)"  :currentPeerUser="user"/>
+                        <ListGroupFriend @add-member="addGroupMember(user, i)"  :currentPeerUser="user" :groupAdminId="group_admin_id"/>
                      </li>
                      <li class="text-gray-300 text-center py-4">
                         <h1 class="mb-6">You No have more Friends!</h1>
                         <div class="flex items-center justify-center space-x-2">
-                           <button @click="getFriendList" class="py-3 px-6 text-lg rounded hover:bg-opacity-80 font-semibold text-gray-300 bg-whatsapp-teal-green focus:outline-none">
+                           <button @click="getFriendList" class="py-2 px-4 rounded hover:bg-opacity-80 text-gray-300 bg-whatsapp-teal-green focus:outline-none">
                               My Contact
                            </button>
-                           <router-link  to="/invite-friend" class="py-3.5 px-6 text-lg rounded hover:bg-opacity-80 font-semibold text-gray-300 bg-gray-700 focus:outline-none">
+                           <router-link  to="/invite-friend" class="py-2 px-4 rounded hover:bg-opacity-80 text-gray-300 bg-gray-700 focus:outline-none">
                               Invite Friend
                            </router-link>
                         </div>
@@ -125,9 +126,10 @@ import ListGroupMemberUser from '../components/ListGroupMemberUser.vue'
 import ListGroupMemberAdmin from '../components/ListGroupMemberAdmin.vue'
 import ListGroupFriend from '../components/ListGroupFriend.vue'
 import store from '../store'
+import G from '../components/svg/G.vue'
 
 export default {
-   components:{ Spinner, ListGroupMemberUser, ListGroupFriend, ListGroupMemberAdmin },
+   components:{ Spinner, ListGroupMemberUser, ListGroupFriend, ListGroupMemberAdmin, G },
    setup () {
       const router = useRouter();
 
