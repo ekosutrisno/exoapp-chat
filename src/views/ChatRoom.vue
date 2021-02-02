@@ -13,10 +13,11 @@
         <router-link 
           :to="{name:'FriendDescription', params: {user_id : currentPeerUserId}}" 
           class="inline-flex focus:outline-none items-center space-x-2">
-            <img class="w-9 h-9 object-cover rounded-full" :src="currentPeerURL ? currentPeerURL : 'https://cdn4.iconfinder.com/data/icons/avatars-xmas-giveaway/128/avocado_scream_avatar_food-128.png'" alt="profile">
+            <img v-if="currentPeerURL" class="w-9 h-9 object-cover rounded-full" :src="currentPeerURL" alt="profile">
+            <U v-else class="w-9 h-9"/>
             <div class="text-left">
               <p class="block text-lg">{{ currentPeerUsername }}</p>
-              <p class="block text-sm -mt-1">online</p>
+              <p class="block text-sm -mt-1">Personal</p>
             </div>
         </router-link>
       </div>
@@ -109,12 +110,14 @@ import db from '../firebase'
 import { useRouter } from 'vue-router'
 import MenuOption from '../components/MenuOption.vue'
 import Spinner from '../components/Spinner.vue'
+import U from '../components/svg/U.vue'
 
 export default {
   components: {
     Chat,
     MenuOption,
-    Spinner
+    Spinner,
+    U
   },
   setup () {
     const router = useRouter()

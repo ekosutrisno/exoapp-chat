@@ -40,7 +40,7 @@
             <button class="my-2 py-0.5 focus:outline-none font-semibold text-xs bg-green-600 text-left px-2 rounded-full">Your Friends</button>
             <ul >
                <li v-for="(user, i) in friends" :key="i">
-                  <ListGroupFriend @add-member="addGroupMember(user, i)"  :currentPeerUser="user"/>
+                  <ListGroupFriendCreate @add-member="addGroupMember(user, i)"  :currentPeerUser="user"/>
                </li>
                <li v-if="friends.length === 0" class="text-gray-300 text-center py-4">
                   <h1 class="mb-6">You No have more Friends!</h1>
@@ -63,14 +63,14 @@ import { useRouter } from 'vue-router';
 import db from '../firebase';
 import Spinner from '../components/Spinner.vue';
 import ListGroupMember from '../components/ListGroupMember.vue';
-import ListGroupFriend from '../components/ListGroupFriend.vue';
+import ListGroupFriendCreate from '../components/ListGroupFriendCreate.vue';
 import GroupIcon from '../components/svg/GroupIcon.vue';
 
 export default {
    components: { 
       Spinner,
       ListGroupMember,
-      ListGroupFriend,
+      ListGroupFriendCreate,
       GroupIcon
    },
    setup(){
@@ -141,6 +141,7 @@ export default {
                      })
                      .then(() =>{
                         state.infoMessage ='Group Added!';
+                        router.push('/chat-home')
                      }).catch(e => console.log(e));
                   }).catch(e => console.log(e));
                })

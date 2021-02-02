@@ -36,7 +36,8 @@ const friends = {
                         dataFriends.push({
                            key: index,
                            documentKey: doc.id,
-                           id: doc.data().user_id,
+                           user_id: doc.data().user_id,
+                           email: doc.data().email,
                            username: doc.data().username,
                            photo_url: doc.data().photo_url,
                            descriptions: doc.data().descriptions,

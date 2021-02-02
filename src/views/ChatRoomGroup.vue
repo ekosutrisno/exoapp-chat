@@ -11,10 +11,11 @@
           </svg>
         </router-link>
         <router-link to="/group-description" class="inline-flex focus:outline-none items-center space-x-2">
-          <img class="w-9 h-9 object-cover rounded-full" :src="currentPeerGroupAvatar ? currentPeerGroupAvatar : 'https://cdn4.iconfinder.com/data/icons/avatars-xmas-giveaway/128/avocado_scream_avatar_food-128.png'" alt="profile">
+          <img v-if="currentPeerGroupAvatar" class="w-9 h-9 object-cover rounded-full" :src="currentPeerGroupAvatar" alt="profile">
+          <G v-else class="w-9 h-9"/>
           <div class="text-left">
             <p class="block text-lg">{{ currentPeerGroupname }}</p>
-            <p class="block text-sm -mt-1">online</p>
+            <p class="block text-sm -mt-1">Group</p>
           </div>
         </router-link>
       </div>
@@ -106,12 +107,14 @@ import db from '../firebase'
 import { useRouter } from 'vue-router'
 import MenuOption from '../components/MenuOption.vue'
 import Spinner from '../components/Spinner.vue'
+import G from '../components/svg/G.vue'
 
 export default {
   components: {
     Chat,
     MenuOption,
-    Spinner
+    Spinner,
+    G
   },
   setup () {
     const router = useRouter()

@@ -165,8 +165,7 @@ export default {
                      if(doc.exists){
                         state.friends.push({
                            key: index,
-                           documentKey: doc.id,
-                           id: doc.data().user_id,
+                           user_id: doc.data().user_id,
                            username: doc.data().username,
                            photo_url: doc.data().photo_url,
                            descriptions: doc.data().descriptions,
@@ -192,7 +191,7 @@ export default {
 
       const letChat = ( peerUser ) => {
          state.currentPeerUser = peerUser;
-         localStorage.setItem('peer_user_id', peerUser.id);
+         localStorage.setItem('peer_user_id', peerUser.user_id);
          localStorage.setItem('peer_photo_url', peerUser.photo_url);
          localStorage.setItem('peer_username', peerUser.username);
          router.push("/chat-room")
