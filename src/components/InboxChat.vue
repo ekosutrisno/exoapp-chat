@@ -6,19 +6,7 @@
    <div class="flex-1 h-full leading-none flex justify-center flex-col pr-2 border-b border-gray-700 overflow-x-hidden">
       <div class="flex items-center justify-between">
          <span class="font-semibold text-lg text-gray-50"> {{ currentPeerUser.username }} </span>
-         <span class="text-sm text-gray-400"> {{ inboxChat.time }} </span>
-      </div>
-      <div class="flex items-center justify-between">
-         <div class="hidden space-x-2 transition-transform duration-100 ease-linear transform translate-x-7 group-hover:translate-x-0">
-            <div  v-if="inboxChat.entry > 0" class="py-1 px-1.5 bg-whatsapp-teal-green leading-none text-gray-900 rounded-full text-xs">
-               <span class="p-0.5 w-full">{{ inboxChat.entry }}</span>
-            </div>
-            <button class="focus:outline-none text-transparent group-hover:text-gray-500">
-               <svg class="w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7" />
-               </svg>
-            </button>
-         </div>
+         <span class="text-sm text-green-500"> {{ inboxChat.time }} </span>
       </div>
    </div>
 </div>
@@ -26,7 +14,6 @@
 
 <script>
 import { reactive, toRefs } from 'vue'
-import moment  from 'moment'
 export default {
    props:{
       currentPeerUser: Object
@@ -36,7 +23,7 @@ export default {
          inboxChat:{
             imageAvatar: localStorage.getItem('photoUrl'),
             username: localStorage.getItem('username'),
-            time: moment(new Date()).format('LT'),
+            time: 'Online',
             entry: 3,
             message:'Test Message'
          }

@@ -32,7 +32,7 @@
                   </svg>
                   <div class="flex flex-col w-full">
                      <h1 class="text-gray-400 pl-2 text-sm -mb-2 z-30">Group Name</h1>
-                     <input v-model="group_name" type="text" required class="py-2 pl-2 z-20 text-gray-300 mb-2 bg-transparent focus:outline-none border-b border-transparent transition-colors focus:border-gray-700 placeholder- text-sm-70" placeholder="Username" />
+                     <input v-model="group_name" type="text" required :readonly="!is_admin" class="py-2 pl-2 z-20 text-gray-300 mb-2 bg-transparent focus:outline-none border-b border-transparent transition-colors focus:border-gray-700 placeholder- text-sm-70" placeholder="Username" />
                   </div>
                </div>
 
@@ -42,7 +42,7 @@
                   </svg>
                   <div class="flex flex-col w-full">
                      <h1 class="text-gray-400 pl-2 text-sm -mb-2 z-30">Status</h1>
-                     <input v-model="status" type="text" required class="py-2 pl-2 z-20 text-gray-300 mb-2 bg-transparent focus:outline-none border-b border-transparent transition-colors focus:border-gray-700 placeholder-gray-400 placeholder-opacity-70" placeholder="Status" />
+                     <input v-model="status" type="text" required readonly class="py-2 pl-2 z-20 text-gray-300 mb-2 bg-transparent focus:outline-none border-b border-transparent transition-colors focus:border-gray-700 placeholder-gray-400 placeholder-opacity-70" placeholder="Status" />
                   </div>
                 </div>
                 <div class="inline-flex px-4 w-full max-w-screen-sm items-start space-x-2">
@@ -51,7 +51,7 @@
                   </svg>
                   <div class="flex flex-col w-full">
                      <h1 class="text-gray-400 pl-2 text-sm -mb-2 z-30">Created At</h1>
-                     <input v-model="created_date" type="text" required class="py-2 pl-2 z-20 text-gray-300 mb-2 bg-transparent focus:outline-none border-b border-transparent transition-colors focus:border-gray-700 placeholder-gray-400 placeholder-opacity-70" placeholder="Phone Number" />
+                     <input v-model="created_date" type="text" required :readonly="!is_admin" class="py-2 pl-2 z-20 text-gray-300 mb-2 bg-transparent focus:outline-none border-b border-transparent transition-colors focus:border-gray-700 placeholder-gray-400 placeholder-opacity-70" placeholder="Phone Number" />
                   </div>
                 </div>
                 <div class="inline-flex px-4 w-full max-w-screen-sm items-start space-x-2">
@@ -94,7 +94,7 @@
                <div class="mt-4 text-gray-300">
                   <button class="my-2 py-0.5 focus:outline-none font-semibold text-xs bg-green-600 text-left px-2 rounded-full">Your Friends</button>
                   <ul >
-                     <li v-for="(user, i) in friends" :key="i">
+                     <li v-show="user.user_id !== user_id" v-for="(user, i) in friends" :key="i">
                         <ListGroupFriend @add-member="addGroupMember(user, i)"  :currentPeerUser="user"/>
                      </li>
                      <li class="text-gray-300 text-center py-4">
@@ -124,6 +124,7 @@ import Spinner from '../components/Spinner.vue'
 import ListGroupMemberUser from '../components/ListGroupMemberUser.vue'
 import ListGroupMemberAdmin from '../components/ListGroupMemberAdmin.vue'
 import ListGroupFriend from '../components/ListGroupFriend.vue'
+import store from '../store'
 
 export default {
    components:{ Spinner, ListGroupMemberUser, ListGroupFriend, ListGroupMemberAdmin },
@@ -214,8 +215,8 @@ export default {
       }
 
       onMounted(()=>{
-         getGroupDetail();
          getGroupMembers();
+         getGroupDetail();
       })
 
       onBeforeMount(() => {
@@ -225,6 +226,9 @@ export default {
       })
 
       const getGroupDetail = async () => {
+      
+         state.isProcess = true;
+
         const group = await db.firestore().collection('groups')
                 .where('group_id', '==', state.group_id)
                 .get();
@@ -239,6 +243,7 @@ export default {
                   state.status = groupDetail.active ? 'Active' : 'NonActive';
                   state.created_date = groupDetail.created_date;
 
+                  state.isProcess = false;
                })
       }
 
@@ -331,7 +336,7 @@ export default {
 
       }
 
-      const getFriendList = async () => {
+      const getFriendList = () => {
 
          state.isProcess = true;
          
@@ -339,39 +344,7 @@ export default {
             state.isProcess = false;
          }, 5000);
 
-         const data = await db.firestore().collection('users')
-            .doc(state.user_id)
-            .collection('friends')
-            .get();
-
-         if (data.docs.length > 0) {
-            let listUser = [];
-            listUser = [...data.docs]
-            state.friends = [];
-            
-            listUser.forEach((item, index) => {
-               
-               db.firestore().collection('users')
-                  .where('user_id', '==', item.id )
-                  .get().then(querySnapshot => {
-                     querySnapshot.forEach(doc => {
-
-                        if(doc.data().user_id !== state.user_id){
-                           state.friends.push({
-                              key: index,
-                              documentKey: doc.id,
-                              email: doc.data().email,
-                              user_id: doc.data().user_id,
-                              username: doc.data().username,
-                              photo_url: doc.data().photo_url,
-                              descriptions: doc.data().descriptions,
-                           })
-                        }
-                           
-                     })
-                  })
-            })
-         }
+         state.friends = computed(()=> store.state.friends.friends);
          state.isProcess = false;
       }
 

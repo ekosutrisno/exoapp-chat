@@ -51,6 +51,11 @@ const routes = [
       name: "GroupDescription",
       component: () => import('../views/GroupDescription.vue'),
    },
+   {
+      path: "/friend-description",
+      name: "FriendDescription",
+      component: () => import('../views/FriendDescription.vue'),
+   },
 ];
 
 const router = createRouter({
