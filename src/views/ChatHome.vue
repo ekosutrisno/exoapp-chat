@@ -47,17 +47,18 @@
                <InboxChat  @click="letChat(user)" :currentPeerUser="user"/>
             </li>
 
-            <li class="text-gray-300 text-center py-4">
-               <h1 v-if="friends.length === 0" class="mb-6">You No have a Friend!</h1>
-               <router-link v-if="friends.length === 0" to="/invite-friend" class="py-3 px-6 text-lg rounded hover:bg-opacity-80 font-semibold text-gray-300 bg-whatsapp-teal-green focus:outline-none">
-                  Invite Friend
-               </router-link>
-               <button class="py-2 px-4 hidden items-center space-x-2 rounded hover:bg-opacity-80 font-semibold text-gray-300 bg-whatsapp-teal-green focus:outline-none">
-                  <span>Refresh your contact</span>
-                  <svg class="w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                     <path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd" />
-                  </svg>
-               </button>
+            <li v-if="friends.length === 0" class="text-gray-300 text-center py-4">
+               <h1 class="mb-6">You No have a Friend!</h1>
+               <div class="inline-flex space-x-2">
+                  <button @click="setFriends" class="py-3 px-4 items-center space-x-2 rounded hover:bg-opacity-80 font-semibold text-gray-300 bg-whatsapp-teal-green focus:outline-none">
+                     <svg class="w-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd" />
+                     </svg>
+                  </button>
+                  <router-link  to="/invite-friend" class="py-3 px-6 text-lg rounded hover:bg-opacity-80 font-semibold text-gray-300 bg-whatsapp-teal-green focus:outline-none">
+                     Invite Friend
+                  </router-link>
+               </div>
             </li>
          </ul>
          <ul v-show="isGroup">
@@ -77,7 +78,7 @@
 </template>
 
 <script>
-import { computed, onBeforeMount, onMounted, reactive, ref, toRefs } from 'vue'
+import { computed, onBeforeMount, onMounted, reactive, toRefs } from 'vue'
 import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
 import db from '../firebase'
@@ -89,7 +90,6 @@ import Spinner from '../components/Spinner.vue'
 export default {
    components: {InboxChat, InboxGroup, Spinner, MenuOption},
    setup () {
-      const option = ref(false);
       const router = useRouter();
       const store = useStore();
 
@@ -97,10 +97,11 @@ export default {
          currentPeerUser: null,
          currentPeerGroup: null,
          currentUserId: computed(() => store.getters.getUserId),
-         friends: computed(() => store.state.friends.friends),
-         groups:[],
+         friends: [],
+         groups: computed(() => store.state.groups.groups) ,
          isProcess: false,
          isChat: true,
+         option : false,
          isGroup: false,
          currentTab:'CHATS',
          togle: [
@@ -115,7 +116,7 @@ export default {
          ]
       })
 
-      onMounted(() =>{ 
+      onMounted(() => {
          getFriendList();
          getGroupList();
       })
@@ -126,7 +127,7 @@ export default {
       })
 
       const toggleOption = () => {
-         return option.value = !option.value
+         return state.option = !state.option
       }
 
       const onLogout = () => {
@@ -138,55 +139,55 @@ export default {
          });
       }
       
-      const onRefreshContact = async () => {
-         if(state.friends.length == 0)
-            await store.dispatch('setListFriend', state.currentUserId);
-      }
+ 
+      const getFriendList = async () => {
 
-      const getFriendList = () => {
-
+         
          state.isProcess = true;
          
          setTimeout(() => {
             state.isProcess = false;
          }, 5000);
-         
-         onRefreshContact();
-         
+
+         const data = await db.firestore().collection('users')
+                        .doc(state.currentUserId)
+                        .collection('friends')
+                        .get();
+         if (data.docs.length > 0) {
+            let listUser = [];
+            listUser = [...data.docs]
+
+            listUser.forEach((item, index) => {
+               db.firestore().collection('users')
+                  .doc( item.id )
+                  .get().then(doc => {
+                     
+                     if(doc.exists){
+                        state.friends.push({
+                           key: index,
+                           documentKey: doc.id,
+                           id: doc.data().user_id,
+                           username: doc.data().username,
+                           photo_url: doc.data().photo_url,
+                           descriptions: doc.data().descriptions,
+                        })
+                     }
+                  })
+            })
+         }
          
          state.isProcess = false;
 
+         // Set to Store 
+         await store.dispatch('setListFriend', state.currentUserId);
+
+      }
+      const setFriends = async () => {
+         state.friends = computed(() => store.state.friends.friends);
       }
 
       const getGroupList = async () => {
-         const data = await db.firestore().collection('users')
-         .doc(state.currentUserId)
-         .collection('groups')
-         .get();
-         
-         if(data.docs.length > 0){
-            let listGroup = [];
-            listGroup = [...data.docs]
-            
-            listGroup.forEach(g =>{
-                db.firestore().collection('groups')
-                .doc(g.data().group_id)
-                .get()
-                .then( group => {
-                   
-                      if (group.exists) {
-                         state.groups.push({
-                           group_id: group.data().group_id,
-                           group_name: group.data().group_name,
-                           group_avatar: group.data().group_avatar,
-                           created_date: group.data().created_date,
-                           admin_create_id: group.data().admin_create_id,
-                           group_description: group.data().group_description
-                        })
-                     }
-                })
-            })
-         }
+        await store.dispatch('setListGroup', state.currentUserId)
       }
 
       const letChat = ( peerUser ) => {
@@ -220,8 +221,8 @@ export default {
 
       return{
          ...toRefs(state),
-         option,
          onLogout,
+         setFriends,
          getFriendList,
          toggleOption,
          letChat,
@@ -231,3 +232,6 @@ export default {
    }
 }
 </script>
+<style>
+
+</style>
