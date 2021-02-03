@@ -80,7 +80,8 @@ export default {
                            photo_url: userData.photo_url,
                            status: userData.status,
                            descriptions: userData.descriptions,
-                           FirebaseDocumentId: doc.id
+                           FirebaseDocumentId: doc.id,
+                           color_code: userData.color_code
                         }
                         setCurrentUser(payload);
                   })

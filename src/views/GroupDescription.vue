@@ -263,7 +263,7 @@ export default {
             .set({
                user_id: member.user_id,
                email: member.email,
-               is_admin: false
+               is_admin: member.user_id == state.group_admin_id ? true : false
             })
             .then(() =>{
                db.firestore()
@@ -304,7 +304,6 @@ export default {
          
       }
 
-
       const getGroupMembers = async () => {
          
          const members = await db.firestore().collection('groups')
@@ -318,24 +317,22 @@ export default {
 
             listMember.forEach((member, index) => {
                db.firestore().collection('users')
-                .where('user_id', '==', member.data().user_id)
+                .doc(member.data().user_id)
                 .get()
-                .then(querySnapshot => {
-
-                   querySnapshot.forEach( doc => {
+                .then( doc => {
+                   if(doc.exists){
                       state.members.push({
-                              key: index,
-                              is_admin: member.data().is_admin,
-                              documentKey: doc.id,
-                              email: doc.data().email,
-                              user_id: doc.data().user_id,
-                              username: doc.data().username,
-                              photo_url: doc.data().photo_url,
-                              descriptions: doc.data().descriptions,
+                        key: index,
+                        is_admin: member.data().is_admin,
+                        documentKey: doc.id,
+                        email: doc.data().email,
+                        user_id: doc.data().user_id,
+                        username: doc.data().username,
+                        photo_url: doc.data().photo_url,
+                        descriptions: doc.data().descriptions,
                       });
-                   })
-                   
-                })
+                   }
+               })
             })
          }
 

@@ -14,7 +14,7 @@
           <img v-if="currentPeerGroupAvatar" class="w-9 h-9 object-cover rounded-full" :src="currentPeerGroupAvatar" alt="profile">
           <G v-else class="w-9 h-9"/>
           <div class="text-left">
-            <p class="block text-lg">{{ currentPeerGroupname }}</p>
+            <p class="block text-lg font-semibold">{{ currentPeerGroupname }}</p>
             <p class="block text-sm -mt-1">Group</p>
           </div>
         </router-link>
@@ -41,10 +41,10 @@
     <div class="flex-1 px-4 pt-20 overflow-y-auto md:on-scrollbar bg-transparent">
       <ul class="space-y-1 text-gray-300 relative">
         <li class="text-center mb-2">
-          <span class="py-1 px-2 text-xs bg-whatsapp-dark-200 rounded-md shadow-lg text-gray-400">Let's broadcash message in {{currentPeerGroupname ? currentPeerGroupname : 'Your Friend' }}</span>
+          <span class="py-1 px-2 text-xs font-semibold bg-whatsapp-dark-200 rounded shadow-lg text-gray-400">Let's broadcash message in {{currentPeerGroupname ? currentPeerGroupname : 'Your Friend' }}</span>
         </li>
         <li class="text-center">
-          <p class="py-1 px-2 text-xs mb-2 bg-whatsapp-dark-200 rounded-md shadow-lg text-yellow-400">
+          <p class="py-1 px-2 text-xs mb-2 bg-whatsapp-dark-200 rounded font-semibold shadow-lg text-yellow-400">
             <span class="inline-flex items-start"><svg class="w-3.5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
               </svg></span> Messages and calls are end-to-end encrypted. No one outside of this chat, not even whatsapp, can read or listen to them. Tap to learn more.
@@ -54,9 +54,9 @@
         <li class="pb-10"> 
           <ul v-for="(message, idx) in listMessages" :key="idx" class="space-y-1 text-center text-gray-300">
             <div class="my-4">
-              <span v-if="message.date == today" class="py-1 px-2 uppercase text-xs mx-auto bg-whatsapp-dark-200 rounded shadow-lg text-gray-400 leading-none">TODAY</span>
-              <span v-else-if="message.date == yesterday" class="py-1 px-2 uppercase text-xs mx-auto bg-whatsapp-dark-200 rounded shadow-lg text-gray-400 leading-none">YESTERDAY</span>
-              <span v-else class="py-1 px-2 uppercase text-xs mx-auto bg-whatsapp-dark-200 rounded shadow-lg text-gray-400 leading-none">{{formatDate(message.date)}}</span>
+              <span v-if="message.date == today" class="py-1 px-2 uppercase text-xs mx-auto bg-whatsapp-dark-200 rounded shadow-lg text-gray-400 leading-none font-semibold">TODAY</span>
+              <span v-else-if="message.date == yesterday" class="py-1 px-2 uppercase text-xs mx-auto bg-whatsapp-dark-200 rounded shadow-lg text-gray-400 leading-none font-semibold">YESTERDAY</span>
+              <span v-else class="py-1 px-2 uppercase text-xs mx-auto bg-whatsapp-dark-200 rounded shadow-lg text-gray-400 leading-none font-semibold">{{formatDate(message.date)}}</span>
             </div>
             <li v-for="chat in message.chats"  :key="chat.user_id" class="flex flex-col" :class="{'items-end': chat.idFrom === currentUserId , 'items-start': chat.idFrom !== currentUserId}">
               <Chat 
@@ -108,6 +108,7 @@ import { useRouter } from 'vue-router'
 import MenuOption from '../components/MenuOption.vue'
 import Spinner from '../components/Spinner.vue'
 import G from '../components/svg/G.vue'
+import { useStore } from 'vuex'
 
 export default {
   components: {
@@ -117,7 +118,8 @@ export default {
     G
   },
   setup () {
-    const router = useRouter()
+    const router = useRouter();
+    const store = useStore();
 
     const option = ref(false);
     const inputMessage = ref("");
@@ -125,6 +127,7 @@ export default {
     const state = reactive({
       currentUsername: localStorage.getItem('username'),
       currentUserId: localStorage.getItem('user_id'),
+      currentUserColorCode: localStorage.getItem('color_code'),
       currentPeerGroupId: localStorage.getItem('current_group_id'),
       currentPeerGroupAvatar: localStorage.getItem('current_group_avatar'),
       currentPeerGroupname: localStorage.getItem('current_group_name'),
@@ -137,13 +140,17 @@ export default {
     })
 
      const logout = () => {
+        store.dispatch('onUserSignout', state.currentUserId);
         db.auth().signOut().then(() => {
-            router.push('/login');
+            
             localStorage.clear();
-        }).catch((error) => {
+            router.push('/login');
+
+         }).catch((error) => {
             console.log(error)
-        });
+         });
       }
+      
 
     const sendMessage = ( inputMessageValue ) => {
       
@@ -156,6 +163,7 @@ export default {
         const message = {
           username: state.currentUsername,
           isGroup: true,
+          colorCode: state.currentUserColorCode,
           idFrom: state.currentUserId,
           timestamp: moment().valueOf().toString(),
           sendTime:formatTime(new Date()),

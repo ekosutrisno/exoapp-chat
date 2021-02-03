@@ -7,7 +7,8 @@
    <div class="flex-1 h-full leading-none flex justify-center flex-col pr-2 border-b border-gray-700 overflow-x-hidden">
       <div class="flex items-center justify-between">
          <span class="font-semibold text-lg text-gray-50"> {{ currentGroup.group_name }} </span>
-         <span class="text-sm text-gray-400"> {{ inboxChat.time }} </span>
+         <span v-if="currentGroup.active" class="text-sm text-green-300">Active</span>
+         <span v-else class="text-sm text-gray-400">NonActive</span>
       </div>
       <div class="flex items-center justify-between">
          <div class="hidden space-x-2 transition-transform duration-100 ease-linear transform translate-x-7 group-hover:translate-x-0">

@@ -31,6 +31,7 @@ const groups = {
                      
                         if (group.exists) {
                            dataGroup.push({
+                           active: group.data().active,
                            group_id: group.data().group_id,
                            group_name: group.data().group_name,
                            group_avatar: group.data().group_avatar,
