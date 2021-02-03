@@ -42,17 +42,17 @@ const routes = [
       component: () => import('../views/ChatRoom.vue'),
    },
    {
-      path: "/group-chat-room",
-      name: "GroupChatRoom",
+      path: "/group-chat-room/:group_id",
+      name: "group-chat-room",
       component: () => import('../views/ChatRoomGroup.vue'),
    },
    {
-      path: "/group-description",
-      name: "GroupDescription",
+      path: "/group-description/:group_id",
+      name: "group-description",
       component: () => import('../views/GroupDescription.vue'),
    },
    {
-      path: "/friend-description",
+      path: "/friend-description/:user_id",
       name: "FriendDescription",
       component: () => import('../views/FriendDescription.vue'),
    },

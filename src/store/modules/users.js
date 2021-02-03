@@ -1,4 +1,5 @@
-// import db from '../../firebase';
+
+import db from '../../firebase';
 
 const users = {
    state: () => ({ 
@@ -16,6 +17,30 @@ const users = {
          saveDataToLocalStorage(user);
          commit('SET_CURRENT_USER', user);
       },
+      onUserSigin(){
+
+         const auth = db.auth();
+         const dbUser =  db.firestore().collection('users')
+
+         auth.onAuthStateChanged((user) =>{
+            if (user) {
+               let user_id = user.uid;
+               dbUser.doc(user_id)
+                  .update({online: true});
+
+            } else {
+               // 
+            }
+          });
+      },
+      onUserSignout({commit}, current_user_id){
+         const dbUser =  db.firestore().collection('users');
+        
+         dbUser.doc(current_user_id)
+             .update({online: false});
+
+         commit('SET_CURRENT_USER', {});
+      }
     },
     getters: {
       getUserId() {
@@ -32,6 +57,7 @@ const users = {
    localStorage.setItem('phone_number', user.phone_number);
    localStorage.setItem('photo_url', user.photo_url);
    localStorage.setItem('status', user.status);
+   localStorage.setItem('color_code', user.color_code)
 };
 
 export default users;

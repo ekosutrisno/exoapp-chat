@@ -22,7 +22,8 @@
                      <input id="file-upload" name="file-upload" type="file" class="sr-only" @change="changeAvatar">
                   </label>
                </div>
-               <img class="w-40 h-40 object-cover ring-whatsapp-teal-green rounded-full" :src="photoUrl ? photoUrl: 'https://cdn4.iconfinder.com/data/icons/avatars-xmas-giveaway/128/avocado_scream_avatar_food-128.png'" alt="exoapp-logo">
+               <img v-if="photo_url" class="w-40 h-40 object-cover ring-whatsapp-teal-green rounded-full" :src="photo_url" alt="exoapp-logo">
+               <U v-else class="w-40 h-40"/>
             </div>
                <h1 v-if="messageInfo" class="text-center text-sm font-semibold text-green-500 mb-6">{{messageInfo}}</h1>
             <div class="w-full flex flex-col">
@@ -78,15 +79,16 @@ import { onBeforeMount, reactive, toRefs } from 'vue'
 import db from '../firebase'
 import { useRouter } from 'vue-router'
 import Spinner from '../components/Spinner.vue'
+import U from '../components/svg/U.vue'
 
 export default {
-   components:{ Spinner },
+   components:{ Spinner, U },
    setup () {
       const router = useRouter();
 
       const state = reactive({
          user_id: localStorage.getItem('user_id'),
-         photoUrl: localStorage.getItem('photo_url'),
+         photo_url: localStorage.getItem('photo_url'),
          username: localStorage.getItem('username') ? localStorage.getItem('username') : '',
          phoneNumber: localStorage.getItem('phone_number') ? localStorage.getItem('phone_number') : '',
          status: localStorage.getItem('status') ? localStorage.getItem('status') : '',

@@ -62,6 +62,9 @@ export default {
          auth.signInWithEmailAndPassword(state.email, state.password)
          .then( async res => {
             if(res.user){
+            
+            store.dispatch('onUserSigin')
+
                await db.firestore().collection('users')
                .where('user_id', '==', res.user.uid)
                .get()
@@ -77,7 +80,8 @@ export default {
                            photo_url: userData.photo_url,
                            status: userData.status,
                            descriptions: userData.descriptions,
-                           FirebaseDocumentId: doc.id
+                           FirebaseDocumentId: doc.id,
+                           color_code: userData.color_code
                         }
                         setCurrentUser(payload);
                   })

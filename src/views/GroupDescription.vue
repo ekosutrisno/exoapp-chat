@@ -119,7 +119,7 @@
 
 <script>
 import { computed, onBeforeMount, onMounted, reactive, toRefs } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import db from '../firebase'
 import Spinner from '../components/Spinner.vue'
 import ListGroupMemberUser from '../components/ListGroupMemberUser.vue'
@@ -132,6 +132,7 @@ export default {
    components:{ Spinner, ListGroupMemberUser, ListGroupFriend, ListGroupMemberAdmin, G },
    setup () {
       const router = useRouter();
+      const route = useRoute();
 
       const state = reactive({
          user_id: localStorage.getItem('user_id'),
@@ -217,8 +218,8 @@ export default {
       }
 
       onMounted(()=>{
-         getGroupMembers();
          getGroupDetail();
+         getGroupMembers();
       })
 
       onBeforeMount(() => {
@@ -230,24 +231,26 @@ export default {
       const getGroupDetail = async () => {
       
          state.isProcess = true;
+         let groupId = route.params.group_id;
 
-        const group = await db.firestore().collection('groups')
-                .where('group_id', '==', state.group_id)
-                .get();
+         await db.firestore().collection('groups')
+                .doc(groupId)
+                .get().then(doc => {
 
-               group.docs.forEach(d => {
-                  const groupDetail = d.data();
+                   if(doc.exists){
+                     const group = doc.data();
 
-                  state.group_admin_id = groupDetail.admin_create_id;
-                  state.group_avatar = groupDetail.group_avatar;
-                  state.group_description = groupDetail.group_description;
-                  state.group_name = groupDetail.group_name;
-                  state.status = groupDetail.active ? 'Active' : 'NonActive';
-                  state.created_date = groupDetail.created_date;
-
-                  state.isProcess = false;
-               })
-      }
+                     state.group_admin_id = group.admin_create_id;
+                     state.group_avatar = group.group_avatar;
+                     state.group_description = group.group_description;
+                     state.group_name = group.group_name;
+                     state.status = group.active ? 'Active' : 'NonActive';
+                     state.created_date = group.created_date;
+   
+                     state.isProcess = false;
+                   }
+                })
+          }
 
       const onAddMember = () => {
 
@@ -260,7 +263,7 @@ export default {
             .set({
                user_id: member.user_id,
                email: member.email,
-               is_admin: false
+               is_admin: member.user_id == state.group_admin_id ? true : false
             })
             .then(() =>{
                db.firestore()
@@ -301,7 +304,6 @@ export default {
          
       }
 
-
       const getGroupMembers = async () => {
          
          const members = await db.firestore().collection('groups')
@@ -315,24 +317,22 @@ export default {
 
             listMember.forEach((member, index) => {
                db.firestore().collection('users')
-                .where('user_id', '==', member.data().user_id)
+                .doc(member.data().user_id)
                 .get()
-                .then(querySnapshot => {
-
-                   querySnapshot.forEach( doc => {
+                .then( doc => {
+                   if(doc.exists){
                       state.members.push({
-                              key: index,
-                              is_admin: member.data().is_admin,
-                              documentKey: doc.id,
-                              email: doc.data().email,
-                              user_id: doc.data().user_id,
-                              username: doc.data().username,
-                              photo_url: doc.data().photo_url,
-                              descriptions: doc.data().descriptions,
+                        key: index,
+                        is_admin: member.data().is_admin,
+                        documentKey: doc.id,
+                        email: doc.data().email,
+                        user_id: doc.data().user_id,
+                        username: doc.data().username,
+                        photo_url: doc.data().photo_url,
+                        descriptions: doc.data().descriptions,
                       });
-                   })
-                   
-                })
+                   }
+               })
             })
          }
 
