@@ -96,13 +96,13 @@ export default {
         getUserData()
       })
 
-      const getUserData = () => {
+      const getUserData = async () => {
          
          state.isProcess = true;
 
          let userId = route.params.user_id;
 
-         db.firestore().collection('users')
+         await db.firestore().collection('users')
             .doc( userId )
             .get().then(doc => {
                

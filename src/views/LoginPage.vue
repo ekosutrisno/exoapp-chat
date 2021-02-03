@@ -62,6 +62,9 @@ export default {
          auth.signInWithEmailAndPassword(state.email, state.password)
          .then( async res => {
             if(res.user){
+            
+            store.dispatch('onUserSigin')
+
                await db.firestore().collection('users')
                .where('user_id', '==', res.user.uid)
                .get()

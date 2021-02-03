@@ -15,7 +15,9 @@ const friends = {
     },
 
    actions: { 
-    async setListFriend({ commit }, current_user_id){
+    async setListFriend({ commit }){
+
+      let current_user_id = db.auth().currentUser.uid;
       
       const data = await db.firestore().collection('users')
                         .doc(current_user_id)
@@ -48,6 +50,22 @@ const friends = {
 
             commit('SET_LIST_FRIEND', dataFriends);
          }
+      },
+      updateFriendStatus(){
+         db.firestore().collection('users')
+         .onSnapshot((snapshot) => {
+            snapshot.docChanges().forEach(function(change) {
+                if (change.type === "added") {
+                    console.log("New: ", change.doc.data());
+                }
+                if (change.type === "modified") {
+                    console.log("Modified: ", change.doc.data());
+                }
+                if (change.type === "removed") {
+                    console.log("Removed: ", change.doc.data());
+                }
+            });
+        });
       }
    },
 

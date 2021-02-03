@@ -119,6 +119,7 @@ export default {
       onMounted(() => {
          getFriendList();
          getGroupList();
+         isLogin()
       })
 
       onBeforeMount(() =>{
@@ -131,9 +132,13 @@ export default {
       }
 
       const onLogout = () => {
+         store.dispatch('onUserSignout', state.currentUserId);
+
          db.auth().signOut().then(() => {
+            
             localStorage.clear();
             router.push('/login');
+
          }).catch((error) => {
             console.log(error)
          });
@@ -165,6 +170,7 @@ export default {
                      if(doc.exists){
                         state.friends.push({
                            key: index,
+                           online: doc.data().online,
                            user_id: doc.data().user_id,
                            username: doc.data().username,
                            photo_url: doc.data().photo_url,
@@ -197,13 +203,17 @@ export default {
          router.push("/chat-room")
       }
 
+      const isLogin = () => {
+         store.dispatch('onUserSigin', state.currentUserId)
+      }
+
       const letChatGroup = ( group ) => {
          state.currentPeerGroup = group;
          localStorage.setItem('current_group_id', group.group_id);
          localStorage.setItem('current_group_avatar', group.group_avatar);
          localStorage.setItem('current_group_name', group.group_name);
          localStorage.setItem('current_group_description', group.group_description);
-         router.push("/group-chat-room")
+         router.push({ name: 'group-chat-room', params: { group_id: group.group_id } })
       }
 
       const switchToggle = ( id, text ) => {

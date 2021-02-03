@@ -149,8 +149,6 @@ export default {
         });
       }
 
-
-
     const sendMessage = ( inputMessageValue ) => {
       
         // Check text message not null or blank
@@ -180,6 +178,8 @@ export default {
         inputMessage.value = ""
 
     }
+
+    
 
     // Lifecicle Hook
     onMounted(() => {

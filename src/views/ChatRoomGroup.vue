@@ -10,7 +10,7 @@
             <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
           </svg>
         </router-link>
-        <router-link to="/group-description" class="inline-flex focus:outline-none items-center space-x-2">
+        <router-link :to="{name: 'group-description', params: {group_id: $route.params.group_id}}" class="inline-flex focus:outline-none items-center space-x-2">
           <img v-if="currentPeerGroupAvatar" class="w-9 h-9 object-cover rounded-full" :src="currentPeerGroupAvatar" alt="profile">
           <G v-else class="w-9 h-9"/>
           <div class="text-left">

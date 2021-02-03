@@ -7,7 +7,7 @@
    <div class="flex-1 h-full leading-none flex justify-center flex-col pr-2 border-b border-gray-700 overflow-x-hidden">
       <div class="flex items-center justify-between">
          <span class="font-semibold text-lg text-gray-50"> {{ currentPeerUser.username }} </span>
-         <span class="text-sm text-green-500"> {{ inboxChat.time }} </span>
+         <span class="text-sm text-green-500"> {{ currentPeerUser.online ? 'Online' : 'Offline' }} </span>
       </div>
    </div>
 </div>
