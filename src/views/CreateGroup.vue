@@ -28,7 +28,7 @@
             <button class="my-2 py-0.5 focus:outline-none font-semibold text-xs bg-green-600 text-left px-2 rounded-full">Members</button>
             <ul >
                <li v-for="(user, i) in members" :key="i">
-                  <ListGroupMember @remove-member="removeGroupMember(user, i)"  :currentPeerUser="user"/>
+                  <ListGroupMember class="nv-transition" @remove-member="removeGroupMember(user, i)"  :currentPeerUser="user"/>
                </li>
                <li v-if="members.length === 0" class="text-gray-300 text-center py-4">
                   <h1 class="p-2 bg-whatsapp-dark-200 rounded text-sm">This group No have a Member!, search bellow to add a member from your contact!</h1>
@@ -40,7 +40,7 @@
             <button class="my-2 py-0.5 focus:outline-none font-semibold text-xs bg-green-600 text-left px-2 rounded-full">Your Friends</button>
             <ul >
                <li v-for="(user, i) in friends" :key="i">
-                  <ListGroupFriendCreate @add-member="addGroupMember(user, i)"  :currentPeerUser="user"/>
+                  <ListGroupFriendCreate class="nv-transition" @add-member="addGroupMember(user, i)"  :currentPeerUser="user"/>
                </li>
                <li v-if="friends.length === 0" class="text-gray-300 text-center py-4">
                   <h1 class="mb-6">You No have more Friends!</h1>
@@ -60,6 +60,8 @@
 import { computed, reactive, toRefs } from 'vue'
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
+import { v4 as uuidv4 } from 'uuid';
+import moment from 'moment';
 import db from '../firebase';
 import Spinner from '../components/Spinner.vue';
 import ListGroupMember from '../components/ListGroupMember.vue';
@@ -101,10 +103,11 @@ export default {
             return;
          }
 
-         let groupId = state.groupName.toUpperCase().replace(" ","") + new Date().getTime();
-         
+         let groupId = `${uuidv4()}`.toUpperCase();
+         let createdDate = `${moment().format('l')} at ${moment().format('LT')}`;
+
          let groupData = {
-               created_date: new Date().toDateString(),
+               created_date: createdDate,
                group_name: state.groupName,
                group_description: state.groupDescriptions,
                admin_create_id: state.user_id,

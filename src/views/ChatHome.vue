@@ -41,37 +41,38 @@
             </button>
          </div>
       </div>
-      <div class="flex-1 pb-2 pt-28 flex flex-col overflow-y-auto on-scrollbar">
+      <div class="w-full h-28"></div>
+      <div class="flex-1 pb-2 flex flex-col overflow-y-auto on-scrollbar">
          <ul v-show="isChat">
-            <li v-for="(user, i) in friends" :key="i">
-               <InboxChat  @click="letChat(user)" :currentPeerUser="user"/>
-            </li>
+               <li v-for="(user, i) in friends" :key="i" >
+                  <InboxChat class="nv-transition" @click="letChat(user)" :currentPeerUser="user"/>
+               </li>
 
-            <li v-if="friends.length === 0" class="text-gray-300 text-center py-4">
-               <h1 class="mb-6">You No have a Friend!</h1>
-               <div class="inline-flex space-x-2">
-                  <button @click="setFriends" class="py-3 px-4 items-center space-x-2 rounded hover:bg-opacity-80 font-semibold text-gray-300 bg-whatsapp-teal-green focus:outline-none">
-                     <svg class="w-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                        <path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd" />
-                     </svg>
-                  </button>
-                  <router-link  to="/invite-friend" class="py-3 px-6 text-lg rounded hover:bg-opacity-80 font-semibold text-gray-300 bg-whatsapp-teal-green focus:outline-none">
-                     Invite Friend
+               <li v-if="friends.length === 0" class="text-gray-300 text-center py-4">
+                  <h1 class="mb-6">You No have a Friend!</h1>
+                  <div class="inline-flex space-x-2">
+                     <button @click="setFriends" class="py-3 px-4 items-center space-x-2 rounded hover:bg-opacity-80 font-semibold text-gray-300 bg-whatsapp-teal-green focus:outline-none">
+                        <svg class="w-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                           <path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd" />
+                        </svg>
+                     </button>
+                     <router-link  to="/invite-friend" class="py-3 px-6 text-lg rounded hover:bg-opacity-80 font-semibold text-gray-300 bg-whatsapp-teal-green focus:outline-none">
+                        Invite Friend
+                     </router-link>
+                  </div>
+               </li>
+            </ul>
+            <ul v-show="isGroup">
+               <li v-for="(group, i) in groups" :key="i">
+                  <InboxGroup class="nv-transition"  @click="letChatGroup(group)" :currentGroup="group"/>
+               </li>
+               <li v-if="groups.length === 0" class="text-gray-300 text-center py-4">
+                  <h1 class="mb-6">Group Empty!</h1>
+                  <router-link to="/create-group" class="py-3 px-6 text-lg rounded hover:bg-opacity-80 font-semibold text-gray-300 bg-whatsapp-teal-green focus:outline-none">
+                     Create Group
                   </router-link>
-               </div>
-            </li>
-         </ul>
-         <ul v-show="isGroup">
-            <li v-for="(group, i) in groups" :key="i">
-               <InboxGroup  @click="letChatGroup(group)" :currentGroup="group"/>
-            </li>
-            <li v-if="groups.length === 0" class="text-gray-300 text-center py-4">
-               <h1 class="mb-6">Group Empty!</h1>
-               <router-link to="/create-group" class="py-3 px-6 text-lg rounded hover:bg-opacity-80 font-semibold text-gray-300 bg-whatsapp-teal-green focus:outline-none">
-                  Create Group
-               </router-link>
-            </li>
-         </ul>
+               </li>
+            </ul>
       </div>
 
    </div>
@@ -171,6 +172,7 @@ export default {
                         state.friends.push({
                            key: index,
                            online: doc.data().online,
+                           last_active: doc.data().last_active,
                            user_id: doc.data().user_id,
                            username: doc.data().username,
                            photo_url: doc.data().photo_url,
@@ -241,6 +243,3 @@ export default {
    }
 }
 </script>
-<style>
-
-</style>

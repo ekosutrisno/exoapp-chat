@@ -38,7 +38,8 @@
         </div>
       </div>
     </div>
-    <div class="flex-1 px-4 pt-20 overflow-y-auto md:on-scrollbar bg-transparent">
+    <div style="height:4.25rem" class="w-full"></div>
+    <div class="flex-1 px-4 overflow-y-auto md:on-scrollbar bg-transparent">
       <ul class="space-y-1 text-gray-300 relative">
         <li class="text-center mb-2">
           <span class="py-1 px-2 text-xs font-semibold bg-whatsapp-dark-200 rounded shadow-lg text-gray-400">Let's broadcash message in {{currentPeerGroupname ? currentPeerGroupname : 'Your Friend' }}</span>

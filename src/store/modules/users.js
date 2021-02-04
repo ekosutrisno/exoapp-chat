@@ -26,7 +26,9 @@ const users = {
             if (user) {
                let user_id = user.uid;
                dbUser.doc(user_id)
-                  .update({online: true});
+                  .update({
+                     online: true
+                  });
 
             } else {
                // 
@@ -37,7 +39,10 @@ const users = {
          const dbUser =  db.firestore().collection('users');
         
          dbUser.doc(current_user_id)
-             .update({online: false});
+             .update({
+                online: false, 
+                last_active: new Date().toISOString()
+            });
 
          commit('SET_CURRENT_USER', {});
       }
