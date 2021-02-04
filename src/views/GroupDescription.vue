@@ -8,8 +8,11 @@
                <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
             </svg>
          </div>
-         <div class="h-full w-full px-4 pb-4 pt-20">
-            <div class="mx-auto flex w-40 h-40 max-w-screen-sm justify-center relative mb-6 cursor-pointer">
+         <div class="h-full w-full px-4 pb-4">
+
+         <div style="height:5.5rem" class="w-full"></div>
+
+            <div class="mx-auto flex w-40 h-40 max-w-screen-sm justify-center relative mb-6 md:cursor-pointer">
                <div v-if="is_admin" class="absolute bottom-2 right-0 z-30">
                   <label for="file-upload" class="relative cursor-pointer rounded-md font-medium bg hover:bg-opacity-50 text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500">
                      <div class="rounded-full bg-whatsapp-teal-green bg-opacity-80 text-gray-200 p-3 hover:bg-opacity-100 transition">
@@ -33,7 +36,7 @@
                   </svg>
                   <div class="flex flex-col w-full">
                      <h1 class="text-gray-400 pl-2 text-sm -mb-2 z-30">Group Name</h1>
-                     <input v-model="group_name" type="text" required :readonly="!is_admin" class="py-2 pl-2 z-20 text-gray-300 mb-2 bg-transparent focus:outline-none border-b border-transparent transition-colors focus:border-gray-700 placeholder- text-sm-70" placeholder="Username" />
+                     <input v-model="group_name" type="text" required :readonly="!is_admin" class="py-2 pl-2 z-20 text-gray-300 mb-2 bg-transparent focus:outline-none border-b border-transparent transition-colors font-semibold focus:border-gray-700 text-xl" placeholder="Username" />
                   </div>
                </div>
 
@@ -60,7 +63,7 @@
                      <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
                   </svg>
                   <div class="flex flex-col w-full">
-                     <h1 class="text-gray-400 pl-2 text-sm -mb-2 z-30">Group Description</h1>
+                     <h1 class="text-whatsapp-cyan pl-2 text-sm font-semibold -mb-2 z-30">Description</h1>
                      <textarea v-model="group_description" class="py-2 pl-2 z-20 text-gray-300 mb-2 bg-transparent focus:outline-none border-b border-transparent transition-colors focus:border-gray-700 placeholder-gray-400 placeholder-opacity-70" rows="2" placeholder="Your Descriptions"></textarea>
                   </div>
                </div>
@@ -71,11 +74,11 @@
 
                 <!-- List Group Member -->
                <div class="mt-4 text-gray-300">
-                  <button class="my-2 py-0.5 focus:outline-none font-semibold text-xs bg-green-600 text-left px-2 rounded-full">Members</button>
+                  <button class="my-2 py-0.5 focus:outline-none font-semibold text-xs bg-green-600 text-left px-2 rounded-full">{{members.length}} participants</button>
                   <!-- As Admin -->
                   <ul v-if="is_admin">
                      <li v-for="(user, i) in members" :key="i">
-                        <ListGroupMemberAdmin @remove-member="removeGroupMember(user, i)"  :currentPeerUser="user"/>
+                        <ListGroupMemberAdmin class="nv-transition" @remove-member="removeGroupMember(user, i)"  :currentPeerUser="user"/>
                      </li>
                      <li v-if="members.length === 0" class="text-gray-300 text-center py-4">
                         <h1 class="p-2 bg-whatsapp-dark-200 rounded text-sm">This group No have a Member!, search bellow to add a member from your contact!</h1>
@@ -84,7 +87,7 @@
                   <!-- As Member -->
                   <ul v-else >
                      <li v-for="(user, i) in members" :key="i">
-                        <ListGroupMemberUser @remove-member="removeGroupMember(user, i)"  :currentPeerUser="user"/>
+                        <ListGroupMemberUser class="nv-transition" @remove-member="removeGroupMember(user, i)"  :currentPeerUser="user"/>
                      </li>
                      <li v-if="members.length === 0" class="text-gray-300 text-center py-4">
                         <h1 class="p-2 bg-whatsapp-dark-200 rounded text-sm">This group No have a Member!, search bellow to add a member from your contact!</h1>

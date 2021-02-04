@@ -6,35 +6,33 @@
    </div>
    <div class="flex-1 h-full leading-none flex justify-center flex-col pr-2 border-b border-gray-700 overflow-x-hidden">
       <div class="flex items-center justify-between">
-         <span class="font-semibold text-lg text-gray-50"> {{ currentPeerUser.username }} </span>
-         <span v-if="currentPeerUser.online " class="text-sm font-semibold text-green-300">Online</span>
-         <span v-else class="text-sm font-semibold text-gray-400">Offline</span>
+         <div class="font-semibold text-lg text-gray-50"> {{ currentPeerUser.username }} </div>
+         <div v-if="currentPeerUser.online " class="text-sm font-semibold text-green-300">Online</div>
+         <div v-else class="font-semibold text-right">
+            <span class="block text-sm text-gray-400 ">Offline</span>
+            <span v-if="currentPeerUser.last_active" class="block text-xs text-gray-500">{{lastSeen(currentPeerUser.last_active)}}</span>
+            <span v-else class="block text-xs text-gray-500">Off</span>
+         </div>
       </div>
    </div>
 </div>
 </template>
 
 <script>
-import { reactive, toRefs } from 'vue'
 import U from './svg/U.vue'
+import moment from 'moment';
 export default {
   components: { U },
    props:{
       currentPeerUser: Object
    },
    setup () {
-      const state = reactive({
-         inboxChat:{
-            imageAvatar: localStorage.getItem('photoUrl'),
-            username: localStorage.getItem('username'),
-            time: 'Online',
-            entry: 3,
-            message:'Test Message'
-         }
-      })
+      const lastSeen = ( last_seen ) => {
+         return moment(last_seen).fromNow();
+      }
 
       return {
-         ...toRefs(state),
+         lastSeen
       }
    }
 }

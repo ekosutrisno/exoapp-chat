@@ -8,9 +8,10 @@
                <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
             </svg>
          </div>
-         <div class="h-full w-full px-4 pb-4 pt-20">
-            <div class="mx-auto flex w-40 h-40 max-w-screen-sm justify-center relative mb-6 cursor-pointer">
-               <img v-if="photo_url" class="w-40 h-40 object-cover ring-whatsapp-teal-green rounded-full" :src="photo_url" alt="exoapp-logo">
+         <div class="h-full w-full px-4 pb-4">
+         <div style="height:5.5rem" class="w-full"></div>
+            <div class="mx-auto flex w-40 h-40 max-w-screen-sm justify-center relative mb-6 md:cursor-pointer">
+               <img v-if="photo_url" class="w-40 h-40 object-cover ring-whatsapp-teal-green rounded-full" :src="photo_url" :alt="username">
                <U v-else class="w-40 h-40"/>
             </div>
                <h1 v-if="messageInfo" class="text-center text-sm font-semibold text-green-500 mb-6">{{messageInfo}}</h1>
@@ -56,7 +57,7 @@
                <button @click="back" type="button" class="py-3 px-6 text-lg mt-4 rounded hover:bg-opacity-80 font-semibold text-gray-300 bg-whatsapp-teal-green focus:outline-none">
                   Chat
                </button>
-               <p class="text-center mt-6 text-xs text-gray-400">From Eko Sutrisno &copy;{{new Date().getFullYear()}} All right reserved</p>
+               <p class="text-center my-5 text-xs text-gray-400">From Eko Sutrisno &copy;{{new Date().getFullYear()}} All right reserved</p>
             </div>
          </div>
    </div>

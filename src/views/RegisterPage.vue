@@ -195,6 +195,7 @@ export default {
                   username: state.username,
                   password: state.password,
                   email: state.email,
+                  last_active: '',
                   join_at: moment().format('LLLL'),
                   descriptions: `Hi, My name is ${state.username}`,
                   phone_number: '',

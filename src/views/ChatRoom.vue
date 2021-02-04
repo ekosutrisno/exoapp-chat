@@ -40,8 +40,8 @@
         </div>
       </div>
     </div>
+    <div style="height:4.25rem" class="w-full"></div>
     <div class="flex-1 px-4 overflow-y-auto md:on-scrollbar bg-transparent">
-      <div class="h-20"></div>
       <ul class="space-y-1 text-gray-300 relative">
         <li class="text-center mb-2">
           <span class="py-1 px-2 text-xs bg-whatsapp-dark-200 rounded font-semibold shadow-lg text-gray-400">Let's say hay with {{currentPeerUsername ? currentPeerUsername : 'Your Friend' }}</span>

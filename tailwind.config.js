@@ -16,7 +16,8 @@ module.exports = {
           'dark-300': '#131C21',
           'blue': '#34B7F1',
           'blue-dark': '#085373',
-          'yellow':'#F5C536'
+          'yellow':'#F5C536',
+          'cyan': '#13c2c2'
         }
       }
     },
