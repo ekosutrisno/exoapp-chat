@@ -2,21 +2,16 @@
 
 [![ExoApps](https://img.shields.io/github/license/Naereen/StrapDown.js.svg)](https://exoappsv2.netlify.app/)
 
-<img alt="vue" src="https://v3.vuejs.org/logo.png" width="50" height="50" />
-<img alt="firebase" src="https://www.gstatic.com/mobilesdk/160503_mobilesdk/logo/2x/firebase_28dp.png" width="50" height="50" />
-<img alt="firebase" src="https://tailwindcss.com/_next/static/media/tailwindcss-mark.cb8046c163f77190406dfbf4dec89848.svg" width="50" height="50" />
----
-
 ### About
 
 - Intoductions
   - It is a Web App portfolio.
   - Design Inspired by WhatsApp.
 - Tech Stack
-  - Vs Code
-  - Vue v3.0.0
-  - TailwindCss v2.0.2
-  - Firebase
+  - <img src="https://img.icons8.com/fluent/48/000000/visual-studio-code-2019.png" width="14" height="14"/> Vs Code
+  - <img alt="vue" src="https://v3.vuejs.org/logo.png" width="11" height="11" /> Vue v3.0.0
+  - <img alt="firebase" src="https://tailwindcss.com/_next/static/media/tailwindcss-mark.cb8046c163f77190406dfbf4dec89848.svg" width="14" height="14" /> TailwindCss v2.0.2
+  - <img alt="firebase" src="https://www.gstatic.com/mobilesdk/160503_mobilesdk/logo/2x/firebase_28dp.png" width="14" height="14" /> Firebase
 - Author
   - Eko Sutrisno
   - [Github](https://github.com/ekosutrisno) Or [Gitlab](https://gitlab.com/ekosutrisno1)
