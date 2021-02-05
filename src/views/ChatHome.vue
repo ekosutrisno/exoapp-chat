@@ -7,7 +7,7 @@
          <div class="flex items-start justify-between">
             <div class="inline-flex items-center space-x-2">
             <button class="w-5 font-medium text-2xl hover:text-gray-400 focus:outline-none">
-               ExoApp
+               ExoApp<sup v-if="isOnline.valueOf()" :class="{'text-green-400': isOnline.valueOf()}">&bull;</sup>
             </button>
             </div>
             <div class="inline-flex items-center space-x-4">
@@ -95,13 +95,13 @@ export default {
       const store = useStore();
 
       const state = reactive({
-         currentPeerGroup: null,
          currentUserId: computed(() => store.getters.getUserId),
          friends: [],
          groups: computed(() => store.state.groups.groups) ,
          isProcess: false,
          isChat: true,
          option : false,
+         isOnline: navigator.onLine.valueOf(),
          isGroup: false,
          currentTab:'CHATS',
          togle: [
@@ -117,7 +117,7 @@ export default {
       })
 
       onMounted(() => {
-         getFriendList();
+         getLatesFriendData();
          getGroupList();
          isLogin()
       })
@@ -133,6 +133,7 @@ export default {
 
       const onLogout = () => {
          store.dispatch('onUserSignout', state.currentUserId);
+         store.dispatch('updateStatus', state.currentUserId);
 
          db.auth().signOut().then(() => {
             
@@ -143,11 +144,18 @@ export default {
             console.log(error)
          });
       }
+      const getLatesFriendData =  () =>{
+         db.database().ref('active_user_status')
+         .on('value', () =>{
+            state.friends = [];
+            getFriendList();
+         })
+      }
       
  
       const getFriendList = async () => {
+         console.log("Fire");
 
-         
          state.isProcess = true;
          
          setTimeout(() => {
@@ -158,6 +166,7 @@ export default {
                         .doc(state.currentUserId)
                         .collection('friends')
                         .get();
+
          if (data.docs.length > 0) {
             let listUser = [];
             listUser = [...data.docs]
@@ -208,12 +217,10 @@ export default {
       }
 
       const letChatGroup = ( group ) => {
-         state.currentPeerGroup = group;
-         localStorage.setItem('current_group_id', group.group_id);
-         localStorage.setItem('current_group_avatar', group.group_avatar);
-         localStorage.setItem('current_group_name', group.group_name);
-         localStorage.setItem('current_group_description', group.group_description);
-         router.push({ name: 'group-chat-room', params: { group_id: group.group_id } })
+         router.push({ 
+            name: 'group-chat-room', 
+            params: { group_id: group.group_id } 
+         })
       }
 
       const switchToggle = ( id, text ) => {

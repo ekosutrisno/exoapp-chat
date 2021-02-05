@@ -40,9 +40,9 @@
          <MenuOption v-click-away="toggleOption" v-if="option" @on-logout="logout" />
         </div>
       </div>
-      <div v-if="!currentPeerUserOnline" class="absolute px-2 z-50 w-full max-w-screen-sm -bottom-12 -ml-4"> 
-        <div class="mx-auto md:w-1/2 rounded-full py-2 bg-whatsapp-dark-200 text-center bg-opacity-95 shadow-lg">
-          <p>Last seen {{lastSeen === 'invalid date' ? 'Today' : lastSeen}}</p>
+      <div v-if="!currentPeerUserOnline" class="absolute px-2 w-full max-w-screen-sm -bottom-12 -ml-4 text-gray-400"> 
+        <div class="mx-auto md:w-1/2 max-w-xs rounded-full py-2 bg-whatsapp-dark-200 text-center bg-opacity-90 shadow-lg">
+          <p class="font-semibold">Last seen {{lastSeen === 'invalid date' ? 'Today' : lastSeen}}</p>
         </div>
       </div>
     </div>
@@ -219,7 +219,7 @@ export default {
     onBeforeMount(() => {
       if (!localStorage.getItem("user_id")) {
         router.push("/login")
-        }
+      }
       
       getPeerUserDetail();
     })

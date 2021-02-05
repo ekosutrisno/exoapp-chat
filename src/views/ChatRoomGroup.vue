@@ -105,7 +105,7 @@ import { reactive, toRefs, onMounted, ref, computed, onBeforeMount, onUpdated } 
 import moment from 'moment'
 import Chat from '../components/Chat.vue'
 import db from '../firebase'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import MenuOption from '../components/MenuOption.vue'
 import Spinner from '../components/Spinner.vue'
 import G from '../components/svg/G.vue'
@@ -120,6 +120,7 @@ export default {
   },
   setup () {
     const router = useRouter();
+    const route = useRoute();
     const store = useStore();
 
     const option = ref(false);
@@ -129,9 +130,9 @@ export default {
       currentUsername: localStorage.getItem('username'),
       currentUserId: localStorage.getItem('user_id'),
       currentUserColorCode: localStorage.getItem('color_code'),
-      currentPeerGroupId: localStorage.getItem('current_group_id'),
-      currentPeerGroupAvatar: localStorage.getItem('current_group_avatar'),
-      currentPeerGroupname: localStorage.getItem('current_group_name'),
+      currentPeerGroupId: '',
+      currentPeerGroupAvatar: '',
+      currentPeerGroupname: '',
       listMessages: [],
       groupChatId: null,
       isProcess: false,
@@ -192,6 +193,7 @@ export default {
         if (!localStorage.getItem("user_id")) {
           router.push("/login")
         }
+        getGroupDetail();
       })
 
     // Scrolldwon when chatroom updated
@@ -203,11 +205,26 @@ export default {
       }
     });
 
+    const getGroupDetail = () => {
+      let current_group_id = route.params.group_id;
+
+      db.firestore().collection('groups')
+          .doc(current_group_id)
+          .get().then(group => {
+            if(group.exists){
+              state.currentPeerGroupId = group.data().group_id;
+              state.currentPeerGroupname = group.data().group_name;
+              state.currentPeerGroupAvatar = group.data().group_avatar;
+            }
+          })
+
+    }
+
    const getDataMessages = async () => {
       state.isProcess = true;
 
       // Temp Current Room
-      let groupChatId = `G-${state.currentPeerGroupId}`;
+      let groupChatId = `G-${route.params.group_id}`;
 
       // Init DB Object
       const messageRefw = db.database().ref(groupChatId);
@@ -224,7 +241,7 @@ export default {
       } else {
         
           // Set new Room
-          state.groupChatId = `G-${state.currentPeerGroupId}`;
+          state.groupChatId = `G-${route.params.group_id}`;
           retrieveMessagesFromDB(state.groupChatId);
           
       }

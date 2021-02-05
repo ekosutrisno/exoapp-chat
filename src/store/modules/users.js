@@ -25,24 +25,39 @@ const users = {
          auth.onAuthStateChanged((user) =>{
             if (user) {
                let user_id = user.uid;
-               dbUser.doc(user_id)
-                  .update({
-                     online: true
-                  });
+               let dataToUpdate = {
+                  online: true
+               }
+               dbUser.doc(user_id).update(dataToUpdate);
+
+               db.database().ref(`active_user_status/${user_id}`)
+               .update(dataToUpdate);
 
             } else {
                // 
             }
           });
       },
-      onUserSignout({commit}, current_user_id){
+     async onUserSignout({commit}, current_user_id){
+         let dataToUpdate = {
+            online: false, 
+            last_active: new Date().toISOString()
+        }
+        await  db.database().ref(`active_user_status/${current_user_id}`)
+            .update(dataToUpdate);
+
+         commit('SET_CURRENT_USER', {});
+      },
+     async updateStatus({commit},current_user_id){
+         
          const dbUser =  db.firestore().collection('users');
-        
-         dbUser.doc(current_user_id)
-             .update({
-                online: false, 
-                last_active: new Date().toISOString()
-            });
+
+         let dataToUpdate = {
+            online: false, 
+            last_active: new Date().toISOString()
+        }
+
+         await  dbUser.doc(current_user_id).update(dataToUpdate);
 
          commit('SET_CURRENT_USER', {});
       }

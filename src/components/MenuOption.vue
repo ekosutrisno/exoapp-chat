@@ -1,5 +1,5 @@
 <template>
- <div class="absolute py-2 w-44 h-auto top-1 right-1 rounded bg-whatsapp-dark-100 ring-1 ring-whatsapp-dark-200 shadow-xl">
+ <div class="absolute z-50 py-2 w-44 h-auto top-1 right-1 rounded bg-whatsapp-dark-100 ring-1 ring-whatsapp-dark-200 shadow-xl">
    <router-link class="inline-flex justify-start items-start pl-4 font-semibold float-left py-2 hover:bg-gray-700 w-full" :to="{path:'/profile'}">Profile</router-link>
    <!-- <button @click="onRefreshContact" class="inline-flex justify-start items-start pl-4 font-semibold float-left py-2 hover:bg-gray-700 w-full focus:outline-none">Refresh Contact</button> -->
    <router-link class="inline-flex justify-start items-start pl-4 font-semibold float-left py-2 hover:bg-gray-700 w-full" :to="{path:'/invite-friend'}">Invite friend</router-link>
