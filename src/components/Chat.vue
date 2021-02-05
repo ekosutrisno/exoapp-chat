@@ -64,7 +64,6 @@ export default {
       border-left: 10px solid transparent;
       border-right: 10px solid transparent;
       border-radius: 10px;
-      border-bottom: 10px solid #075E54;
-      /* border-bottom: 10px solid #075E54; */
+      border-bottom: 10px solid #056162;
    }
 </style>
