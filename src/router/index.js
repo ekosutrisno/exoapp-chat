@@ -37,8 +37,8 @@ const routes = [
       component: () => import('../views/CreateGroup.vue'),
    },
    {
-      path: "/chat-room",
-      name: "ChatRoom",
+      path: "/chat-room/:user_peer_id",
+      name: "chat-room",
       component: () => import('../views/ChatRoom.vue'),
    },
    {
@@ -53,7 +53,7 @@ const routes = [
    },
    {
       path: "/friend-description/:user_id",
-      name: "FriendDescription",
+      name: "friend-description",
       component: () => import('../views/FriendDescription.vue'),
    },
 ];

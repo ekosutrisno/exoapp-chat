@@ -95,7 +95,6 @@ export default {
       const store = useStore();
 
       const state = reactive({
-         currentPeerUser: null,
          currentPeerGroup: null,
          currentUserId: computed(() => store.getters.getUserId),
          friends: [],
@@ -198,11 +197,10 @@ export default {
       }
 
       const letChat = ( peerUser ) => {
-         state.currentPeerUser = peerUser;
-         localStorage.setItem('peer_user_id', peerUser.user_id);
-         localStorage.setItem('peer_photo_url', peerUser.photo_url);
-         localStorage.setItem('peer_username', peerUser.username);
-         router.push("/chat-room")
+         router.push({
+            name: 'chat-room', 
+            params: {user_peer_id: peerUser.user_id}
+         })
       }
 
       const isLogin = () => {
