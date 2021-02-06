@@ -123,7 +123,7 @@ export default {
             }
 
             state.newFoto = event.target.files[0];
-            state.photoUrl = URL.createObjectURL(event.target.files[0])
+            state.photo_url = URL.createObjectURL(event.target.files[0])
          }else{
             alert('Error when change avatar!')
          }
@@ -176,11 +176,6 @@ export default {
             .doc(state.user_id)
             .update(newInfo)
             .then( () => {
-                  localStorage.setItem('username', state.username)
-                  localStorage.setItem('descriptions', state.descriptions)
-                  if (isUrlPresent) {
-                     localStorage.setItem('photo_url', downloadURL)
-                  }
                stopSpinner();
             })
 

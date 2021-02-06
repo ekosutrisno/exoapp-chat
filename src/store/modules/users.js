@@ -67,21 +67,14 @@ const users = {
     
    },
    getters: {
-   getUserId() {
-      return localStorage.getItem('user_id');
+      getUserId() {
+         return localStorage.getItem('user_id');
       }
    },
 }
 
  const saveDataToLocalStorage = (user) => {
    localStorage.setItem('user_id', user.user_id);
-   localStorage.setItem('username', user.username);
-   localStorage.setItem('email', user.email);
-   localStorage.setItem('descriptions', user.descriptions);
-   localStorage.setItem('phone_number', user.phone_number);
-   localStorage.setItem('photo_url', user.photo_url);
-   localStorage.setItem('status', user.status);
-   localStorage.setItem('color_code', user.color_code)
 };
 
 export default users;
