@@ -5,11 +5,11 @@
   <div class="h-screen mx-auto flex flex-col w-full max-w-screen-sm">
     <div class="flex fixed w-full top-0 max-w-screen-sm items-center justify-between px-4 bg-whatsapp-dark-300 text-gray-300 h-16 flex-shrink-0 shadow-lg z-40">
       <div class="inline-flex items-center space-x-2">
-        <router-link to="/chat-home" class="w-5 hover:text-gray-400 focus:outline-none">
+        <button @click="$router.back()" class="w-5 hover:text-gray-400 focus:outline-none">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
             <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
           </svg>
-        </router-link>
+        </button>
         <router-link :to="{name: 'group-description', params: {group_id: $route.params.group_id}}" class="inline-flex focus:outline-none items-center space-x-2">
           <img v-if="currentPeerGroupAvatar" class="w-9 h-9 object-cover rounded-full" :src="currentPeerGroupAvatar" alt="profile">
           <G v-else class="w-9 h-9"/>
@@ -45,7 +45,7 @@
           <span class="py-1 px-2 text-xs font-semibold bg-whatsapp-dark-200 rounded shadow-lg text-gray-400">Let's broadcash message in {{currentPeerGroupname ? currentPeerGroupname : 'Your Friend' }}</span>
         </li>
         <li class="text-center">
-          <p class="py-1 px-2 text-xs mb-2 bg-whatsapp-dark-200 rounded font-semibold shadow-lg text-yellow-400">
+          <p class="py-1 px-2 text-xs mb-2 bg-whatsapp-dark-200 rounded font-semibold shadow-lg text-whatsapp-yellow">
             <span class="inline-flex items-start"><svg class="w-3.5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
               </svg></span> Messages and calls are end-to-end encrypted. No one outside of this chat, not even whatsapp, can read or listen to them. Tap to learn more.
@@ -105,7 +105,7 @@ import { reactive, toRefs, onMounted, ref, computed, onBeforeMount, onUpdated } 
 import moment from 'moment'
 import Chat from '../components/Chat.vue'
 import db from '../firebase'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import MenuOption from '../components/MenuOption.vue'
 import Spinner from '../components/Spinner.vue'
 import G from '../components/svg/G.vue'
@@ -120,18 +120,19 @@ export default {
   },
   setup () {
     const router = useRouter();
+    const route = useRoute();
     const store = useStore();
 
     const option = ref(false);
     const inputMessage = ref("");
 
     const state = reactive({
-      currentUsername: localStorage.getItem('username'),
+      currentUsername:  computed(()=>store.state.users.currentUser.username),
       currentUserId: localStorage.getItem('user_id'),
-      currentUserColorCode: localStorage.getItem('color_code'),
-      currentPeerGroupId: localStorage.getItem('current_group_id'),
-      currentPeerGroupAvatar: localStorage.getItem('current_group_avatar'),
-      currentPeerGroupname: localStorage.getItem('current_group_name'),
+      currentUserColorCode:  computed(()=>store.state.users.currentUser.color_code),
+      currentPeerGroupId: '',
+      currentPeerGroupAvatar: '',
+      currentPeerGroupname: '',
       listMessages: [],
       groupChatId: null,
       isProcess: false,
@@ -192,6 +193,7 @@ export default {
         if (!localStorage.getItem("user_id")) {
           router.push("/login")
         }
+        getGroupDetail();
       })
 
     // Scrolldwon when chatroom updated
@@ -203,11 +205,26 @@ export default {
       }
     });
 
+    const getGroupDetail = () => {
+      let current_group_id = route.params.group_id;
+
+      db.firestore().collection('groups')
+          .doc(current_group_id)
+          .get().then(group => {
+            if(group.exists){
+              state.currentPeerGroupId = group.data().group_id;
+              state.currentPeerGroupname = group.data().group_name;
+              state.currentPeerGroupAvatar = group.data().group_avatar;
+            }
+          })
+
+    }
+
    const getDataMessages = async () => {
       state.isProcess = true;
 
       // Temp Current Room
-      let groupChatId = `G-${state.currentPeerGroupId}`;
+      let groupChatId = `active_user_groups/G-${route.params.group_id}`;
 
       // Init DB Object
       const messageRefw = db.database().ref(groupChatId);
@@ -224,7 +241,7 @@ export default {
       } else {
         
           // Set new Room
-          state.groupChatId = `G-${state.currentPeerGroupId}`;
+          state.groupChatId = `active_user_groups/G-${route.params.group_id}`;
           retrieveMessagesFromDB(state.groupChatId);
           
       }

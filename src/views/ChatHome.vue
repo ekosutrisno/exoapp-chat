@@ -7,7 +7,7 @@
          <div class="flex items-start justify-between">
             <div class="inline-flex items-center space-x-2">
             <button class="w-5 font-medium text-2xl hover:text-gray-400 focus:outline-none">
-               ExoApp
+               ExoApp<sup v-if="isOnline.valueOf()" :class="{'text-green-400': isOnline.valueOf()}">&bull;</sup>
             </button>
             </div>
             <div class="inline-flex items-center space-x-4">
@@ -51,7 +51,7 @@
                <li v-if="friends.length === 0" class="text-gray-300 text-center py-4">
                   <h1 class="mb-6">You No have a Friend!</h1>
                   <div class="inline-flex space-x-2">
-                     <button @click="setFriends" class="py-3 px-4 items-center space-x-2 rounded hover:bg-opacity-80 font-semibold text-gray-300 bg-whatsapp-teal-green focus:outline-none">
+                     <button @click="setFriends" class="py-3 px-4 items-center space-x-2 rounded hover:bg-opacity-80 font-semibold text-gray-300 bg-whatsapp-dark-200 ring-1 ring-whatsapp-dark-100 focus:outline-none">
                         <svg class="w-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                            <path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd" />
                         </svg>
@@ -95,14 +95,14 @@ export default {
       const store = useStore();
 
       const state = reactive({
-         currentPeerUser: null,
-         currentPeerGroup: null,
          currentUserId: computed(() => store.getters.getUserId),
          friends: [],
-         groups: computed(() => store.state.groups.groups) ,
+         groups: computed(() => store.state.groups.groups),
+         me: computed(() => store.state.users.currentUser) ,
          isProcess: false,
          isChat: true,
          option : false,
+         isOnline: navigator.onLine.valueOf(),
          isGroup: false,
          currentTab:'CHATS',
          togle: [
@@ -117,7 +117,13 @@ export default {
          ]
       })
 
+      const refreshCurrentUser = async ()=>{
+         await store.dispatch('setCurrentUser', state.currentUserId);
+
+      }
+
       onMounted(() => {
+         refreshCurrentUser();
          getFriendList();
          getGroupList();
          isLogin()
@@ -144,11 +150,8 @@ export default {
             console.log(error)
          });
       }
-      
- 
-      const getFriendList = async () => {
 
-         
+      const getFriendList = async () => {
          state.isProcess = true;
          
          setTimeout(() => {
@@ -159,6 +162,7 @@ export default {
                         .doc(state.currentUserId)
                         .collection('friends')
                         .get();
+
          if (data.docs.length > 0) {
             let listUser = [];
             listUser = [...data.docs]
@@ -198,11 +202,10 @@ export default {
       }
 
       const letChat = ( peerUser ) => {
-         state.currentPeerUser = peerUser;
-         localStorage.setItem('peer_user_id', peerUser.user_id);
-         localStorage.setItem('peer_photo_url', peerUser.photo_url);
-         localStorage.setItem('peer_username', peerUser.username);
-         router.push("/chat-room")
+         router.push({
+            name: 'chat-room', 
+            params: {user_peer_id: peerUser.user_id}
+         })
       }
 
       const isLogin = () => {
@@ -210,12 +213,10 @@ export default {
       }
 
       const letChatGroup = ( group ) => {
-         state.currentPeerGroup = group;
-         localStorage.setItem('current_group_id', group.group_id);
-         localStorage.setItem('current_group_avatar', group.group_avatar);
-         localStorage.setItem('current_group_name', group.group_name);
-         localStorage.setItem('current_group_description', group.group_description);
-         router.push({ name: 'group-chat-room', params: { group_id: group.group_id } })
+         router.push({ 
+            name: 'group-chat-room', 
+            params: { group_id: group.group_id } 
+         })
       }
 
       const switchToggle = ( id, text ) => {

@@ -13,46 +13,65 @@ const users = {
    },
 
    actions: { 
-      setCurrentUser({ commit }, user) {
-         saveDataToLocalStorage(user);
-         commit('SET_CURRENT_USER', user);
+     async setCurrentUser({ commit }, user_id) {
+         await db.firestore().collection('users')
+         .doc(user_id)
+         .get()
+         .then(doc => {
+               if( doc.exists){
+                  const payload = {
+                     user_id: doc.data().user_id,
+                     username: doc.data().username,
+                     email: doc.data().email,
+                     phone_number: doc.data().phone_number,
+                     photo_url: doc.data().photo_url,
+                     status: doc.data().status,
+                     descriptions: doc.data().descriptions,
+                     color_code: doc.data().color_code
+                  }
+                  
+                  saveDataToLocalStorage(payload);
+                  commit('SET_CURRENT_USER', payload);
+               }
+         })
       },
-      onUserSigin(){
+   onUserSigin(){
 
          const auth = db.auth();
          const dbUser =  db.firestore().collection('users')
 
-         auth.onAuthStateChanged((user) =>{
+         auth.onAuthStateChanged( (user) =>{
             if (user) {
                let user_id = user.uid;
-               dbUser.doc(user_id)
-                  .update({
-                     online: true
-                  });
-
+               let dataToUpdate = {
+                  online: true
+               }
+               dbUser.doc(user_id).update(dataToUpdate);
             } else {
                // 
             }
           });
       },
-      onUserSignout({commit}, current_user_id){
-         const dbUser =  db.firestore().collection('users');
-        
-         dbUser.doc(current_user_id)
-             .update({
-                online: false, 
-                last_active: new Date().toISOString()
-            });
+     async onUserSignout({commit}, current_user_id){
+      const dbUser =  db.firestore().collection('users');
 
-         commit('SET_CURRENT_USER', {});
+      let dataToUpdate = {
+         online: false, 
+         last_active: new Date().toISOString()
       }
+
+      await  dbUser.doc(current_user_id).update(dataToUpdate);
+
+      commit('SET_CURRENT_USER', {});
     },
-    getters: {
-      getUserId() {
-         return localStorage.getItem('user_id');
+    
+   },
+   getters: {
+   getUserId() {
+      return localStorage.getItem('user_id');
       }
    },
- }
+}
 
  const saveDataToLocalStorage = (user) => {
    localStorage.setItem('user_id', user.user_id);

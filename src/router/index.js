@@ -1,44 +1,49 @@
 import { createRouter, createWebHistory } from 'vue-router';
 
 const routes = [
+   { 
+      path: '/:pathMatch(.*)*', 
+      name: 'not-found', 
+      component: () => import('../views/NotFound.vue')
+   },
    {
       path: "/",
-      name: "Home",
+      name: "home",
       component: () => import('../views/HomePage.vue'),
    },
    {
       path: "/login",
-      name: "Login",
+      name: "login",
       component: () => import('../views/LoginPage.vue'),
    },
    {
       path: "/register",
-      name: "Register",
+      name: "register",
       component: () => import('../views/RegisterPage.vue'),
    },
    {
       path: "/profile",
-      name: "Profile",
+      name: "profile",
       component: () => import('../views/ProfilePage.vue'),
    },
    {
-      path: "/chat-home",
-      name: "ChatHome",
+      path: "/chat-home/:user_id",
+      name: "chat-home",
       component: () => import('../views/ChatHome.vue'),
    },
    {
       path: "/invite-friend",
-      name: "InviteFriend",
+      name: "invite-friend",
       component: () => import('../views/InviteFriend.vue'),
    },
    {
       path: "/create-group",
-      name: "CreateGroup",
+      name: "create-group",
       component: () => import('../views/CreateGroup.vue'),
    },
    {
-      path: "/chat-room",
-      name: "ChatRoom",
+      path: "/chat-room/:user_peer_id",
+      name: "chat-room",
       component: () => import('../views/ChatRoom.vue'),
    },
    {
@@ -53,7 +58,7 @@ const routes = [
    },
    {
       path: "/friend-description/:user_id",
-      name: "FriendDescription",
+      name: "friend-description",
       component: () => import('../views/FriendDescription.vue'),
    },
 ];

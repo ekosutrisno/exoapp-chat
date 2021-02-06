@@ -5,19 +5,20 @@
   <div class="h-screen mx-auto flex flex-col w-full max-w-screen-sm">
     <div class="flex fixed w-full top-0 max-w-screen-sm items-center justify-between px-4 bg-whatsapp-dark-300 text-gray-300 h-16 flex-shrink-0 shadow-lg z-40">
       <div class="inline-flex items-center space-x-2">
-        <router-link to="/chat-home" class="w-5 hover:text-gray-400 focus:outline-none">
+        <button @click="$router.back()" class="w-5 hover:text-gray-400 focus:outline-none">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
             <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
           </svg>
-        </router-link>
+        </button>
         <router-link 
-          :to="{name:'FriendDescription', params: {user_id : currentPeerUserId}}" 
+          :to="{name:'friend-description', params: {user_id : $route.params.user_peer_id}}" 
           class="inline-flex focus:outline-none items-center space-x-2">
             <img v-if="currentPeerURL" class="w-9 h-9 object-cover rounded-full" :src="currentPeerURL" alt="profile">
             <U v-else class="w-9 h-9"/>
-            <div class="text-left">
+            <div class="text-left max-w-max nv-transition">
               <p class="block text-lg font-semibold">{{ currentPeerUsername }}</p>
-              <p class="block text-sm -mt-1">Personal</p>
+              <p v-if="currentPeerUserOnline" class="block text-sm -mt-1">online</p>
+              <p v-else class="text-sm -mt-1">offline</p>
             </div>
         </router-link>
       </div>
@@ -39,15 +40,20 @@
          <MenuOption v-click-away="toggleOption" v-if="option" @on-logout="logout" />
         </div>
       </div>
+      <div v-if="!currentPeerUserOnline" class="absolute px-2 w-full max-w-screen-sm -bottom-12 -ml-4 text-gray-400"> 
+        <div class="mx-auto md:w-1/2 max-w-xs rounded-lg py-2 bg-whatsapp-dark-200 text-center bg-opacity-90 shadow-lg text-sm">
+          <p class="font-semibold">Last seen {{lastSeen === 'invalid date' ? 'Today' : lastSeen}}</p>
+        </div>
+      </div>
     </div>
     <div style="height:4.25rem" class="w-full"></div>
-    <div class="flex-1 px-4 overflow-y-auto md:on-scrollbar bg-transparent">
+    <div class="flex-1 relative px-4 overflow-y-auto md:on-scrollbar bg-transparent">
       <ul class="space-y-1 text-gray-300 relative">
         <li class="text-center mb-2">
           <span class="py-1 px-2 text-xs bg-whatsapp-dark-200 rounded font-semibold shadow-lg text-gray-400">Let's say hay with {{currentPeerUsername ? currentPeerUsername : 'Your Friend' }}</span>
         </li>
         <li class="text-center">
-          <p class="py-1 px-2 text-xs mb-2 bg-whatsapp-dark-200 rounded font-semibold shadow-lg text-yellow-400">
+          <p class="py-1 px-2 text-xs mb-2 bg-whatsapp-dark-200 rounded font-semibold shadow-lg text-whatsapp-yellow">
             <span class="inline-flex items-start"><svg class="w-3.5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
               </svg></span> Messages and calls are end-to-end encrypted. No one outside of this chat, not even whatsapp, can read or listen to them. Tap to learn more.
@@ -107,7 +113,7 @@ import { reactive, toRefs, onMounted, ref, computed, onBeforeMount, onUpdated} f
 import moment from 'moment'
 import Chat from '../components/Chat.vue'
 import db from '../firebase'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import MenuOption from '../components/MenuOption.vue'
 import Spinner from '../components/Spinner.vue'
 import U from '../components/svg/U.vue'
@@ -122,18 +128,20 @@ export default {
   },
   setup () {
     const router = useRouter();
+    const route = useRoute();
     const store = useStore();
 
     const option = ref(false);
     const inputMessage = ref("");
 
     const state = reactive({
-      currentUsername: localStorage.getItem('username'),
+      currentUsername: computed(()=>store.state.users.currentUser.username),
       currentUserId: localStorage.getItem('user_id'),
-      currentPeerUserId: localStorage.getItem('peer_user_id'),
-      currentPeerURL: localStorage.getItem('peer_photo_url'),
-      currentPeerUsername: localStorage.getItem('peer_username'),
-      currentPeerUser: null,
+      currentPeerUserId: '',
+      currentPeerURL: '',
+      currentPeerUsername: '',
+      currentPeerUserOnline: true,
+      peerUserLastSeen: '',
       listMessages: [],
       groupChatId: null,
       isProcess: false,
@@ -184,19 +192,37 @@ export default {
 
     }
 
-    
+    const getPeerUserDetail = async () => {
+      
+      let user_peer_id = route.params.user_peer_id;
+
+      await db.firestore().collection('users')
+            .doc(user_peer_id)
+            .get()
+            .then( user => {
+              if (user.exists) {
+                state.currentPeerUserId = user.data().user_id;
+                state.currentPeerUsername = user.data().username;
+                state.currentPeerURL = user.data().photo_url;
+                state.currentPeerUserOnline = user.data().online;
+                state.peerUserLastSeen = user.data().last_active;
+            }
+      })
+    }
 
     // Lifecicle Hook
     onMounted(() => {
-        getDataMessages();
+      getDataMessages();
     })
 
     // Lifecicle Hook
     onBeforeMount(() => {
-        if (!localStorage.getItem("user_id")) {
-          router.push("/login")
-        }
-      })
+      if (!localStorage.getItem("user_id")) {
+        router.push("/login")
+      }
+      
+      getPeerUserDetail();
+    })
 
     // Scrolldwon when chatroom updated
     onUpdated(()=> {
@@ -212,7 +238,7 @@ export default {
       autoStopSpinner();
 
       // Temp Current Room
-      let groupChatId = `P-${state.currentPeerUserId}+${state.currentUserId}`;
+      let groupChatId = `active_user_chats/P-${route.params.user_peer_id}+${state.currentUserId}`;
 
       // Init DB Object
       const messageRefw = db.database().ref(groupChatId);
@@ -230,7 +256,7 @@ export default {
       } else {
         
           // Set new Room
-          state.groupChatId =  `P-${state.currentUserId}+${state.currentPeerUserId}`;
+          state.groupChatId =  `active_user_chats/P-${state.currentUserId}+${route.params.user_peer_id}`;
           retrieveMessagesFromDB(state.groupChatId);
           
       }
@@ -277,7 +303,6 @@ export default {
     }
 
     const bottom = ref(null)
-
     const scrollToBottom = () => {
       bottom.value.scrollIntoView({behavior: 'smooth'})
     }
@@ -286,10 +311,13 @@ export default {
       bottom.value.scrollIntoView();
     }
 
+    const lastSeen = computed( () => moment(state.peerUserLastSeen).calendar())
+
     return{
       ...toRefs(state),
       option,
       bottom,
+      lastSeen,
       inputMessage,
       toggleOption,
       logout,

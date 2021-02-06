@@ -144,7 +144,7 @@ export default {
                      })
                      .then(() =>{
                         state.infoMessage ='Group Added!';
-                        router.push('/chat-home')
+                        router.back();
                      }).catch(e => console.log(e));
                   }).catch(e => console.log(e));
                })

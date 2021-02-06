@@ -22,7 +22,7 @@
                   </svg>
                   <div class="flex flex-col w-full">
                      <h1 class="text-gray-400 pl-2 text-sm -mb-2 z-30">Username</h1>
-                     <input v-model="username" type="text" required readonly class="py-2 pl-2 z-20 text-gray-300 mb-2 bg-transparent focus:outline-none border-b border-transparent transition-colors focus:border-gray-700 placeholder- text-sm-70" placeholder="Username" />
+                     <input v-model="username" type="text" readonly class="py-2 pl-2 z-20 text-gray-300 mb-2 bg-transparent focus:outline-none border-b border-transparent transition-colors focus:border-gray-700 placeholder- text-sm-70" placeholder="Username" />
                   </div>
                </div>
 
@@ -32,7 +32,7 @@
                   </svg>
                   <div class="flex flex-col w-full">
                      <h1 class="text-gray-400 pl-2 text-sm -mb-2 z-30">Status</h1>
-                     <input v-model="status" type="text" required readonly class="py-2 pl-2 z-20 text-gray-300 mb-2 bg-transparent focus:outline-none border-b border-transparent transition-colors focus:border-gray-700 placeholder-gray-400 placeholder-opacity-70" placeholder="Status" />
+                     <input v-model="status" type="text" readonly class="py-2 pl-2 z-20 text-gray-300 mb-2 bg-transparent focus:outline-none border-b border-transparent transition-colors focus:border-gray-700 placeholder-gray-400 placeholder-opacity-70" placeholder="Status" />
                   </div>
                 </div>
                 <div class="inline-flex px-4 w-full max-w-screen-sm items-start space-x-2">
@@ -41,7 +41,7 @@
                   </svg>
                   <div class="flex flex-col w-full">
                      <h1 class="text-gray-400 pl-2 text-sm -mb-2 z-30">Handphone</h1>
-                     <input v-model="phoneNumber" type="text" required readonly class="py-2 pl-2 z-20 text-gray-300 mb-2 bg-transparent focus:outline-none border-b border-transparent transition-colors focus:border-gray-700 placeholder-gray-400 placeholder-opacity-70" placeholder="Phone Number" />
+                     <input v-model="phoneNumber" type="text" readonly class="py-2 pl-2 z-20 text-gray-300 mb-2 bg-transparent focus:outline-none border-b border-transparent transition-colors focus:border-gray-700 placeholder-gray-400 placeholder-opacity-70" placeholder="Phone Number" />
                   </div>
                 </div>
                 <div class="inline-flex px-4 w-full max-w-screen-sm items-start space-x-2">
@@ -50,7 +50,7 @@
                   </svg>
                   <div class="flex flex-col w-full">
                      <h1 class="text-gray-400 pl-2 text-sm -mb-2 z-30">About Me</h1>
-                     <textarea v-model="descriptions" class="py-2 pl-2 z-20 text-gray-300 mb-2 bg-transparent focus:outline-none border-b border-transparent transition-colors focus:border-gray-700 placeholder-gray-400 placeholder-opacity-70" rows="2" placeholder="Your Descriptions"></textarea>
+                     <textarea v-model="descriptions" readonly class="py-2 pl-2 z-20 text-gray-300 mb-2 bg-transparent focus:outline-none border-b border-transparent transition-colors focus:border-gray-700 placeholder-gray-400 placeholder-opacity-70" rows="2" placeholder="Your Descriptions"></textarea>
                   </div>
                </div>
 
