@@ -27,7 +27,7 @@ const friends = {
          if (data.docs.length > 0) {
             let listUser = [];
             let dataFriends = []
-            listUser = [...data.docs]
+            listUser = [...data.docs];
 
             listUser.forEach((item, index) => {
                db.firestore().collection('users')
@@ -39,6 +39,8 @@ const friends = {
                            key: index,
                            documentKey: doc.id,
                            user_id: doc.data().user_id,
+                           online: doc.data().online,
+                           last_active: doc.data().last_active,
                            email: doc.data().email,
                            username: doc.data().username,
                            photo_url: doc.data().photo_url,
@@ -50,22 +52,6 @@ const friends = {
 
             commit('SET_LIST_FRIEND', dataFriends);
          }
-      },
-      updateFriendStatus(){
-         db.firestore().collection('users')
-         .onSnapshot((snapshot) => {
-            snapshot.docChanges().forEach(function(change) {
-                if (change.type === "added") {
-                    console.log("New: ", change.doc.data());
-                }
-                if (change.type === "modified") {
-                    console.log("Modified: ", change.doc.data());
-                }
-                if (change.type === "removed") {
-                    console.log("Removed: ", change.doc.data());
-                }
-            });
-        });
       }
    },
 
