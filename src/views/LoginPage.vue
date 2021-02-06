@@ -26,7 +26,7 @@
                      forgot password 
                   </router-link>
                </p>
-               <p class="text-center mt-6 text-sm text-gray-400">From Eko Sutrisno &copy;{{new Date().getFullYear()}} All right reserved</p>
+               <p class="text-center my-5 text-sm text-gray-400">From Eko Sutrisno &copy;{{new Date().getFullYear()}} All right reserved</p>
             </div>
          </div>
    </div>
