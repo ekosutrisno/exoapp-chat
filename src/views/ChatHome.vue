@@ -97,7 +97,8 @@ export default {
       const state = reactive({
          currentUserId: computed(() => store.getters.getUserId),
          friends: [],
-         groups: computed(() => store.state.groups.groups) ,
+         groups: computed(() => store.state.groups.groups),
+         me: computed(() => store.state.users.currentUser) ,
          isProcess: false,
          isChat: true,
          option : false,
@@ -116,8 +117,14 @@ export default {
          ]
       })
 
+      const refreshCurrentUser = async ()=>{
+         await store.dispatch('setCurrentUser', state.currentUserId);
+
+      }
+
       onMounted(() => {
-         getLatesFriendData();
+         refreshCurrentUser();
+         getFriendList();
          getGroupList();
          isLogin()
       })
@@ -133,7 +140,6 @@ export default {
 
       const onLogout = () => {
          store.dispatch('onUserSignout', state.currentUserId);
-         store.dispatch('updateStatus', state.currentUserId);
 
          db.auth().signOut().then(() => {
             
@@ -144,18 +150,8 @@ export default {
             console.log(error)
          });
       }
-      const getLatesFriendData =  () =>{
-         db.database().ref('active_user_status')
-         .on('value', () =>{
-            state.friends = [];
-            getFriendList();
-         })
-      }
-      
- 
-      const getFriendList = async () => {
-         console.log("Fire");
 
+      const getFriendList = async () => {
          state.isProcess = true;
          
          setTimeout(() => {

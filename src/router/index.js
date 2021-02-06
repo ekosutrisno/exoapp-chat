@@ -22,8 +22,8 @@ const routes = [
       component: () => import('../views/ProfilePage.vue'),
    },
    {
-      path: "/chat-home",
-      name: "ChatHome",
+      path: "/chat-home/:user_id",
+      name: "chat-home",
       component: () => import('../views/ChatHome.vue'),
    },
    {

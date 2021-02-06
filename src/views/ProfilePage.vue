@@ -75,25 +75,28 @@
 </template>
 
 <script>
-import { onBeforeMount, reactive, toRefs } from 'vue'
+import { computed, onBeforeMount, reactive, toRefs } from 'vue'
 import db from '../firebase'
 import { useRouter } from 'vue-router'
 import Spinner from '../components/Spinner.vue'
 import U from '../components/svg/U.vue'
+import { useStore } from 'vuex'
 
 export default {
    components:{ Spinner, U },
    setup () {
       const router = useRouter();
+      const store = useStore();
 
       const state = reactive({
          user_id: localStorage.getItem('user_id'),
-         photo_url: localStorage.getItem('photo_url'),
-         username: localStorage.getItem('username') ? localStorage.getItem('username') : '',
-         phoneNumber: localStorage.getItem('phone_number') ? localStorage.getItem('phone_number') : '',
-         status: localStorage.getItem('status') ? localStorage.getItem('status') : '',
-         descriptions: localStorage.getItem('descriptions') ? localStorage.getItem('descriptions') : '',
+         photo_url: computed(()=> store.state.users.currentUser.photo_url),
+         username: computed(()=> store.state.users.currentUser.username),
+         phoneNumber: computed(()=> store.state.users.currentUser.phone_number),
+         status: computed(()=> store.state.users.currentUser.status),
+         descriptions: computed(()=> store.state.users.currentUser.descriptions),
          newFoto : null,
+         me: computed(()=> store.state.users.currentUser),
          isProcess: false,
          messageInfo: ''
       })

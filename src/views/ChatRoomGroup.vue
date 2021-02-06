@@ -5,11 +5,11 @@
   <div class="h-screen mx-auto flex flex-col w-full max-w-screen-sm">
     <div class="flex fixed w-full top-0 max-w-screen-sm items-center justify-between px-4 bg-whatsapp-dark-300 text-gray-300 h-16 flex-shrink-0 shadow-lg z-40">
       <div class="inline-flex items-center space-x-2">
-        <router-link to="/chat-home" class="w-5 hover:text-gray-400 focus:outline-none">
+        <button @click="$router.back()" class="w-5 hover:text-gray-400 focus:outline-none">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
             <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
           </svg>
-        </router-link>
+        </button>
         <router-link :to="{name: 'group-description', params: {group_id: $route.params.group_id}}" class="inline-flex focus:outline-none items-center space-x-2">
           <img v-if="currentPeerGroupAvatar" class="w-9 h-9 object-cover rounded-full" :src="currentPeerGroupAvatar" alt="profile">
           <G v-else class="w-9 h-9"/>
@@ -127,9 +127,9 @@ export default {
     const inputMessage = ref("");
 
     const state = reactive({
-      currentUsername: localStorage.getItem('username'),
+      currentUsername:  computed(()=>store.state.users.currentUser.username),
       currentUserId: localStorage.getItem('user_id'),
-      currentUserColorCode: localStorage.getItem('color_code'),
+      currentUserColorCode:  computed(()=>store.state.users.currentUser.color_code),
       currentPeerGroupId: '',
       currentPeerGroupAvatar: '',
       currentPeerGroupname: '',

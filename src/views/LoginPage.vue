@@ -63,33 +63,15 @@ export default {
          .then( async res => {
             if(res.user){
             
-            store.dispatch('onUserSigin')
+               store.dispatch('onUserSigin')
+               
+              await store.dispatch('setCurrentUser', res.user.uid);
 
-               await db.firestore().collection('users')
-               .where('user_id', '==', res.user.uid)
-               .get()
-               .then(querySnapshot =>{
-                  
-                  querySnapshot.forEach( doc => {
-                        let userData = doc.data();
-                        const payload = {
-                           user_id: userData.user_id,
-                           username: userData.username,
-                           email: userData.email,
-                           phone_number: userData.phone_number,
-                           photo_url: userData.photo_url,
-                           status: userData.status,
-                           descriptions: userData.descriptions,
-                           FirebaseDocumentId: doc.id,
-                           color_code: userData.color_code
-                        }
-                        setCurrentUser(payload);
-                  })
-
-                  state.isProcess = false;
+               state.isProcess = false;
+               router.push({
+                  name: 'chat-home', 
+                  params: {user_id: res.user.uid}
                })
-
-               router.push("/chat-home")
             }
          }).catch( err => {
 
@@ -102,10 +84,6 @@ export default {
             }
          })
 
-      }
-
-       const setCurrentUser = async ( data ) => {
-          await store.dispatch('setCurrentUser', data);
       }
 
       const errorMessageHandler = (errors) => {
@@ -131,8 +109,12 @@ export default {
       }
 
       onBeforeMount(() => {
-         if(localStorage.getItem('user_id')) { 
-            router.push('/chat-home')
+         let user_id = localStorage.getItem('user_id')
+         if(user_id) { 
+            router.push({
+               name: 'chat-home', 
+               params : {user_id: user_id}
+            })
          }
       })
 

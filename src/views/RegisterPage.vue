@@ -189,48 +189,45 @@ export default {
 
         await auth.createUserWithEmailAndPassword( state.email, state.password )
          .then(async data =>{
-                const userData = {
-                  user_id: data.user.uid,
-                  color_code: randomColorCode,
-                  username: state.username,
-                  password: state.password,
-                  email: state.email,
-                  last_active: '',
-                  join_at: moment().format('LLLL'),
-                  descriptions: `Hi, My name is ${state.username}`,
-                  phone_number: '',
-                  photo_url: '',
-                  status: 'I Love ExoApps'
-               }
+            const userData = {
+               user_id: data.user.uid,
+               color_code: randomColorCode,
+               username: state.username,
+               password: state.password,
+               email: state.email,
+               last_active: '',
+               join_at: moment().format('LLLL'),
+               descriptions: `Hi, My name is ${state.username}`,
+               phone_number: '',
+               photo_url: '',
+               status: 'I Love ExoApps'
+            }
                
-               insertUser(userData); //Save to Store and LocalStorage
+            await db.firestore().collection('users')
+            .doc(data.user.uid)
+            .set(userData).then( () =>{
+               
+               // Save To Store
+               store.dispatch('setCurrentUser', userData.user_id);
+               
+               state.username = '';
+               state.email = '';
+               state.password = '';
+               state.confirmPassword = '';
 
-               await db.firestore().collection('users')
-               .doc(data.user.uid)
-               .set(userData).then( () =>{
-                  
-                  state.username = '';
-                  state.email = '';
-                  state.password = '';
-                  state.confirmPassword = '';
+               state.isProcess = false;
 
-                  state.isProcess = false;
-
-                  router.push("/chat-home") // Change To Page Chat
-                  
-               }).catch(err =>{
-                  state.isProcess = false;
-                  state.errorMessage = err.message;
-               })
+               router.push({name: 'chat-home', params: {user_id: data.user.uid}}) // Change To Page Chat
+               
+            }).catch(err =>{
+               state.isProcess = false;
+               state.errorMessage = err.message;
+            })
          }).catch(err => {
             state.isProcess = false;
             state.errorMessage = err.message;
          })
 
-      }
-
-      const insertUser = ( data ) => {
-         store.dispatch('setCurrentUser', data);
       }
 
       return {

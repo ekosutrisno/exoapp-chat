@@ -135,7 +135,7 @@ export default {
     const inputMessage = ref("");
 
     const state = reactive({
-      currentUsername: localStorage.getItem('username'),
+      currentUsername: computed(()=>store.state.users.currentUser.username),
       currentUserId: localStorage.getItem('user_id'),
       currentPeerUserId: '',
       currentPeerURL: '',
