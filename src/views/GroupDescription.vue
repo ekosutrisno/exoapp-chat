@@ -36,7 +36,7 @@
                   </svg>
                   <div class="flex flex-col w-full">
                      <h1 class="text-gray-400 pl-2 text-sm -mb-2 z-30">Group Name</h1>
-                     <input v-model="group_name" type="text" :readonly="!is_admin" class="py-2 pl-2 z-20 text-gray-300 mb-2 bg-transparent focus:outline-none border-b border-transparent transition-colors font-semibold focus:border-gray-700 text-xl" placeholder="Username" />
+                     <input v-model="group_name" type="text" :readonly="!is_admin" class="py-2 pl-2 z-20 text-gray-300 mb-2 bg-transparent focus:outline-none border-b border-transparent transition-colors font-semibold focus:border-gray-700 text-xl" placeholder="Group Name" />
                   </div>
                </div>
                
@@ -46,7 +46,7 @@
                   </svg>
                   <div class="flex flex-col w-full">
                      <h1 class="text-gray-400 pl-2 text-sm -mb-2 z-30">Status</h1>
-                     <input v-model="status" type="text" readonly class="py-2 pl-2 z-20 text-gray-300 mb-2 bg-transparent focus:outline-none border-b border-transparent transition-colors focus:border-gray-700 placeholder-gray-400 placeholder-opacity-70" placeholder="Status" />
+                     <input v-model="status" type="text" readonly class="py-2 pl-2 z-20 text-gray-300 mb-2 bg-transparent focus:outline-none border-b border-transparent transition-colors focus:border-gray-700 placeholder-gray-400 placeholder-opacity-70" placeholder="Group Status" />
                   </div>
                 </div>
                 <div class="inline-flex px-4 w-full max-w-screen-sm items-start space-x-2">
@@ -55,7 +55,7 @@
                   </svg>
                   <div class="flex flex-col w-full">
                      <h1 class="text-gray-400 pl-2 text-sm -mb-2 z-30">Created At</h1>
-                     <input v-model="created_date" type="text" readonly class="py-2 pl-2 z-20 text-gray-300 mb-2 bg-transparent focus:outline-none border-b border-transparent transition-colors focus:border-gray-700 placeholder-gray-400 placeholder-opacity-70" placeholder="Phone Number" />
+                     <input v-model="created_date" type="text" readonly class="py-2 pl-2 z-20 text-gray-300 mb-2 bg-transparent focus:outline-none border-b border-transparent transition-colors focus:border-gray-700 placeholder-gray-400 placeholder-opacity-70" placeholder="Group Created At" />
                   </div>
                 </div>
                 <div class="inline-flex px-4 w-full max-w-screen-sm items-start space-x-2">
@@ -64,7 +64,7 @@
                   </svg>
                   <div class="flex flex-col w-full">
                      <h1 class="text-whatsapp-cyan pl-2 text-sm font-semibold -mb-2 z-30">Description</h1>
-                     <textarea v-model="group_description" :readonly="!is_admin" class="py-2 pl-2 z-20 text-gray-300 mb-2 bg-transparent focus:outline-none border-b border-transparent transition-colors focus:border-gray-700 placeholder-gray-400 placeholder-opacity-70" rows="2" placeholder="Your Descriptions"></textarea>
+                     <textarea v-model="group_description" :readonly="!is_admin" class="py-2 pl-2 z-20 text-gray-300 mb-2 bg-transparent focus:outline-none border-b border-transparent transition-colors focus:border-gray-700 placeholder-gray-400 placeholder-opacity-70" rows="2" placeholder="Group Descriptions"></textarea>
                   </div>
                </div>
 

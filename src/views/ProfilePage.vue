@@ -75,7 +75,7 @@
 </template>
 
 <script>
-import { computed, onBeforeMount, reactive, toRefs } from 'vue'
+import {onBeforeMount, onMounted, reactive, toRefs } from 'vue'
 import db from '../firebase'
 import { useRouter } from 'vue-router'
 import Spinner from '../components/Spinner.vue'
@@ -90,16 +90,28 @@ export default {
 
       const state = reactive({
          user_id: localStorage.getItem('user_id'),
-         photo_url: computed(()=> store.state.users.currentUser.photo_url),
-         username: computed(()=> store.state.users.currentUser.username),
-         phoneNumber: computed(()=> store.state.users.currentUser.phone_number),
-         status: computed(()=> store.state.users.currentUser.status),
-         descriptions: computed(()=> store.state.users.currentUser.descriptions),
+         photo_url: '',
+         username: '',
+         phoneNumber: '',
+         status: '',
+         descriptions: '',
          newFoto : null,
-         me: computed(()=> store.state.users.currentUser),
          isProcess: false,
          messageInfo: ''
       })
+
+      onMounted(()=> setUserDetail());
+
+      const setUserDetail = ()=>{
+         const me = store.state.users.currentUser;
+
+         state.photo_url = me.photo_url;
+         state.username = me.username;
+         state.phoneNumber = me.phone_number;
+         state.status = me.status;
+         state.descriptions = me.descriptions;
+
+      }
 
       const changeAvatar = (event) => {
          if (event.target.files && event.target.files[0]) {
