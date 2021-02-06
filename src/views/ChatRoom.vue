@@ -238,7 +238,7 @@ export default {
       autoStopSpinner();
 
       // Temp Current Room
-      let groupChatId = `P-${route.params.user_peer_id}+${state.currentUserId}`;
+      let groupChatId = `active_user_chats/P-${route.params.user_peer_id}+${state.currentUserId}`;
 
       // Init DB Object
       const messageRefw = db.database().ref(groupChatId);
@@ -256,7 +256,7 @@ export default {
       } else {
         
           // Set new Room
-          state.groupChatId =  `P-${state.currentUserId}+${route.params.user_peer_id}`;
+          state.groupChatId =  `active_user_chats/P-${state.currentUserId}+${route.params.user_peer_id}`;
           retrieveMessagesFromDB(state.groupChatId);
           
       }

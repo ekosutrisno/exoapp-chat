@@ -45,7 +45,7 @@
           <span class="py-1 px-2 text-xs font-semibold bg-whatsapp-dark-200 rounded shadow-lg text-gray-400">Let's broadcash message in {{currentPeerGroupname ? currentPeerGroupname : 'Your Friend' }}</span>
         </li>
         <li class="text-center">
-          <p class="py-1 px-2 text-xs mb-2 bg-whatsapp-dark-200 rounded font-semibold shadow-lg text-yellow-400">
+          <p class="py-1 px-2 text-xs mb-2 bg-whatsapp-dark-200 rounded font-semibold shadow-lg text-whatsapp-yellow">
             <span class="inline-flex items-start"><svg class="w-3.5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
               </svg></span> Messages and calls are end-to-end encrypted. No one outside of this chat, not even whatsapp, can read or listen to them. Tap to learn more.
@@ -224,7 +224,7 @@ export default {
       state.isProcess = true;
 
       // Temp Current Room
-      let groupChatId = `G-${route.params.group_id}`;
+      let groupChatId = `active_user_groups/G-${route.params.group_id}`;
 
       // Init DB Object
       const messageRefw = db.database().ref(groupChatId);
@@ -241,7 +241,7 @@ export default {
       } else {
         
           // Set new Room
-          state.groupChatId = `G-${route.params.group_id}`;
+          state.groupChatId = `active_user_groups/G-${route.params.group_id}`;
           retrieveMessagesFromDB(state.groupChatId);
           
       }
