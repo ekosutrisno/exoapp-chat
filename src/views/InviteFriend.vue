@@ -80,7 +80,7 @@ export default {
 
                   .then(()=>{
                      state.isProcess = false;
-                     router.push('/chat-home');
+                     router.back();
                   }).catch(e =>{
                      console.log(e)
                   })
