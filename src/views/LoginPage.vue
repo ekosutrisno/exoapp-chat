@@ -3,9 +3,9 @@
       <Spinner/>
    </div>
    <div class="min-h-screen w-full absolute inset-0 max-w-screen-sm mx-auto flex flex-col justify-center items-center">
-         <div class="h-full w-full p-4">
+         <div class="h-full w-full p-4 nv-transition">
             <div class="mx-auto mb-3">
-               <Lock class="mx-auto"/>
+               <Lock class="mx-auto"/> 
             </div>
             <h1 class="text-center text-lg font-semibold text-gray-300 mb-6">SIGN IN</h1>
             <h1 v-if="errorMessage" class="text-center text-sm font-semibold text-green-500 mb-6">{{errorMessage}}</h1>
@@ -13,12 +13,17 @@
             <div class="w-full flex flex-col">
                <input @keyup.enter="onLogin" v-model="email" type="email" required class="py-3 px-6 text-lg text-gray-300 mb-2 rounded bg-gray-800 focus:outline-none focus-within:ring-1 focus:ring-gray-700 placeholder-gray-400 placeholder-opacity-70" placeholder="Email" />
                <input @keyup.enter="onLogin" v-model="password" type="password" required class="py-3 px-6 text-lg text-gray-300 mb-6 rounded bg-gray-800 focus:outline-none focus-within:ring-1 focus:ring-gray-700 placeholder-gray-400 placeholder-opacity-70" placeholder="Password" />
-               <button @click="onLogin" type="button" class="py-3 px-6 text-lg rounded hover:bg-opacity-80 font-semibold text-gray-300 bg-whatsapp-teal-green focus:outline-none">
+               <button @click="onLogin" type="button" class="py-3 px-6 text-xl rounded hover:bg-opacity-80 font-semibold text-gray-300 bg-whatsapp-teal-green focus:outline-none">
                   Sign In
                </button>
                <p class="text-center text-lg  text-gray-300 my-2">New user? let's 
-                  <router-link to="/register" class="font-semibold">
+                  <router-link to="/register" class="text-xl font-semibold">
                      Sign Up
+                  </router-link>
+               </p>
+               <p class="text-center text-lg text-gray-300 mb-2">or 
+                  <router-link to="/forgot-password" class="underline">
+                     forgot password 
                   </router-link>
                </p>
                <p class="text-center mt-6 text-sm text-gray-400">From Eko Sutrisno &copy;{{new Date().getFullYear()}} All right reserved</p>

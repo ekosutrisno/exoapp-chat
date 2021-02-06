@@ -3,7 +3,7 @@
       <Spinner/>
    </div>
    <div class="h-full min-h-screen absolute inset-0 w-full max-w-screen-sm mx-auto flex flex-col justify-center items-center">
-         <div class="h-full w-full p-4">
+         <div class="h-full w-full p-4 nv-transition">
             <div class="mx-auto">
                <ChatIcon class="mx-auto"/>
             </div>
@@ -15,11 +15,11 @@
                <input @keyup.enter="onRegister" v-model="email" type="email" required class="py-3 px-6 text-lg text-gray-300 mb-2 rounded bg-gray-800 focus:outline-none focus-within:ring-1 focus:ring-gray-700 placeholder-gray-400 placeholder-opacity-70" placeholder="Email" />
                <input @keyup.enter="onRegister" v-model="password" type="password" required class="py-3 px-6 text-lg text-gray-300 mb-2 rounded bg-gray-800 focus:outline-none focus-within:ring-1 focus:ring-gray-700 placeholder-gray-400 placeholder-opacity-70" placeholder="Password" />
                <input @keyup.enter="onRegister" v-model="confirmPassword" type="password" required class="py-3 px-6 text-lg text-gray-300 mb-6 rounded bg-gray-800 focus:outline-none focus-within:ring-1 focus:ring-gray-700 placeholder-gray-400 placeholder-opacity-70" placeholder="Confirm Password" />
-               <button @click="onRegister" type="button" class="py-4 text-lg px-6 rounded hover:bg-opacity-80 font-semibold text-gray-300 bg-whatsapp-teal-green focus:outline-none">
+               <button @click="onRegister" type="button" class="py-4 text-xl px-6 rounded hover:bg-opacity-80 font-semibold text-gray-300 bg-whatsapp-teal-green focus:outline-none">
                   Sign Up
                </button>
                <p class="text-center text-lg text-gray-300 my-2">Already account? 
-                  <router-link to="/login" class="font-semibold">
+                  <router-link to="/login" class="text-xl font-semibold">
                      Sign In
                   </router-link>
                </p>

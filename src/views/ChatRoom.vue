@@ -41,7 +41,7 @@
         </div>
       </div>
       <div v-if="!currentPeerUserOnline" class="absolute px-2 w-full max-w-screen-sm -bottom-12 -ml-4 text-gray-400"> 
-        <div class="mx-auto md:w-1/2 max-w-xs rounded-full py-2 bg-whatsapp-dark-200 text-center bg-opacity-90 shadow-lg">
+        <div class="mx-auto md:w-1/2 max-w-xs rounded-lg py-2 bg-whatsapp-dark-200 text-center bg-opacity-90 shadow-lg text-sm">
           <p class="font-semibold">Last seen {{lastSeen === 'invalid date' ? 'Today' : lastSeen}}</p>
         </div>
       </div>
@@ -53,7 +53,7 @@
           <span class="py-1 px-2 text-xs bg-whatsapp-dark-200 rounded font-semibold shadow-lg text-gray-400">Let's say hay with {{currentPeerUsername ? currentPeerUsername : 'Your Friend' }}</span>
         </li>
         <li class="text-center">
-          <p class="py-1 px-2 text-xs mb-2 bg-whatsapp-dark-200 rounded font-semibold shadow-lg text-yellow-400">
+          <p class="py-1 px-2 text-xs mb-2 bg-whatsapp-dark-200 rounded font-semibold shadow-lg text-whatsapp-yellow">
             <span class="inline-flex items-start"><svg class="w-3.5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
               </svg></span> Messages and calls are end-to-end encrypted. No one outside of this chat, not even whatsapp, can read or listen to them. Tap to learn more.

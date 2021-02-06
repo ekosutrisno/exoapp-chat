@@ -1,24 +1,29 @@
 import { createRouter, createWebHistory } from 'vue-router';
 
 const routes = [
+   { 
+      path: '/:pathMatch(.*)*', 
+      name: 'not-found', 
+      component: () => import('../views/NotFound.vue')
+   },
    {
       path: "/",
-      name: "Home",
+      name: "home",
       component: () => import('../views/HomePage.vue'),
    },
    {
       path: "/login",
-      name: "Login",
+      name: "login",
       component: () => import('../views/LoginPage.vue'),
    },
    {
       path: "/register",
-      name: "Register",
+      name: "register",
       component: () => import('../views/RegisterPage.vue'),
    },
    {
       path: "/profile",
-      name: "Profile",
+      name: "profile",
       component: () => import('../views/ProfilePage.vue'),
    },
    {
@@ -28,12 +33,12 @@ const routes = [
    },
    {
       path: "/invite-friend",
-      name: "InviteFriend",
+      name: "invite-friend",
       component: () => import('../views/InviteFriend.vue'),
    },
    {
       path: "/create-group",
-      name: "CreateGroup",
+      name: "create-group",
       component: () => import('../views/CreateGroup.vue'),
    },
    {

@@ -1,6 +1,6 @@
 <template>
    <div class="h-screen w-full absolute inset-0 max-w-screen-sm mx-auto flex flex-col justify-center items-center">
-      <div class="h-auto mx-auto w-full p-4 overflow-y-auto">
+      <div class="h-auto mx-auto w-full p-4 overflow-y-auto nv-transition">
         <div class="mx-auto">
                <ChatIcon class="mx-auto"/>
         </div>
