@@ -90,9 +90,9 @@ export default {
          members: [
             {
                user_id: computed(() => store.getters.getUserId),
-               email: localStorage.getItem('email'),
-               username: localStorage.getItem('username'),
-               photo_url: localStorage.getItem('photo_url')
+               email: computed(() => store.state.users.currentUser.email),
+               username: computed(() => store.state.users.currentUser.username),
+               photo_url: computed(() => store.state.users.currentUser.photo_url)
             }
          ]
       })
