@@ -57,6 +57,16 @@
                 </div>
                 <div class="inline-flex px-4 w-full max-w-screen-sm items-start space-x-2">
                   <svg class="w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                     <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
+                     <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
+                  </svg>
+                  <div class="flex flex-col w-full">
+                     <h1 class="text-gray-400 pl-2 text-sm -mb-2 z-30">Email</h1>
+                     <input v-model="email" type="text" readonly required class="py-2 pl-2 z-20 text-gray-300 mb-2 bg-transparent focus:outline-none border-b border-transparent transition-colors focus:border-gray-700 placeholder-gray-400 placeholder-opacity-70" placeholder="Email" />
+                  </div>
+                </div>
+                <div class="inline-flex px-4 w-full max-w-screen-sm items-start space-x-2">
+                  <svg class="w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                      <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
                   </svg>
                   <div class="flex flex-col w-full">
@@ -76,7 +86,7 @@
 
 <script>
 import {onBeforeMount, onMounted, reactive, toRefs } from 'vue'
-import db from '../firebase'
+import { firestore, storage } from '../firebase'
 import { useRouter } from 'vue-router'
 import Spinner from '../components/Spinner.vue'
 import U from '../components/svg/U.vue'
@@ -93,6 +103,7 @@ export default {
          photo_url: '',
          username: '',
          phoneNumber: '',
+         email: '',
          status: '',
          descriptions: '',
          newFoto : null,
@@ -110,6 +121,7 @@ export default {
          state.phoneNumber = me.phone_number;
          state.status = me.status;
          state.descriptions = me.descriptions;
+         state.email = me.email;
 
       }
 
@@ -134,7 +146,7 @@ export default {
          autoStopSpinner();
 
          if(state.newFoto){
-            const upload = db.storage().ref()
+            const upload = storage.ref()
             .child(state.user_id)
             .put(state.newFoto)
 
@@ -172,7 +184,7 @@ export default {
             }
          }
 
-         db.firestore().collection('users')
+         firestore.collection('users')
             .doc(state.user_id)
             .update(newInfo)
             .then( () => {

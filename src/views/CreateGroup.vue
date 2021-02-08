@@ -62,7 +62,7 @@ import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
 import { v4 as uuidv4 } from 'uuid';
 import moment from 'moment';
-import db from '../firebase';
+import { firestore } from '../firebase';
 import Spinner from '../components/Spinner.vue';
 import ListGroupMember from '../components/ListGroupMember.vue';
 import ListGroupFriendCreate from '../components/ListGroupFriendCreate.vue';
@@ -116,13 +116,13 @@ export default {
                active: true
             };
 
-         db.firestore()
+         firestore
             .collection('groups')
             .doc(groupId)
             .set(groupData)
             .then(() =>{
                state.members.forEach( member => {
-                  db.firestore()
+                  firestore
                   .collection('groups')
                   .doc(groupId)
                   .collection('members')
@@ -133,7 +133,7 @@ export default {
                      is_admin: member.user_id == state.user_id ? true : false
                   })
                   .then(() =>{
-                     db.firestore()
+                     firestore
                      .collection('users')
                      .doc(member.user_id)
                      .collection('groups')

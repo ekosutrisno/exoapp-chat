@@ -29,7 +29,7 @@
 
 <script>
 import { computed, reactive, toRefs } from 'vue'
-import db from '../firebase';
+import { firestore } from '../firebase';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
 import Spinner from '../components/Spinner';
@@ -64,11 +64,11 @@ export default {
             return;
          }
 
-         await db.firestore().collection('users')
+         await firestore.collection('users')
             .where('email', '==', state.email )
             .get().then( querySnapshot => {
               querySnapshot.forEach(doc => {
-                 db.firestore().collection('users')
+                 firestore.collection('users')
 
                   .doc(state.user_id)
                   .collection('friends')

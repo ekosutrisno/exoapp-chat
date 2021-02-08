@@ -104,7 +104,7 @@
 import { reactive, toRefs, onMounted, ref, computed, onBeforeMount, onUpdated } from 'vue'
 import moment from 'moment'
 import Chat from '../components/Chat.vue'
-import db from '../firebase'
+import {auth,database, firestore} from '../firebase'
 import { useRoute, useRouter } from 'vue-router'
 import MenuOption from '../components/MenuOption.vue'
 import Spinner from '../components/Spinner.vue'
@@ -143,7 +143,7 @@ export default {
 
      const logout = () => {
         store.dispatch('onUserSignout', state.currentUserId);
-        db.auth().signOut().then(() => {
+        auth.signOut().then(() => {
             
             localStorage.clear();
             router.push('/login');
@@ -173,7 +173,7 @@ export default {
         }
 
         // DB Object Init
-        db.database()
+        database
         .ref(`${state.groupChatId}/${moment().format('YYYY-MM-DD').toString()}`)
         .push(message);
 
@@ -208,7 +208,7 @@ export default {
     const getGroupDetail = () => {
       let current_group_id = route.params.group_id;
 
-      db.firestore().collection('groups')
+      firestore.collection('groups')
           .doc(current_group_id)
           .get().then(group => {
             if(group.exists){
@@ -227,7 +227,7 @@ export default {
       let groupChatId = `active_user_groups/G-${route.params.group_id}`;
 
       // Init DB Object
-      const messageRefw = db.database().ref(groupChatId);
+      const messageRefw = database.ref(groupChatId);
       
       // Get Reference
       let keyChek = await messageRefw.get()
@@ -248,7 +248,7 @@ export default {
     }
 
     const retrieveMessagesFromDB = ( group ) => {
-        db.database().ref(group)
+        database.ref(group)
         .on('value', (snapshot) => {
         const data = snapshot.val();
 
