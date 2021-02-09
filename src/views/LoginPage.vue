@@ -10,17 +10,17 @@
             <h1 class="text-center text-lg font-semibold text-gray-300 mb-6">SIGN IN</h1>
             <h1 v-if="errorMessage" class="text-center text-sm font-semibold text-green-500 mb-6">{{errorMessage}}</h1>
 
-            <div class="w-full flex flex-col">
+            <div class="w-full max-w-md mx-auto flex flex-col">
                
                <div class="rounded-md shadow-sm -space-y-px mb-5">
                   <div>
-                     <input @keyup.enter="onLogin" v-model="email" type="email" autocomplete="email" required class="appearance-none rounded-none relative block w-full px-4 py-2 bg-gray-800 placeholder-gray-400 text-gray-300 rounded-t-md focus:outline-none focus:ring-whatsapp-teal-green border border-gray-700 focus:border-whatsapp-teal-green focus:z-10" placeholder="Email address">
+                     <input @keyup.enter="onLogin" v-model="email" type="email" autocomplete="email" required class="appearance-none rounded-none relative block w-full px-4 py-3 bg-gray-800 placeholder-gray-400 text-gray-300 rounded-t-md focus:outline-none focus:ring-whatsapp-teal-green border border-gray-700 focus:border-whatsapp-teal-green focus:z-10" placeholder="Email address">
                   </div>
                   <div>
-                     <input @keyup.enter="onLogin" v-model="password"  type="password" autocomplete="current-password" required class="appearance-none rounded-none relative block w-full px-4 py-2 bg-gray-800 placeholder-gray-400 text-gray-300 rounded-b-md focus:outline-none focus:ring-whatsapp-teal-green border border-gray-700 focus:border-whatsapp-teal-green focus:z-10" placeholder="Password">
+                     <input @keyup.enter="onLogin" v-model="password"  type="password" autocomplete="current-password" required class="appearance-none rounded-none relative block w-full px-4 py-3 bg-gray-800 placeholder-gray-400 text-gray-300 rounded-b-md focus:outline-none focus:ring-whatsapp-teal-green border border-gray-700 focus:border-whatsapp-teal-green focus:z-10" placeholder="Password">
                   </div>
                </div>
-               <button @click="onLogin" type="button" class="py-2 px-6 text-lg rounded-md hover:bg-opacity-80 font-semibold text-gray-300 bg-whatsapp-teal-green focus:outline-none">
+               <button @click="onLogin" type="button" class="py-3 px-6 text-lg rounded-md hover:bg-opacity-80 font-semibold text-gray-300 bg-whatsapp-teal-green focus:outline-none">
                   Sign In
                </button>
                <p class="text-center text-lg  text-gray-300 my-2">New user? let's 

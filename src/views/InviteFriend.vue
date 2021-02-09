@@ -15,13 +15,13 @@
       <h1 class="text-center text-lg font-semibold text-gray-300 mb-6">INVITE FRIEND</h1>
       <h1 v-if="errorMessage" class="text-center text-sm font-semibold text-green-500 mb-6">{{errorMessage}}</h1>
 
-      <div class="w-full flex flex-col">
-         <input @keyup.enter="onInvite" v-model="email" type="email" required class="py-3 px-6 text-lg text-gray-300 mb-6 rounded bg-gray-800 focus:outline-none focus-within:ring-1 focus:ring-gray-700 placeholder-gray-400 placeholder-opacity-70" placeholder="Your Friend Email" />
+      <div class="w-full max-w-md mx-auto flex flex-col">
+         <input @keyup.enter="onInvite" v-model="email" type="email" required class="appearance-none relative block w-full px-4 py-3 bg-gray-800 placeholder-gray-400 text-gray-300 rounded-md focus:outline-none focus:ring-gray-700 border border-transparent mb-5 focus:border-gray-700 focus:z-10" placeholder="Your Friend Email" />
          <button @click="onInvite" type="button" class="py-3 px-6 text-lg rounded hover:bg-opacity-80 font-semibold text-gray-300 bg-whatsapp-teal-green focus:outline-none">
             Invite
          </button>
          <p class="text-left mt-6 text-sm text-gray-300">Hi <span class="font-semibold">{{ currentUsername }}</span>, you can add to your friends contact list and share stories with each other. It should be noted that you can only invite your friends who are also registered and use ExoApp.</p>
-         <p class="text-center mt-6 text-sm text-gray-400">From Eko Sutrisno &copy;{{new Date().getFullYear()}} All right reserved</p>
+         <p class="text-center my-5 text-sm text-gray-400">From Eko Sutrisno &copy;{{new Date().getFullYear()}} All right reserved</p>
       </div>
    </div>
 </div>
