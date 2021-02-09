@@ -9,7 +9,7 @@
           <router-link to="/login" class="py-3  px-6 text-lg rounded hover:bg-opacity-80 font-semibold text-gray-300 bg-whatsapp-teal-green focus:outline-none">
             Sign In
           </router-link>
-          <button type="button" class="py-3 px-4 inline-flex items-center text-lg rounded hover:bg-opacity-80 font-semibold text-gray-300 bg-whatsapp-dark-200 focus:outline-none">
+          <button @click="loginWithGoogle" type="button" class="py-3 px-4 inline-flex items-center text-lg rounded hover:bg-opacity-80 font-semibold text-gray-300 bg-whatsapp-dark-200 focus:outline-none">
             <GoogleIcon class="w-6 mr-2"/><span>Google</span>
           </button>
         </div>
@@ -23,10 +23,33 @@
    </div>
 </template>
 <script>
+import { useRouter } from 'vue-router';
+import { useStore } from 'vuex';
 import ChatIcon from '../components/svg/ChatIcon';
 import GoogleIcon from '../components/svg/GoogleIcon.vue';
+import { auth } from '../service/firebase';
 
 export default {
-  components: {ChatIcon, GoogleIcon}
+  components: {ChatIcon, GoogleIcon},
+  setup(){
+
+    const store = useStore();
+    const router = useRouter();
+    const loginWithGoogle = async () =>{
+        await store.dispatch('loginWithGoogle')
+
+         var user = auth.currentUser;
+         
+         router.push({
+            name: 'chat-home', 
+            params: {user_id: user.uid}
+         })
+
+      }
+
+      return{
+        loginWithGoogle
+      }
+  }
 }
 </script>
