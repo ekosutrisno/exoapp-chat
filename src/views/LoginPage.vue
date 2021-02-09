@@ -8,6 +8,8 @@
                <Lock class="mx-auto"/> 
             </div>
             <h1 class="text-center text-lg font-semibold text-gray-300 mb-3">SIGN IN</h1>
+            <p v-if="$route.query.status" class="text-whatsapp-yellow text-sm pb-2 text-center">Please Check your Email to activate your ExoApps Account.</p>
+            <p v-if="$route.query.reset_password" class="text-whatsapp-yellow text-sm pb-2 text-center">Check Your Email for reset your password, and try to login with your new password.</p>
             <h1 v-if="errorMessage" class="text-center text-sm font-semibold text-green-500 mb-6">{{errorMessage}}</h1>
 
             <div class="w-full max-w-md mx-auto flex flex-col">
@@ -32,7 +34,7 @@
                   <GoogleIcon class="w-6 mr-2"/><span>Google</span>
                </button>
                <p class="text-center text-lg text-gray-300 my-2">or 
-                  <router-link to="/forgot-password" class="underline">
+                  <router-link to="/reset-password" class="underline">
                      forgot password 
                   </router-link>
                </p>
@@ -45,9 +47,7 @@
 import { onBeforeMount, reactive, toRefs } from 'vue';
 import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
-import { auth, firestore, googleProvider } from '../service/firebase'
-import randomColorCode from '../service/randomColor';
-import moment from 'moment';
+import { auth } from '../service/firebase'
 import Spinner from '../components/Spinner'
 import Lock from '../components/svg/Lock.vue';
 import GoogleIcon from '../components/svg/GoogleIcon.vue';
@@ -80,7 +80,7 @@ export default {
          .then( async res => {
             if(res.user){
             
-              store.dispatch('onUserSigin')
+              store.dispatch('onUserSigin');
                
               await store.dispatch('setCurrentUser', res.user.uid);
 
@@ -103,47 +103,15 @@ export default {
 
       }
 
-      const loginWithGoogle = () =>{
-         var provider = googleProvider;
-         provider.addScope('profile');
-         provider.addScope('email');
+      const loginWithGoogle = async () =>{
+        await store.dispatch('loginWithGoogle')
+
+         var user = auth.currentUser;
          
-         auth.signInWithPopup(provider).then( async (res) => {
-
-            var user = res.user;
-
-            const userData = {
-               user_id: user.uid,
-               color_code: randomColorCode.call(),
-               username: user.displayName,
-               email: user.email,
-               online: true,
-               last_active: '',
-               join_at: moment().format('LLLL'),
-               descriptions: `Hi, My name is ${user.displayName}`,
-               phone_number: user.phoneNumber,
-               photo_url: user.photoURL,
-               status: 'I Love ExoApps'
-            }
-
-            await firestore.collection('users')
-            .doc(user.uid)
-            .set(userData).then( async () =>{
-               
-               localStorage.setItem("user_id", user.user_id)
-   
-               
-               store.dispatch('onUserSigin');
-                  
-               await store.dispatch('setCurrentUser', user.uid);
-   
-               router.push({
-                     name: 'chat-home', 
-                     params: {user_id: user.uid}
-               })
-            })
-            
-         });
+         router.push({
+            name: 'chat-home', 
+            params: {user_id: user.uid}
+         })
 
       }
 

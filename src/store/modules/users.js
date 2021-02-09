@@ -1,5 +1,6 @@
-import { auth, firestore } from "../../service/firebase";
-
+import { auth, firestore, googleProvider } from "../../service/firebase";
+import randomColorCode from "../../service/randomColor";
+import moment from "moment";
 const users = {
   state: () => ({
     currentUser: {},
@@ -54,16 +55,68 @@ const users = {
       });
     },
     async onUserSignout({ commit }, current_user_id) {
-      const dbUser = firestore.collection("users");
+      console.log(current_user_id);
+      // const dbUser = firestore.collection("users");
 
-      let dataToUpdate = {
-        online: false,
-        last_active: new Date().toISOString(),
-      };
+      // let dataToUpdate = {
+      //   online: false,
+      //   last_active: new Date().toISOString(),
+      // };
 
-      await dbUser.doc(current_user_id).update(dataToUpdate);
+      // await dbUser.doc(current_user_id).update(dataToUpdate);
 
       commit("SET_CURRENT_USER", {});
+    },
+    async onVerifyEmail() {
+      var user = auth.currentUser;
+      await user.sendEmailVerification();
+    },
+    async loginWithGoogle({ dispatch }) {
+      var provider = googleProvider;
+      provider.addScope("profile");
+      provider.addScope("email");
+
+      await auth.signInWithPopup(provider).then(async (res) => {
+        var user = res.user;
+
+        const userData = {
+          user_id: user.uid,
+          color_code: randomColorCode.call(),
+          username: user.displayName,
+          email: user.email,
+          online: true,
+          last_active: "",
+          join_at: moment().format("LLLL"),
+          descriptions: `Hi, My name is ${user.displayName}`,
+          phone_number: user.phoneNumber,
+          photo_url: user.photoURL,
+          status: "I Love ExoApps",
+        };
+
+        await firestore
+          .collection("users")
+          .doc(user.uid)
+          .get()
+          .then(async (doc) => {
+            if (doc.exists) {
+              localStorage.setItem("user_id", doc.data().user_id);
+              dispatch("onUserSigin");
+              await dispatch("setCurrentUser", doc.data().uid);
+            } else {
+              await firestore
+                .collection("users")
+                .doc(user.uid)
+                .set(userData)
+                .then(async () => {
+                  localStorage.setItem("user_id", user.user_id);
+
+                  dispatch("onUserSigin");
+
+                  await dispatch("setCurrentUser", user.uid);
+                });
+            }
+          });
+      });
     },
   },
   getters: {

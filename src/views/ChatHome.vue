@@ -139,10 +139,15 @@ export default {
       }
 
       const onLogout = () => {
+         const dbUser = firestore.collection("users");
+         dbUser.doc(localStorage.getItem('user_id')).update({
+            online: false,
+            last_active: new Date().toISOString(),
+         });
+
          store.dispatch('onUserSignout', state.currentUserId);
 
          auth.signOut().then(() => {
-            
             localStorage.clear();
             router.push('/login');
 
