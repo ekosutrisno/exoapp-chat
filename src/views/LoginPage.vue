@@ -28,7 +28,7 @@
                      Sign Up
                   </router-link>
                </p>
-               <button type="button" class="py-3 px-4 w-32 mx-auto inline-flex items-center text-lg rounded hover:bg-opacity-80 font-semibold text-gray-300 bg-whatsapp-dark-200 focus:outline-none">
+               <button @click="loginWithGoogle" type="button" class="py-3 px-4 w-32 mx-auto inline-flex items-center text-lg rounded hover:bg-opacity-80 font-semibold text-gray-300 bg-whatsapp-dark-200 focus:outline-none">
                   <GoogleIcon class="w-6 mr-2"/><span>Google</span>
                </button>
                <p class="text-center text-lg text-gray-300 my-2">or 
@@ -45,7 +45,9 @@
 import { onBeforeMount, reactive, toRefs } from 'vue';
 import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
-import { auth } from '../service/firebase'
+import { auth, firestore, googleProvider } from '../service/firebase'
+import randomColorCode from '../service/randomColor';
+import moment from 'moment';
 import Spinner from '../components/Spinner'
 import Lock from '../components/svg/Lock.vue';
 import GoogleIcon from '../components/svg/GoogleIcon.vue';
@@ -78,7 +80,7 @@ export default {
          .then( async res => {
             if(res.user){
             
-               store.dispatch('onUserSigin')
+              store.dispatch('onUserSigin')
                
               await store.dispatch('setCurrentUser', res.user.uid);
 
@@ -98,6 +100,50 @@ export default {
                errorMessageHandler('The password is invalid.')
             }
          })
+
+      }
+
+      const loginWithGoogle = () =>{
+         var provider = googleProvider;
+         provider.addScope('profile');
+         provider.addScope('email');
+         
+         auth.signInWithPopup(provider).then( async (res) => {
+
+            var user = res.user;
+
+            const userData = {
+               user_id: user.uid,
+               color_code: randomColorCode.call(),
+               username: user.displayName,
+               email: user.email,
+               online: true,
+               last_active: '',
+               join_at: moment().format('LLLL'),
+               descriptions: `Hi, My name is ${user.displayName}`,
+               phone_number: user.phoneNumber,
+               photo_url: user.photoURL,
+               status: 'I Love ExoApps'
+            }
+
+            await firestore.collection('users')
+            .doc(user.uid)
+            .set(userData).then( async () =>{
+               
+               localStorage.setItem("user_id", user.user_id)
+   
+               
+               store.dispatch('onUserSigin');
+                  
+               await store.dispatch('setCurrentUser', user.uid);
+   
+               router.push({
+                     name: 'chat-home', 
+                     params: {user_id: user.uid}
+               })
+            })
+            
+         });
 
       }
 
@@ -135,7 +181,8 @@ export default {
 
       return {
          ...toRefs(state),
-         onLogin
+         onLogin, 
+         loginWithGoogle
       }
    }
 }

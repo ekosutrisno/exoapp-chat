@@ -139,7 +139,7 @@ export default {
 
       const state = reactive({
          user_id: localStorage.getItem('user_id'),
-         group_id: localStorage.getItem('current_group_id'),
+         group_id: route.params.group_id,
          group_avatar: '',
          group_name: '',
          created_date: '',
