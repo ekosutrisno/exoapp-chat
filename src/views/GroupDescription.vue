@@ -36,7 +36,7 @@
                   </svg>
                   <div class="flex flex-col w-full">
                      <h1 class="text-gray-400 pl-2 text-sm -mb-2 z-30">Group Name</h1>
-                     <input v-model="group_name" type="text" :readonly="!is_admin" class="py-2 pl-2 z-20 text-gray-300 mb-2 bg-transparent focus:outline-none border-b border-transparent transition-colors font-semibold focus:border-gray-700 text-xl" placeholder="Group Name" />
+                     <input v-model="group_name" type="text" :readonly="!is_admin" class="py-2 pl-2 z-20 text-gray-300 mb-2 bg-transparent focus:outline-none border-b border-transparent transition-colors font-semibold focus:border-gray-700 text-lg" placeholder="Group Name" />
                   </div>
                </div>
                
@@ -123,7 +123,7 @@
 <script>
 import { computed, onBeforeMount, onMounted, reactive, toRefs } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import db from '../firebase'
+import { firestore, storage } from '../firebase'
 import Spinner from '../components/Spinner.vue'
 import ListGroupMemberUser from '../components/ListGroupMemberUser.vue'
 import ListGroupMemberAdmin from '../components/ListGroupMemberAdmin.vue'
@@ -178,7 +178,7 @@ export default {
          autoStopSpinner();
 
          if(state.newFoto){
-            const upload = db.storage().ref()
+            const upload = storage.ref()
             .child(state.group_id)
             .put(state.newFoto)
 
@@ -210,7 +210,7 @@ export default {
             }
          }
 
-         db.firestore().collection('groups')
+         firestore.collection('groups')
             .doc(state.group_id)
             .update(newInfo)
             .then( () => {
@@ -236,7 +236,7 @@ export default {
          state.isProcess = true;
          let groupId = route.params.group_id;
 
-         await db.firestore().collection('groups')
+         await firestore.collection('groups')
                 .doc(groupId)
                 .get().then(doc => {
 
@@ -258,7 +258,7 @@ export default {
       const onAddMember = () => {
 
          state.members.forEach( member => {
-            db.firestore()
+            firestore
             .collection('groups')
             .doc(state.group_id)
             .collection('members')
@@ -269,7 +269,7 @@ export default {
                is_admin: member.user_id == state.group_admin_id ? true : false
             })
             .then(() =>{
-               db.firestore()
+               firestore
                .collection('users')
                .doc(member.user_id)
                .collection('groups')
@@ -287,14 +287,14 @@ export default {
       
       const onRemoveMember = ( member ) => {
 
-         db.firestore()
+         firestore
             .collection('groups')
             .doc(state.group_id)
             .collection('members')
             .doc(member.user_id)
             .delete()
             .then(() =>{
-               db.firestore()
+               firestore
                .collection('users')
                .doc(member.user_id)
                .collection('groups')
@@ -309,7 +309,7 @@ export default {
 
       const getGroupMembers = async () => {
          
-         const members = await db.firestore().collection('groups')
+         const members = await firestore.collection('groups')
             .doc(route.params.group_id)
             .collection('members')
             .get();
@@ -319,7 +319,7 @@ export default {
             listMember = [...members.docs]
 
             listMember.forEach((member, index) => {
-               db.firestore().collection('users')
+               firestore.collection('users')
                 .doc(member.data().user_id)
                 .get()
                 .then( doc => {

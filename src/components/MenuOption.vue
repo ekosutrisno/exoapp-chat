@@ -6,7 +6,7 @@
    <router-link class="inline-flex justify-start items-start pl-4 font-semibold float-left py-2 hover:bg-gray-700 w-full" :to="{path:'/create-group'}">New group</router-link>
    <p class="inline-flex justify-start items-start pl-4 font-semibold float-left py-2 hover:bg-gray-700 w-full" :to="{path:'/'}">Settings</p>
    <router-link class="inline-flex justify-start items-start pl-4 font-semibold float-left py-2 hover:bg-gray-700 w-full" :to="{path:'/login'}" @click="$emit('on-logout')">Logout</router-link>
-   <p class="inline-flex justify-start text-sm items-start pl-4 font-semibold float-left py-2 text-gray-400 w-full" >App v0.0.1-RC-1</p>
+   <p class="inline-flex justify-start text-sm items-start pl-4 font-semibold float-left py-2 text-gray-400 w-full" >App version v1.0.0</p>
  </div>
 </template>
 <script>

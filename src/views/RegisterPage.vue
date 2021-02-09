@@ -23,7 +23,7 @@
                      Sign In
                   </router-link>
                </p>
-               <p class="text-center mt-6 text-sm text-gray-400">From Eko Sutrisno &copy;{{new Date().getFullYear()}} All right reserved</p>
+               <p class="text-center my-5 text-sm text-gray-400">From Eko Sutrisno &copy;{{new Date().getFullYear()}} All right reserved</p>
             </div>
          </div>
    </div>
@@ -32,7 +32,7 @@
 <script>
 import { computed, reactive, toRefs } from 'vue'
 import { useStore } from 'vuex';
-import db from '../firebase'
+import { auth, firestore } from '../firebase'
 import { useRouter } from 'vue-router'
 import Spinner from '../components/Spinner'
 import ChatIcon from '../components/svg/ChatIcon';
@@ -168,9 +168,6 @@ export default {
       const onRegister = async () => {
          let randomColorCode = state
           .colors[Math.floor(Math.random()*state.colors.length)];
-         
-
-         const auth = db.auth();
 
          if (validateInput.value) {
             return;
@@ -203,7 +200,7 @@ export default {
                status: 'I Love ExoApps'
             }
                
-            await db.firestore().collection('users')
+            await firestore.collection('users')
             .doc(data.user.uid)
             .set(userData).then( () =>{
                

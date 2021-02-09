@@ -35,7 +35,7 @@
 import { onBeforeMount, reactive, toRefs } from 'vue';
 import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
-import db from '../firebase'
+import { auth } from '../firebase'
 import Spinner from '../components/Spinner'
 import Lock from '../components/svg/Lock';
 export default {
@@ -52,7 +52,6 @@ export default {
       });
 
       const onLogin = () => {
-         const auth = db.auth();
 
          if (!ValidateEmail(state.email)) {
             errorMessageHandler('Invalid format email.');
