@@ -1,4 +1,4 @@
-import { firestore, auth } from "../../firebase";
+import { firestore, auth } from "../../service/firebase";
 
 const friends = {
   state: () => ({

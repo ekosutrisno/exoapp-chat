@@ -82,7 +82,7 @@
 import { computed, onBeforeMount, onMounted, reactive, toRefs } from 'vue'
 import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
-import {firestore, auth} from '../firebase'
+import {firestore, auth} from '../service/firebase'
 import InboxChat from '../components/InboxChat.vue'
 import InboxGroup from '../components/InboxGroup.vue'
 import MenuOption from '../components/MenuOption.vue'
@@ -139,10 +139,15 @@ export default {
       }
 
       const onLogout = () => {
+         const dbUser = firestore.collection("users");
+         dbUser.doc(localStorage.getItem('user_id')).update({
+            online: false,
+            last_active: new Date().toISOString(),
+         });
+
          store.dispatch('onUserSignout', state.currentUserId);
 
          auth.signOut().then(() => {
-            
             localStorage.clear();
             router.push('/login');
 

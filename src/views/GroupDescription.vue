@@ -8,7 +8,7 @@
                <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
             </svg>
          </div>
-         <div class="h-full w-full px-4 pb-4">
+         <div class="h-full w-full px-4 pb-4 nv-transition">
 
          <div style="height:5.5rem" class="w-full"></div>
 
@@ -123,7 +123,7 @@
 <script>
 import { computed, onBeforeMount, onMounted, reactive, toRefs } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { firestore, storage } from '../firebase'
+import { firestore, storage } from '../service/firebase'
 import Spinner from '../components/Spinner.vue'
 import ListGroupMemberUser from '../components/ListGroupMemberUser.vue'
 import ListGroupMemberAdmin from '../components/ListGroupMemberAdmin.vue'
@@ -139,7 +139,7 @@ export default {
 
       const state = reactive({
          user_id: localStorage.getItem('user_id'),
-         group_id: localStorage.getItem('current_group_id'),
+         group_id: route.params.group_id,
          group_avatar: '',
          group_name: '',
          created_date: '',

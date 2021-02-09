@@ -8,14 +8,14 @@
          <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
       </svg>
    </div>
-   <div class="h-full px-4 pb-4 pt-20">
+   <div class="h-full px-4 pb-4 pt-20 nv-transition">
       <div class="mx-auto">
          <GroupIcon class="mx-auto"/>
       </div>
       <h1 class="text-center text-lg font-semibold text-gray-300 mb-6">CREATE GROUP</h1>
       <h1 v-if="infoMessage" class="text-center text-sm font-semibold text-green-500 mb-6">{{infoMessage}}</h1>
 
-      <div class="w-full flex flex-col pb-4">
+      <div class="w-full max-w-md mx-auto flex flex-col pb-4">
          <input @keyup.enter="onCreateGroup" v-model="groupName" type="email" required class="py-3 px-6 text-lg text-gray-300 mb-6 rounded bg-gray-800 focus:outline-none focus-within:ring-1 focus:ring-gray-700 placeholder-gray-400 placeholder-opacity-70" placeholder="Group Name" />
          <textarea v-model="groupDescriptions" class="py-2 px-4 text-gray-300 mb-2 rounded bg-gray-800 focus:outline-none focus-within:ring-1 focus:ring-gray-700 placeholder-gray-400 placeholder-opacity-70" rows="4" placeholder="Group Descriptions"></textarea>
          <button @click="onCreateGroup" type="button" class="py-3 px-6 text-lg rounded hover:bg-opacity-80 font-semibold text-gray-300 bg-whatsapp-teal-green focus:outline-none">
@@ -50,7 +50,7 @@
                </li>
             </ul>
          </div>
-         <p class="text-center mt-6 text-sm text-gray-400">From Eko Sutrisno &copy;{{new Date().getFullYear()}} All right reserved</p>
+         <p class="text-center my-5 text-sm text-gray-400">From Eko Sutrisno &copy;{{new Date().getFullYear()}} All right reserved</p>
       </div>
    </div>
 </div>
@@ -62,7 +62,7 @@ import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
 import { v4 as uuidv4 } from 'uuid';
 import moment from 'moment';
-import { firestore } from '../firebase';
+import { firestore } from '../service/firebase';
 import Spinner from '../components/Spinner.vue';
 import ListGroupMember from '../components/ListGroupMember.vue';
 import ListGroupFriendCreate from '../components/ListGroupFriendCreate.vue';
