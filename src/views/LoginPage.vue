@@ -11,9 +11,16 @@
             <h1 v-if="errorMessage" class="text-center text-sm font-semibold text-green-500 mb-6">{{errorMessage}}</h1>
 
             <div class="w-full flex flex-col">
-               <input @keyup.enter="onLogin" v-model="email" type="email" required class="py-3 px-6 text-lg text-gray-300 mb-2 rounded bg-gray-800 focus:outline-none focus-within:ring-1 focus:ring-gray-700 placeholder-gray-400 placeholder-opacity-70" placeholder="Email" />
-               <input @keyup.enter="onLogin" v-model="password" type="password" required class="py-3 px-6 text-lg text-gray-300 mb-6 rounded bg-gray-800 focus:outline-none focus-within:ring-1 focus:ring-gray-700 placeholder-gray-400 placeholder-opacity-70" placeholder="Password" />
-               <button @click="onLogin" type="button" class="py-3 px-6 text-xl rounded hover:bg-opacity-80 font-semibold text-gray-300 bg-whatsapp-teal-green focus:outline-none">
+               
+               <div class="rounded-md shadow-sm -space-y-px mb-5">
+                  <div>
+                     <input @keyup.enter="onLogin" v-model="email" type="email" autocomplete="email" required class="appearance-none rounded-none relative block w-full px-4 py-2 bg-gray-800 placeholder-gray-400 text-gray-300 rounded-t-md focus:outline-none focus:ring-whatsapp-teal-green border border-gray-700 focus:border-whatsapp-teal-green focus:z-10" placeholder="Email address">
+                  </div>
+                  <div>
+                     <input @keyup.enter="onLogin" v-model="password"  type="password" autocomplete="current-password" required class="appearance-none rounded-none relative block w-full px-4 py-2 bg-gray-800 placeholder-gray-400 text-gray-300 rounded-b-md focus:outline-none focus:ring-whatsapp-teal-green border border-gray-700 focus:border-whatsapp-teal-green focus:z-10" placeholder="Password">
+                  </div>
+               </div>
+               <button @click="onLogin" type="button" class="py-2 px-6 text-lg rounded-md hover:bg-opacity-80 font-semibold text-gray-300 bg-whatsapp-teal-green focus:outline-none">
                   Sign In
                </button>
                <p class="text-center text-lg  text-gray-300 my-2">New user? let's 
@@ -21,12 +28,15 @@
                      Sign Up
                   </router-link>
                </p>
-               <p class="text-center text-lg text-gray-300 mb-2">or 
+               <button type="button" class="py-3 px-4 w-32 mx-auto inline-flex items-center text-lg rounded hover:bg-opacity-80 font-semibold text-gray-300 bg-whatsapp-dark-200 focus:outline-none">
+                  <GoogleIcon class="w-6 mr-2"/><span>Google</span>
+               </button>
+               <p class="text-center text-lg text-gray-300 my-2">or 
                   <router-link to="/forgot-password" class="underline">
                      forgot password 
                   </router-link>
                </p>
-               <p class="text-center my-5 text-sm text-gray-400">From Eko Sutrisno &copy;{{new Date().getFullYear()}} All right reserved</p>
+               <p class="text-center my-3 text-sm text-gray-400">From Eko Sutrisno &copy;{{new Date().getFullYear()}} All right reserved</p>
             </div>
          </div>
    </div>
@@ -37,9 +47,10 @@ import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 import { auth } from '../firebase'
 import Spinner from '../components/Spinner'
-import Lock from '../components/svg/Lock';
+import Lock from '../components/svg/Lock.vue';
+import GoogleIcon from '../components/svg/GoogleIcon.vue';
 export default {
-   components:{Spinner, Lock},
+   components:{Spinner, Lock, GoogleIcon},
    setup () {
       const router = useRouter();
       const store = useStore();
