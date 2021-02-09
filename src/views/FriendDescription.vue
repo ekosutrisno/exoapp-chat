@@ -75,7 +75,7 @@
 
 <script>
 import { onBeforeMount, onMounted, reactive, toRefs } from 'vue'
-import { firestore } from '../firebase'
+import { firestore } from '../service/firebase'
 import { useRoute, useRouter } from 'vue-router'
 import Spinner from '../components/Spinner.vue'
 import U from '../components/svg/U.vue'

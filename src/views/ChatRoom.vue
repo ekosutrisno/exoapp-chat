@@ -112,7 +112,7 @@
 import { reactive, toRefs, onMounted, ref, computed, onBeforeMount, onUpdated} from 'vue'
 import moment from 'moment'
 import Chat from '../components/Chat.vue'
-import {firestore,database,auth} from '../firebase'
+import {firestore,database,auth} from '../service/firebase'
 import { useRoute, useRouter } from 'vue-router'
 import MenuOption from '../components/MenuOption.vue'
 import Spinner from '../components/Spinner.vue'

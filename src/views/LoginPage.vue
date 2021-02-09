@@ -7,7 +7,7 @@
             <div class="mx-auto mb-3">
                <Lock class="mx-auto"/> 
             </div>
-            <h1 class="text-center text-lg font-semibold text-gray-300 mb-6">SIGN IN</h1>
+            <h1 class="text-center text-lg font-semibold text-gray-300 mb-3">SIGN IN</h1>
             <h1 v-if="errorMessage" class="text-center text-sm font-semibold text-green-500 mb-6">{{errorMessage}}</h1>
 
             <div class="w-full max-w-md mx-auto flex flex-col">
@@ -45,7 +45,7 @@
 import { onBeforeMount, reactive, toRefs } from 'vue';
 import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
-import { auth } from '../firebase'
+import { auth } from '../service/firebase'
 import Spinner from '../components/Spinner'
 import Lock from '../components/svg/Lock.vue';
 import GoogleIcon from '../components/svg/GoogleIcon.vue';

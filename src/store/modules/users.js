@@ -1,4 +1,4 @@
-import { auth, firestore } from "../../firebase";
+import { auth, firestore } from "../../service/firebase";
 
 const users = {
   state: () => ({

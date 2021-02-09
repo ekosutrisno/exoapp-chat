@@ -62,7 +62,7 @@ import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
 import { v4 as uuidv4 } from 'uuid';
 import moment from 'moment';
-import { firestore } from '../firebase';
+import { firestore } from '../service/firebase';
 import Spinner from '../components/Spinner.vue';
 import ListGroupMember from '../components/ListGroupMember.vue';
 import ListGroupFriendCreate from '../components/ListGroupFriendCreate.vue';

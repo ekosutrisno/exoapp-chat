@@ -29,7 +29,7 @@
 
 <script>
 import { computed, reactive, toRefs } from 'vue'
-import { firestore } from '../firebase';
+import { firestore } from '../service/firebase';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
 import Spinner from '../components/Spinner';

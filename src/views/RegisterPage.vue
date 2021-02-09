@@ -7,7 +7,7 @@
             <div class="mx-auto">
                <ChatIcon class="mx-auto"/>
             </div>
-            <h1 class="text-center -mt-6 text-lg font-semibold text-gray-300 mb-6">SIGN UP</h1>
+            <h1 class="text-center text-lg font-semibold text-gray-300 mb-3">SIGN UP</h1>
             <h1 v-if="errorMessage" class="text-center text-sm font-semibold text-green-500 mb-6">{{errorMessage}}</h1>
 
             <div class="w-full max-w-md mx-auto flex flex-col">
@@ -35,7 +35,7 @@
 <script>
 import { computed, reactive, toRefs } from 'vue'
 import { useStore } from 'vuex';
-import { auth, firestore } from '../firebase'
+import { auth, firestore } from '../service/firebase'
 import { useRouter } from 'vue-router'
 import Spinner from '../components/Spinner'
 import ChatIcon from '../components/svg/ChatIcon';

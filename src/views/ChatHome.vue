@@ -82,7 +82,7 @@
 import { computed, onBeforeMount, onMounted, reactive, toRefs } from 'vue'
 import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
-import {firestore, auth} from '../firebase'
+import {firestore, auth} from '../service/firebase'
 import InboxChat from '../components/InboxChat.vue'
 import InboxGroup from '../components/InboxGroup.vue'
 import MenuOption from '../components/MenuOption.vue'

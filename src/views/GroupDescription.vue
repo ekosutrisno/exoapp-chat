@@ -123,7 +123,7 @@
 <script>
 import { computed, onBeforeMount, onMounted, reactive, toRefs } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { firestore, storage } from '../firebase'
+import { firestore, storage } from '../service/firebase'
 import Spinner from '../components/Spinner.vue'
 import ListGroupMemberUser from '../components/ListGroupMemberUser.vue'
 import ListGroupMemberAdmin from '../components/ListGroupMemberAdmin.vue'
