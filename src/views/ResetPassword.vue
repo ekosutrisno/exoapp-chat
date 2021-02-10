@@ -59,6 +59,10 @@ export default {
       const onResetPassword = async () => {
          state.isProcess = true;
 
+         setTimeout(() => {
+            state.errorMessage = '';
+         }, 5000);
+
          if(!validateEmail(state.email)){
             state.isProcess = false;
             state.errorMessage = 'Invalid Format Email!'

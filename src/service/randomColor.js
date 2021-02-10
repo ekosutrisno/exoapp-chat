@@ -75,9 +75,7 @@ function randomColorCode() {
     "#9e1068",
     "#780650",
   ];
-  let randomColorCode = colors[Math.floor(Math.random() * colors.length)];
-
-  return randomColorCode;
+  return colors[Math.floor(Math.random() * colors.length)];
 }
 
 export default randomColorCode;
