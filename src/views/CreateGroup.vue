@@ -85,7 +85,7 @@ export default {
          infoMessage: '',
          isProcess: false,
          user_id: computed(() => store.getters.getUserId),
-         currentUsername: localStorage.getItem('username'),
+         currentUsername: computed(() => store.state.users.currentUser.username),
          friends: computed(() => store.state.friends.friends),
          members: [
             {
