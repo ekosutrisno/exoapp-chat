@@ -45,7 +45,7 @@ export default {
          errorMessage: '',
          isProcess: false,
          user_id: computed(() => store.getters.getUserId),
-         currentUsername: localStorage.getItem('username')
+         currentUsername: computed(() => store.state.users.currentUser.username)
       })
 
        const validateEmail = (email) => {
