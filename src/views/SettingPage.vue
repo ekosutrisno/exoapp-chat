@@ -122,8 +122,8 @@
 </template>
 
 <script>
-import {computed, onBeforeMount, onMounted, reactive, toRefs } from 'vue'
-import { firestore, storage } from '../service/firebase'
+import { computed, onBeforeMount, onMounted, reactive, toRefs } from 'vue'
+import { auth, firestore, storage } from '../service/firebase'
 import { useRouter } from 'vue-router'
 import Spinner from '../components/Spinner.vue'
 import U from '../components/svg/U.vue'
@@ -217,8 +217,21 @@ export default {
             return;
          }
          
-         // TODO
-         console.log('Account Deleted!');
+         var user = auth.currentUser;
+         
+         user.delete().then( async () => {
+            await store.dispatch('onUserSignout', state.user_id);
+
+            firestore.collection('users')
+               .doc(state.user_id).delete()
+
+         }).catch(function(error) {
+            console.log(error);
+         });
+
+         localStorage.clear();
+         router.replace('/');
+              
       }
 
       const updateUserInfo = (isUrlPresent, downloadURL) => {
