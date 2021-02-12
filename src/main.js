@@ -4,6 +4,7 @@ import router from './router';
 import store from './store';
 import VueClickAway from "vue3-click-away";
 import './index.css';
+import './registerServiceWorker'
 
 createApp(App)
    .use(router)
