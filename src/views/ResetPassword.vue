@@ -30,23 +30,21 @@
 </template>
 
 <script>
-import { computed, reactive, toRefs } from 'vue'
+import { reactive, toRefs } from 'vue'
 import { auth, firestore } from '../service/firebase';
-import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
 import Spinner from '../components/Spinner';
 import Lock from '../components/svg/Lock.vue';
 export default {
    components: { Spinner, Lock },
    setup(){
-      const store = useStore();
       const router = useRouter();
 
       const state = reactive({
          email: '',
          errorMessage: '',
          isProcess: false,
-         user_id: computed(() => store.getters.getUserId),
+         user_id: localStorage.getItem('user_id'),
          currentUsername: localStorage.getItem('username')
       })
 

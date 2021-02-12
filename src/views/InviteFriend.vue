@@ -44,7 +44,7 @@ export default {
          email: '',
          errorMessage: '',
          isProcess: false,
-         user_id: computed(() => store.getters.getUserId),
+         user_id: localStorage.getItem('user_id'),
          currentUsername: computed(() => store.state.users.currentUser.username)
       })
 
