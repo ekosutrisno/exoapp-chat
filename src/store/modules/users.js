@@ -1,7 +1,13 @@
-import { auth, firestore, googleProvider } from "../../service/firebase";
+import {
+  auth,
+  facebookProvider,
+  firestore,
+  googleProvider,
+} from "../../service/firebase";
 import randomColorCode from "../../service/randomColor";
 import moment from "moment";
 const users = {
+  namespaced: true,
   state: () => ({
     currentUser: {},
   }),
@@ -36,6 +42,7 @@ const users = {
           }
         });
     },
+
     onUserSigin({ dispatch }) {
       const dbUser = firestore.collection("users");
 
@@ -54,23 +61,37 @@ const users = {
         }
       });
     },
-    async onUserSignout({ commit }, current_user_id) {
-      console.log(current_user_id);
-      // const dbUser = firestore.collection("users");
 
-      // let dataToUpdate = {
-      //   online: false,
-      //   last_active: new Date().toISOString(),
-      // };
-
-      // await dbUser.doc(current_user_id).update(dataToUpdate);
-
+    async onUserSignout({ commit }) {
       commit("SET_CURRENT_USER", {});
     },
+
     async onVerifyEmail() {
       var user = auth.currentUser;
       await user.sendEmailVerification();
     },
+
+    async onUpdateEmail({ dispatch }, email) {
+      var user = auth.currentUser;
+      user
+        .updateEmail(email)
+        .then(async () => {
+          await firestore
+            .collection("users")
+            .doc(user.uid)
+            .update({
+              email: email,
+            })
+            .then(async () => {
+              dispatch("onUserSigin");
+              await dispatch("setCurrentUser", user.uid);
+            });
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+    },
+
     async loginWithGoogle({ dispatch }) {
       var provider = googleProvider;
       provider.addScope("profile");
@@ -118,7 +139,55 @@ const users = {
           });
       });
     },
+
+    async loginWithFacebook({ dispatch }) {
+      var provider = facebookProvider;
+      provider.addScope("user_birthday");
+
+      await auth.signInWithPopup(provider).then(async (res) => {
+        var user = res.user;
+
+        const userData = {
+          user_id: user.uid,
+          color_code: randomColorCode.call(),
+          username: user.displayName,
+          email: user.email,
+          online: true,
+          last_active: "",
+          join_at: moment().format("LLLL"),
+          descriptions: `Hi, My name is ${user.displayName}`,
+          phone_number: user.phoneNumber,
+          photo_url: user.photoURL,
+          status: "I Love ExoApps",
+        };
+
+        await firestore
+          .collection("users")
+          .doc(user.uid)
+          .get()
+          .then(async (doc) => {
+            if (doc.exists) {
+              localStorage.setItem("user_id", doc.data().user_id);
+              dispatch("onUserSigin");
+              await dispatch("setCurrentUser", doc.data().uid);
+            } else {
+              await firestore
+                .collection("users")
+                .doc(user.uid)
+                .set(userData)
+                .then(async () => {
+                  localStorage.setItem("user_id", user.user_id);
+
+                  dispatch("onUserSigin");
+
+                  await dispatch("setCurrentUser", user.uid);
+                });
+            }
+          });
+      });
+    },
   },
+
   getters: {
     getUserId() {
       return localStorage.getItem("user_id");

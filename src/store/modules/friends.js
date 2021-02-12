@@ -1,6 +1,7 @@
 import { firestore, auth } from "../../service/firebase";
 
 const friends = {
+  namespaced: true,
   state: () => ({
     friends: [],
   }),

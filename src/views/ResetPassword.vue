@@ -13,6 +13,8 @@
          <Lock class="mx-auto"/>
       </div>
       <h1 class="text-center text-lg font-semibold text-gray-300 mb-6">RESET PASSWORD</h1>
+      <p class="text-left my-4 ml-2 text-sm text-whatsapp-yellow">Make sure your email is active.</p>
+
       <h1 v-if="errorMessage" class="text-center text-sm font-semibold mb-6">  <span class="text-green-500">{{errorMessage}} </span><span class="text-whatsapp-yellow">{{email}}</span></h1>
 
       <div class="w-full max-w-md mx-auto flex flex-col">

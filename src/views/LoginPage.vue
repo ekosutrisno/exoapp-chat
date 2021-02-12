@@ -30,9 +30,14 @@
                      Sign Up
                   </router-link>
                </p>
-               <button @click="loginWithGoogle" type="button" class="py-3 px-4 w-32 mx-auto inline-flex items-center text-lg rounded hover:bg-opacity-80 font-semibold text-gray-300 bg-whatsapp-dark-200 focus:outline-none">
-                  <GoogleIcon class="w-6 mr-2"/><span>Google</span>
-               </button>
+               <div class="mx-auto w-full flex space-x-2 items-center justify-center">
+                  <button @click="loginWithGoogle" type="button" class="py-3 px-4 inline-flex items-center text-lg rounded hover:bg-opacity-80 font-semibold text-gray-300 bg-whatsapp-dark-200 focus:outline-none">
+                     <GoogleIcon class="w-6 mr-2"/><span>Google</span>
+                  </button>
+                  <button @click="loginWithFacebook" type="button" class="py-3 px-4 inline-flex items-center text-lg rounded hover:bg-opacity-80 font-semibold text-gray-300 bg-whatsapp-dark-200 focus:outline-none">
+                     <FacebookIcon class="w-6 mr-2"/><span>Facebook</span>
+                  </button>
+               </div>
                <p class="text-center text-lg text-gray-300 my-2">or 
                   <router-link to="/reset-password" class="underline">
                      forgot password 
@@ -51,8 +56,9 @@ import { auth } from '../service/firebase'
 import Spinner from '../components/Spinner'
 import Lock from '../components/svg/Lock.vue';
 import GoogleIcon from '../components/svg/GoogleIcon.vue';
+import FacebookIcon from '../components/svg/FacebookIcon.vue';
 export default {
-   components:{Spinner, Lock, GoogleIcon},
+   components:{Spinner, Lock, GoogleIcon, FacebookIcon},
    setup () {
       const router = useRouter();
       const store = useStore();
@@ -80,9 +86,9 @@ export default {
          .then( async res => {
             if(res.user){
             
-              store.dispatch('onUserSigin');
+              store.dispatch('users/onUserSigin');
                
-              await store.dispatch('setCurrentUser', res.user.uid);
+              await store.dispatch('users/setCurrentUser', res.user.uid);
 
                state.isProcess = false;
                router.push({
@@ -104,7 +110,7 @@ export default {
       }
 
       const loginWithGoogle = async () =>{
-        await store.dispatch('loginWithGoogle')
+        await store.dispatch('users/loginWithGoogle')
 
          var user = auth.currentUser;
          
@@ -114,6 +120,18 @@ export default {
          })
 
       }
+
+      const loginWithFacebook = async () =>{
+        await store.dispatch('users/loginWithFacebook')
+
+         var user = auth.currentUser;
+         
+         router.push({
+            name: 'chat-home', 
+            params: {user_id: user.uid}
+         })
+
+    }
 
       const errorMessageHandler = (errors) => {
          state.errorMessage = errors;
@@ -150,7 +168,8 @@ export default {
       return {
          ...toRefs(state),
          onLogin, 
-         loginWithGoogle
+         loginWithGoogle,
+         loginWithFacebook
       }
    }
 }

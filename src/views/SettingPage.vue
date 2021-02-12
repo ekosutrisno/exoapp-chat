@@ -71,14 +71,13 @@
             </div>
             <div class="w-full flex mt-4 flex-col">
                <h1 class="text-gray-300 font-semibold pl-2 text-sm z-30">ADVANCED</h1>
-               <p class="text-whatsapp-yellow pl-2 text-sm z-30 mb-4">Change the email maybe can affect another configuration!.</p>
-                <div class="inline-flex px-4 w-full max-w-screen-sm items-start space-x-2">
+               <p class="text-whatsapp-yellow pl-2 text-sm z-30">Not recomended to Change the email.</p>
+                <div class="inline-flex px-4 w-full max-w-screen-sm items-center space-x-2">
                   <svg class="w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                      <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
                      <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
                   </svg>
                   <div class="flex flex-col w-full">
-                     <h1 class="text-gray-400 pl-2 text-sm -mb-2 z-30">Change your email account</h1>
                      <div class="relative w-full">
                         <input v-model="email" type="text" :readonly="!isEdit" required class="py-2 w-full pl-2 z-20 text-gray-300 bg-transparent text-lg focus:outline-none border-b border-transparent transition-colors focus:border-gray-700 placeholder-gray-400 placeholder-opacity-70" placeholder="Email" />
                         <svg @click="isEdit = true" v-if="!isEdit" class="text-gray-400 w-6 absolute top-2 hover:text-gray-300 cursor-pointer right-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
@@ -90,17 +89,20 @@
                      </div>
                   </div>
                 </div>
+               <button v-if="isEdit" type="button" @click="onUpdateEmail" class="py-2 px-4 w-48 mx-auto nv-transition text-lg mt-4 rounded hover:bg-opacity-80 font-semibold text-gray-300 bg-whatsapp-teal-green focus:outline-none">
+                  Update Email
+               </button>
             </div>
-            <div class="w-full flex mt-8 flex-col">
-               <div class="text-red-600 inline-flex items-center space-x-2 font-semibold pl-2 text-sm z-30">
+            <div class="w-full flex mt-4 flex-col">
+                <div class="text-red-600 inline-flex items-center space-x-2 font-semibold pl-2 text-sm z-30">
                   <span>DANGER ZONE</span>
                   <span>
                      <svg class="w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                      <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
                   </svg>
                   </span>
-               </div>
-                  <p class="text-red-600 text-sm z-30 pl-2">This action canot be restore!</p>
+                </div>
+                <p class="text-red-600 text-sm z-30 pl-2">This action canot be restore!</p>
                 <div class="inline-flex px-4 w-full max-w-screen-sm items-center space-x-2">
                   <svg class="w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                      <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
@@ -108,7 +110,7 @@
                   </svg>
                   <div class="flex flex-col w-full">
                      <div class="relative w-full">
-                        <input v-model="emailVerifyDelete" type="text" required class="py-2 w-full pl-2 z-20 text-gray-300 bg-transparent text-lg focus:outline-none border-b border-transparent transition-colors focus:border-gray-700 placeholder-gray-400 placeholder-opacity-70" placeholder="Your email here" />
+                        <input v-model="emailVerifyDelete" type="text" required class="py-2 w-full pl-2 z-20 text-gray-300 bg-transparent text-lg focus:outline-none border-b border-transparent transition-colors focus:border-gray-700 placeholder-gray-400 placeholder-opacity-70" placeholder="Confirm your email here" />
                      </div>
                   </div>
                 </div>
@@ -219,11 +221,12 @@ export default {
          
          var user = auth.currentUser;
          
+         firestore.collection('users')
+            .doc(state.user_id).delete();
+            
          user.delete().then( async () => {
-            await store.dispatch('onUserSignout', state.user_id);
+            await store.dispatch('users/onUserSignout', state.user_id);
 
-            firestore.collection('users')
-               .doc(state.user_id).delete()
 
          }).catch(function(error) {
             console.log(error);
@@ -262,6 +265,15 @@ export default {
 
       }
 
+      const onUpdateEmail = () =>{
+
+         state.isProcess = true;
+         store.dispatch('users/onUpdateEmail', state.email);
+         state.isProcess = false;
+         state.isEdit = false;
+
+      }
+
       onBeforeMount(() => {
          if (!localStorage.getItem("user_id")) {
           router.push("/login")
@@ -293,6 +305,7 @@ export default {
          uploadAvatar,
          onVerifyDelete,
          onDeleteAccount,
+         onUpdateEmail,
          back
       }
    }
