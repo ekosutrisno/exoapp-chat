@@ -94,10 +94,9 @@ export default {
       const store = useStore();
 
       const state = reactive({
-         currentUserId: computed(() => store.getters.getUserId),
+         currentUserId: localStorage.getItem('user_id'),
          friends: [],
          groups: computed(() => store.state.groups.groups),
-         me: computed(() => store.state.users.currentUser) ,
          isProcess: false,
          isChat: true,
          option : false,
@@ -117,7 +116,7 @@ export default {
       })
 
       const refreshCurrentUser = async ()=>{
-         await store.dispatch('setCurrentUser', state.currentUserId);
+         await store.dispatch('users/setCurrentUser', state.currentUserId);
 
       }
 
@@ -144,7 +143,7 @@ export default {
             last_active: new Date().toISOString(),
          });
 
-         store.dispatch('onUserSignout', state.currentUserId);
+         store.dispatch('users/onUserSignout', state.currentUserId);
 
          auth.signOut().then(() => {
             localStorage.clear();
@@ -194,7 +193,7 @@ export default {
          state.isProcess = false;
 
          // Set to Store 
-         await store.dispatch('setListFriend', state.currentUserId);
+         await store.dispatch('friends/setListFriend', state.currentUserId);
 
       }
       const setFriends = async () => {
@@ -202,7 +201,7 @@ export default {
       }
 
       const getGroupList = async () => {
-        await store.dispatch('setListGroup', state.currentUserId)
+        await store.dispatch('groups/setListGroup', state.currentUserId)
       }
 
       const letChat = ( peerUser ) => {
@@ -213,7 +212,7 @@ export default {
       }
 
       const isLogin = () => {
-         store.dispatch('onUserSigin', state.currentUserId)
+         store.dispatch('users/onUserSigin', state.currentUserId)
       }
 
       const letChatGroup = ( group ) => {

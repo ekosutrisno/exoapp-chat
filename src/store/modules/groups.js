@@ -1,6 +1,7 @@
 import { firestore } from "../../service/firebase";
 
 const groups = {
+  namespaced: true,
   state: () => ({
     groups: [],
   }),

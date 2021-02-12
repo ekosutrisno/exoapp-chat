@@ -54,7 +54,7 @@ export default {
             password: '',
             confirmPassword: '',
             isProcess: false,
-            errorMessage: ''
+            errorMessage: '',
       });
 
       const ValidateEmail = (mail) => {
@@ -130,7 +130,7 @@ export default {
             .set(userData).then( () =>{
 
                //Sending Email Verifications
-               store.dispatch('onVerifyEmail');
+               store.dispatch('users/onVerifyEmail');
 
                // Logout
                auth.signOut();

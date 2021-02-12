@@ -156,7 +156,7 @@ export default {
             last_active: new Date().toISOString(),
          });
 
-         store.dispatch('onUserSignout', state.currentUserId);
+         store.dispatch('users/onUserSignout', state.currentUserId);
 
         auth.signOut().then(() => {
             localStorage.clear();

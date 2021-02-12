@@ -60,9 +60,11 @@
                      <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
                      <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
                   </svg>
-                  <div class="flex flex-col w-full">
+                  <div class="flex flex-col w-full relative">
                      <h1 class="text-gray-400 pl-2 text-sm -mb-2 z-30">Email</h1>
                      <input v-model="email" type="text" readonly required class="py-2 pl-2 z-20 text-gray-300 mb-2 bg-transparent focus:outline-none border-b border-transparent transition-colors focus:border-gray-700 placeholder-gray-400 placeholder-opacity-70" placeholder="Email" />
+                     <GoogleIcon v-if="provider === 'google.com'" class="absolute top-5 right-0"/>
+                     <FacebookIcon v-if="provider === 'facebook.com'" class="absolute top-5 right-0"/>
                   </div>
                 </div>
                 <div class="inline-flex px-4 w-full max-w-screen-sm items-start space-x-2">
@@ -85,17 +87,18 @@
 </template>
 
 <script>
-import {onBeforeMount, onMounted, reactive, toRefs } from 'vue'
-import { firestore, storage } from '../service/firebase'
+import {computed, onBeforeMount, onMounted, reactive, toRefs } from 'vue'
+import { auth, firestore, storage } from '../service/firebase'
 import { useRouter } from 'vue-router'
 import Spinner from '../components/Spinner.vue'
 import U from '../components/svg/U.vue'
 import { useStore } from 'vuex'
+import GoogleIcon from '../components/svg/GoogleIcon.vue'
+import FacebookIcon from '../components/svg/FacebookIcon.vue'
 
 export default {
-   components:{ Spinner, U },
-   setup () {
-      const router = useRouter();
+   components:{ Spinner, U, GoogleIcon, FacebookIcon },
+   setup () {  const router = useRouter();
       const store = useStore();
 
       const state = reactive({
@@ -108,7 +111,8 @@ export default {
          descriptions: '',
          newFoto : null,
          isProcess: false,
-         messageInfo: ''
+         messageInfo: '',
+         provider: computed(()=> auth.currentUser.providerData[0].providerId)
       })
 
       onMounted(()=> setUserDetail());
