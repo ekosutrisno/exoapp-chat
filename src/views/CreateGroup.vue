@@ -84,12 +84,12 @@ export default {
          groupDescriptions: '',
          infoMessage: '',
          isProcess: false,
-         user_id: computed(() => store.getters.getUserId),
+         user_id: localStorage.getItem('user_id'),
          currentUsername: computed(() => store.state.users.currentUser.username),
          friends: computed(() => store.state.friends.friends),
          members: [
             {
-               user_id: computed(() => store.getters.getUserId),
+               user_id: localStorage.getItem('user_id'),
                email: computed(() => store.state.users.currentUser.email),
                username: computed(() => store.state.users.currentUser.username),
                photo_url: computed(() => store.state.users.currentUser.photo_url)
