@@ -19,8 +19,7 @@
 </template>
 
 <script>
-import { computed, reactive, toRefs } from 'vue'
-import { useStore } from 'vuex'
+import {  reactive, toRefs } from 'vue'
 import U from './svg/U.vue';
 export default {
   components: { U },
@@ -28,10 +27,9 @@ export default {
       currentPeerUser: Object
    },
    setup () {
-      const store = useStore();
 
       const state = reactive({
-         currentUserId: computed(() => store.getters.getUserId),
+         currentUserId: localStorage.getItem('user_id'),
       })
       return {
          ...toRefs(state)

@@ -45,8 +45,8 @@ import moment from 'moment';
 export default {
    components:{ Spinner, ChatIcon },
    setup () {
-       const router = useRouter();
-       const store = useStore();
+      const router = useRouter();
+      const store = useStore();
 
       const state = reactive({
             username: '',
@@ -134,9 +134,6 @@ export default {
 
                // Logout
                auth.signOut();
-               
-               // Save To Store
-               // store.dispatch('setCurrentUser', userData.user_id);
                
                state.username = '';
                state.email = '';
