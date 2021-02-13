@@ -9,17 +9,17 @@
  </div>
 </template>
 <script>
-import { computed, reactive } from 'vue';
+import { reactive } from 'vue';
 import { useStore } from 'vuex';
 export default {
   setup(_, { emit }){
     const store = useStore();
     const state = reactive({
-      user_id: computed(() => store.getters.getUserId)
+      user_id: localStorage.getItem('user_id')
     })
 
     const onRefreshContact = () => {
-      store.dispatch('setListFriend',state.user_id);
+      store.dispatch('friends/setListFriend',state.user_id);
       emit('on-refresh');
     }
 
